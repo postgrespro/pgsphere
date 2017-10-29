@@ -452,7 +452,7 @@ healpix_subset_smoc_impl(hpint64 x, Datum y)
 		return false;
 	/* get the first page -- it contains at least the full root node */
 	moc = (Smoc *) PG_DETOAST_DATUM_SLICE(y, 0, MOC_HEADER_PAGE);
-	d_end = VARSIZE(moc) - VARHDRSZ;
+	d_end = VARSIZE(moc) - VARHDRSZ; /* the end of the actually detoasted part */
 	if (moc->first == moc->last || x < moc->first || x >= moc->last)
 		return false;
 
