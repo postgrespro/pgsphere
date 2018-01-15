@@ -11,6 +11,7 @@ It provides:
 
 This is an R-Tree implementation using GiST for spherical objects like
 spherical points and spherical circles with useful functions and operators.
+It also support the Block Range INdexing (BRIN) for large datasets.
 
 NOTICE:
      This version will work only with PostgreSQL version 10 and above.

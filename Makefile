@@ -11,7 +11,7 @@ MODULE_big = pg_sphere
 OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
              src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
              src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
-             src/key.o src/gnomo.o src/epochprop.o
+             src/key.o src/gnomo.o src/epochprop.o brin.o
 
 ifneq ($(USE_HEALPIX),0)
 OBJS      += src/healpix.o src/moc.o src/process_moc.o \
@@ -33,7 +33,7 @@ DATA_built  = $(RELEASE_SQL) \
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
               contains_ops contains_ops_compat bounding_box_gist gnomo epochprop \
-              contains overlaps
+              contains overlaps spoint_brin
 
 ifneq ($(USE_HEALPIX),0)
 REGRESS    += healpix moc mocautocast
@@ -66,7 +66,7 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
               pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-              pgs_gist.sql gnomo.sql
+              pgs_gist.sql gnomo.sql pgs_brin.sql
 
 ifneq ($(USE_HEALPIX),0)
 PGS_SQL    += healpix.sql
