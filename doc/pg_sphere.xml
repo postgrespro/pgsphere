@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
   "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
@@ -22,7 +22,7 @@
 <!ENTITY graph1006 "img/spath.jpg">
 <!ENTITY graph1007 "img/spoly.jpg">
 <!ENTITY graph1008 "img/sbox.jpg">
-<!ENTITY graph1009 "img/logo.jpg">
+<!ENTITY graph1009 "img/logo.png">
 
 ]>
 
@@ -39,7 +39,7 @@
             <para>
               <mediaobject>
                 <imageobject>
-                  <imagedata fileref="&graph1009;" width="225px" format="JPEG"/>
+                  <imagedata fileref="&graph1009;" width="168px" format="PNG"/>
                 </imageobject>
               </mediaobject>
             </para>

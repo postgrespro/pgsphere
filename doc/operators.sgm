@@ -161,6 +161,10 @@
                 queries using binary operators returning
                 <emphasis>true</emphasis> or <emphasis>false</emphasis>:
             </para>
+            <para>
+                <screen>
+                </screen>
+            </para>
             <table frame="all" rowsep="1" colsep="1">
               <title>Contain and overlap operators</title>
               <tgroup cols="2" colsep="1" rowsep="1">

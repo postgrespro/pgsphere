@@ -1,0 +1,37 @@
+SET client_min_messages TO NOTICE;
+\set ECHO none
+psql:pg_sphere.test.sql:9: NOTICE:  type "spoint" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:16: NOTICE:  argument type spoint is only a shell
+psql:pg_sphere.test.sql:32: NOTICE:  type "strans" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:39: NOTICE:  argument type strans is only a shell
+psql:pg_sphere.test.sql:55: NOTICE:  type "scircle" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:62: NOTICE:  argument type scircle is only a shell
+psql:pg_sphere.test.sql:78: NOTICE:  type "sline" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:85: NOTICE:  argument type sline is only a shell
+psql:pg_sphere.test.sql:101: NOTICE:  type "sellipse" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:108: NOTICE:  argument type sellipse is only a shell
+psql:pg_sphere.test.sql:126: NOTICE:  type "spoly" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:133: NOTICE:  argument type spoly is only a shell
+psql:pg_sphere.test.sql:152: NOTICE:  type "spath" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:159: NOTICE:  argument type spath is only a shell
+psql:pg_sphere.test.sql:178: NOTICE:  type "sbox" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:185: NOTICE:  argument type sbox is only a shell
+psql:pg_sphere.test.sql:8541: NOTICE:  type "spherekey" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:8548: NOTICE:  argument type spherekey is only a shell
+psql:pg_sphere.test.sql:8943: NOTICE:  type "pointkey" is not yet defined
+DETAIL:  Creating a shell type definition.
+psql:pg_sphere.test.sql:8950: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8956: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8962: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8968: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:9149: NOTICE:  return type smoc is only a shell
+psql:pg_sphere.test.sql:9155: NOTICE:  argument type smoc is only a shell

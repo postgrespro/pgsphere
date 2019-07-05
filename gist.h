@@ -148,5 +148,13 @@ Datum	pointkey_out(PG_FUNCTION_ARGS);
 Datum	pointkey_volume(PG_FUNCTION_ARGS);
 Datum	pointkey_area(PG_FUNCTION_ARGS);
 Datum	pointkey_perimeter(PG_FUNCTION_ARGS);
+Datum	g_spoint3_compress(PG_FUNCTION_ARGS);
+Datum	g_spoint3_union(PG_FUNCTION_ARGS);
+Datum	g_spoint3_same(PG_FUNCTION_ARGS);
+Datum	g_spoint3_consistent(PG_FUNCTION_ARGS);
+Datum	g_spoint3_penalty(PG_FUNCTION_ARGS);
+Datum	g_spoint3_picksplit(PG_FUNCTION_ARGS);
+Datum	g_spoint3_distance(PG_FUNCTION_ARGS);
+Datum	g_spoint3_fetch(PG_FUNCTION_ARGS);
 
 #endif

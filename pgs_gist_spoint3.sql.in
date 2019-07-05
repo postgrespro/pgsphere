@@ -1,0 +1,67 @@
+-- create the next generation operator class for spherical points
+
+CREATE FUNCTION g_spoint3_union(bytea, internal)
+	RETURNS spherekey
+	AS 'MODULE_PATHNAME', 'g_spoint3_union'
+	LANGUAGE 'c';	
+
+CREATE FUNCTION g_spoint3_penalty (internal, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_penalty'
+	LANGUAGE 'c' with (isstrict);
+
+CREATE FUNCTION g_spoint3_picksplit(internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_picksplit'
+	LANGUAGE 'c';
+
+CREATE FUNCTION g_spoint3_same (bytea, bytea, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_same'
+	LANGUAGE 'c';
+
+CREATE FUNCTION g_spoint3_compress(internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_compress'
+	LANGUAGE 'c';	
+
+CREATE FUNCTION g_spoint3_consistent(internal, internal, int4, oid, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_consistent'
+	LANGUAGE 'c';	
+
+CREATE FUNCTION g_spoint3_distance(internal, internal, int4, oid)
+	RETURNS float8
+	AS 'MODULE_PATHNAME', 'g_spoint3_distance'
+	LANGUAGE 'c';	
+
+CREATE FUNCTION g_spoint3_fetch(internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME', 'g_spoint3_fetch'
+	LANGUAGE 'c' with (isstrict);
+
+CREATE OPERATOR CLASS spoint3
+	FOR TYPE spoint USING gist AS
+	OPERATOR   1 = (spoint, spoint),
+	OPERATOR  11 @ (spoint, scircle),
+	OPERATOR  12 @ (spoint, sline),
+	OPERATOR  13 @ (spoint, spath),
+	OPERATOR  14 @ (spoint, spoly),
+	OPERATOR  15 @ (spoint, sellipse),
+	OPERATOR  16 @ (spoint, sbox),
+	OPERATOR  37 <@ (spoint, scircle),
+	OPERATOR  38 <@ (spoint, sline),
+	OPERATOR  39 <@ (spoint, spath),
+	OPERATOR  40 <@ (spoint, spoly),
+	OPERATOR  41 <@ (spoint, sellipse),
+	OPERATOR  42 <@ (spoint, sbox),
+	OPERATOR  100 <-> (spoint, spoint) FOR ORDER BY float_ops,
+	FUNCTION  1 g_spoint3_consistent (internal, internal, int4, oid, internal),
+	FUNCTION  2 g_spoint3_union (bytea, internal),
+	FUNCTION  3 g_spoint3_compress (internal),
+	FUNCTION  4 g_spherekey_decompress (internal),
+	FUNCTION  5 g_spoint3_penalty (internal, internal, internal),
+	FUNCTION  6 g_spoint3_picksplit (internal, internal),
+	FUNCTION  7 g_spoint3_same (bytea, bytea, internal),
+	FUNCTION  8 g_spoint3_distance (internal, internal, int4, oid),
+	STORAGE	pointkey;

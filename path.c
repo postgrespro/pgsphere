@@ -145,7 +145,7 @@ euler_spath_trans(SPATH *out, const SPATH *in, const SEuler *se)
 {
 	int32 i;
 
-	out->size = in->size;
+	SET_VARSIZE(out, VARSIZE(in));
 	out->npts = in->npts;
 	for (i = 0; i < in->npts; i++)
 		euler_spoint_trans(&out->p[i], &in->p[i], se);
@@ -628,7 +628,7 @@ spherepath_swap(PG_FUNCTION_ARGS)
 	{
 		memcpy((void *) &ret->p[i], (void *) &path->p[n - i], sizeof(SPoint));
 	}
-	ret->size = path->size;
+	SET_VARSIZE(ret, VARSIZE(path));
 	ret->npts = path->npts;
 	PG_RETURN_POINTER(ret);
 }
