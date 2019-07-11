@@ -1,8 +1,7 @@
 #ifndef __PGS_CHEALPIX_H__
 #define __PGS_CHEALPIX_H__
 
-#include <chealpix.h>
-
+#include <healpix_bare.h>
 /*
  * Actually, chealpix changed its API: thus, this file must be included first,
  * directly or indirectly.
