@@ -43,7 +43,7 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-   pgs_gist.sql gnomo.sql pgs_gist_pointkey.sql \
+   pgs_gist.sql gnomo.sql \
    healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
