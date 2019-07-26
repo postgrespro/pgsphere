@@ -27,11 +27,11 @@ psql:pg_sphere.test.sql:185: NOTICE:  argument type sbox is only a shell
 psql:pg_sphere.test.sql:8541: NOTICE:  type "spherekey" is not yet defined
 DETAIL:  Creating a shell type definition.
 psql:pg_sphere.test.sql:8548: NOTICE:  argument type spherekey is only a shell
-psql:pg_sphere.test.sql:8943: NOTICE:  type "pointkey" is not yet defined
+psql:pg_sphere.test.sql:8562: NOTICE:  type "pointkey" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:8950: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8956: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8962: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8968: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:9149: NOTICE:  return type smoc is only a shell
-psql:pg_sphere.test.sql:9155: NOTICE:  argument type smoc is only a shell
+psql:pg_sphere.test.sql:8569: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8575: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8581: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8587: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:9152: NOTICE:  return type smoc is only a shell
+psql:pg_sphere.test.sql:9158: NOTICE:  argument type smoc is only a shell
