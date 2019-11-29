@@ -62,7 +62,7 @@
 <![CDATA[  pos spoint NOT NULL]]>
 <![CDATA[);]]>
 <![CDATA[-- Put in data now]]>
-<![CDATA[CREATE INDEX test_pos_idx USING GIST ON test (pos);]]>
+<![CDATA[CREATE INDEX test_pos_idx ON test USING GIST (pos);]]>
 <![CDATA[VACUUM ANALYZE test;]]>
           </programlisting>
         </example>
