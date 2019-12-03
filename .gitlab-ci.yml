@@ -1,0 +1,18 @@
+stages:
+  - build
+
+.build: &build
+  stage: build
+  image: credativ/postgresql-build:${PGVERSION}
+  script:
+    - make -C healpix_bare CPPFLAGS="$(pg_config --cppflags)" CFLAGS="$(pg_config --cflags)" LDFLAGS="$(pg_config --ldflags)"
+    - make USE_PGXS=1 PG_CPPFLAGS="-Ihealpix_bare" PG_LDFLAGS="-Lhealpix_bare"
+    - make install USE_PGXS=1
+    - if ! pg_virtualenv make installcheck USE_PGXS=1; then cat regression.diffs; exit 1; fi
+
+build:9.4: { <<: *build, variables: { PGVERSION: '9.4' } }
+build:9.5: { <<: *build, variables: { PGVERSION: '9.5' } }
+build:9.6: { <<: *build, variables: { PGVERSION: '9.6' } }
+build:10:  { <<: *build, variables: { PGVERSION: '10'  } }
+build:11:  { <<: *build, variables: { PGVERSION: '11'  } }
+build:12:  { <<: *build, variables: { PGVERSION: '12'  } }
