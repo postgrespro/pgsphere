@@ -47,6 +47,7 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
+USE_PGXS = 1
 ifdef USE_PGXS
   ifndef PG_CONFIG
     PG_CONFIG := pg_config
