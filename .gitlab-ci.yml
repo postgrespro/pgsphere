@@ -5,8 +5,7 @@ stages:
   stage: build
   image: credativ/postgresql-build:${PGVERSION}
   script:
-    - make -C healpix_bare CPPFLAGS="$(pg_config --cppflags)" CFLAGS="$(pg_config --cflags)" LDFLAGS="$(pg_config --ldflags)"
-    - make PG_CPPFLAGS="-Ihealpix_bare" PG_LDFLAGS="-Lhealpix_bare"
+    - make
     - make install
     - if ! pg_virtualenv make installcheck; then cat regression.diffs; exit 1; fi
 

@@ -8,7 +8,7 @@ MODULE_big = pg_sphere
 OBJS       = sscan.o sparse.o sbuffer.o vector3d.o point.o \
              euler.o circle.o line.o ellipse.o polygon.o \
              path.o box.o output.o gq_cache.o gist.o key.o \
-             gnomo.o healpix.o moc.o process_moc.o
+             gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o
 
 EXTENSION   = pg_sphere
 RELEASE_SQL = $(EXTENSION)--1.1.5beta4gavo.sql
@@ -30,7 +30,6 @@ TESTS       = init_test tables points euler circle line ellipse poly path box in
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
 			  moc
 
-SHLIB_LINK += -lhealpix_bare
 # no support for CXXFLAGS in PGXS
 CXXFLAGS = -Wall -Wpointer-arith -Wendif-labels \
 		-Wmissing-format-attribute -Wformat-security -g -O0 -fpic
