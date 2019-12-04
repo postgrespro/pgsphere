@@ -30,9 +30,11 @@ TESTS       = init_test tables points euler circle line ellipse poly path box in
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
 			  moc
 
-# no support for CXXFLAGS in PGXS
+ifndef CXXFLAGS
+# no support for CXXFLAGS in PGXS before v11
 CXXFLAGS = -Wall -Wpointer-arith -Wendif-labels \
-		-Wmissing-format-attribute -Wformat-security -g -O0 -fpic
+		-Wmissing-format-attribute -Wformat-security -g -O2 -fPIC
+endif
 
 EXTRA_CLEAN = $(PGS_SQL) pg_sphere.test.sql
 
