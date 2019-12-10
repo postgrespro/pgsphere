@@ -110,3 +110,6 @@ SELECT smoc('1/6-7 2/22-23,32-33 11/1 24/1 29/1,3');
 SELECT smoc('5/1-127,999-1103');
 SELECT smoc('5/1024-1103');
 SELECT smoc('28/1101-1103');
+
+SELECT smoc_union('1/1,4-6', '1/3-5 2/8');
+SELECT '1/1'::smoc || '1/2' AS union;

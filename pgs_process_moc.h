@@ -79,6 +79,8 @@ typedef struct
 
 #define MOC_MAX_OPTIONS_SIZE 0 /* no options yet */
 
+#define HEALPIX_MAX_ORDER 29
+
 int32
 moc_mod_floor(int32, int32);
 int32
@@ -135,6 +137,10 @@ entry_lower_bound(moc_tree_entry*, moc_tree_entry*, hpint64);
 
 moc_interval*
 interval_lower_bound(moc_interval*, moc_interval*, hpint64);
+
+void
+moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+												pgs_error_handler error_out);
 
 #ifdef __cplusplus
 }

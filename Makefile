@@ -1,5 +1,4 @@
-
-PGSPHERE_VERSION = 1.1.5
+PGSPHERE_VERSION = 1.2.0
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR = $(shell basename $(shell pwd))
@@ -11,13 +10,14 @@ OBJS       = sscan.o sparse.o sbuffer.o vector3d.o point.o \
              gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o
 
 EXTENSION   = pg_sphere
-RELEASE_SQL = $(EXTENSION)--1.1.5beta4gavo.sql
+RELEASE_SQL = $(EXTENSION)--1.2.0.sql
 DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--unpackaged--1.1.5beta0gavo.sql \
 			  pg_sphere--1.0--1.0_gavo.sql \
 			  pg_sphere--1.0_gavo--1.1.5beta0gavo.sql \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
-			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql
+			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql \
+			  pg_sphere--1.1.5beta4gavo--1.2.0.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
@@ -45,7 +45,7 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
    pgs_gist.sql gnomo.sql \
-   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql
+   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
 USE_PGXS = 1
@@ -177,6 +177,9 @@ pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql: pgs_moc_type.sql.in
 
 pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql: pgs_moc_compat.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
+
+pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
+	cat $^ > $@
 
 # end of local stuff
 

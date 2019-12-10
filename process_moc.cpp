@@ -839,3 +839,40 @@ interval_lower_bound(moc_interval* first, moc_interval* last, hpint64 value)
 {
 	return std::lower_bound(first, last, value, interval_cmp);
 }
+
+void
+moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+												pgs_error_handler error_out)
+{
+	int32 begin	= moc_a->data_begin;
+	//int32 end	= VARSIZE(moc_a) - VARHDRSZ;
+	int32 entry_size = MOC_INTERVAL_SIZE;
+	char* p = 0; // PGS_TRY wants this, TODO get rid
+
+	PGS_TRY
+		for (int32 j = begin; j < moc_a_end; j += entry_size)
+		{
+			// page bumps
+			int32 mod = (j + entry_size) % PG_TOAST_PAGE_FRAGMENT;
+			if (mod > 0 && mod < entry_size)
+				j += entry_size - mod;
+			moc_interval & x = *interval_ptr(moc_a, j);
+
+			add_to_moc(moc_in_context, HEALPIX_MAX_ORDER, x.first, x.second, error_out);
+		}
+
+		begin	= moc_b->data_begin;
+		//end	= VARSIZE(moc_b) - VARHDRSZ;
+
+		for (int32 j = begin; j < moc_b_end; j += entry_size)
+		{
+			// page bumps
+			int32 mod = (j + entry_size) % PG_TOAST_PAGE_FRAGMENT;
+			if (mod > 0 && mod < entry_size)
+				j += entry_size - mod;
+			moc_interval & x = *interval_ptr(moc_b, j);
+
+			add_to_moc(moc_in_context, HEALPIX_MAX_ORDER, x.first, x.second, error_out);
+		}
+	PGS_CATCH
+};
