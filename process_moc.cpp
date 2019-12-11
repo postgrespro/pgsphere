@@ -380,13 +380,13 @@ release_moc_in_context(void* moc_in_context, pgs_error_handler error_out)
 void
 add_to_map(moc_map & input_map, hpint64 first, hpint64 last)
 {
-	map_iterator lower = input_map.lower_bound(first);
-	map_iterator upper = input_map.upper_bound(last);
+	map_iterator lower = input_map.lower_bound(first); // first element not less than 'first'
+	map_iterator upper = input_map.upper_bound(last);  // first element greater than 'last'
 
 	if (lower != input_map.begin())
 	{
 		map_iterator before = lower;
-		--before;
+		--before; // element actually less than 'first'
 		if (before->second >= first)
 		{
 			if (before->second >= last)
@@ -841,7 +841,7 @@ interval_lower_bound(moc_interval* first, moc_interval* last, hpint64 value)
 }
 
 void
-moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+moc_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
 												pgs_error_handler error_out)
 {
 	int32 begin	= moc_a->data_begin;
@@ -875,3 +875,49 @@ moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* m
 		}
 	PGS_CATCH
 };
+
+void
+moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+												pgs_error_handler error_out)
+{
+	int32	a = moc_a->data_begin;
+	int32	b = moc_b->data_begin;
+	int32	entry_size = MOC_INTERVAL_SIZE;
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	PGS_TRY
+		moc_input & m = *p;
+
+		for (; a < moc_a_end && b < moc_b_end; ) // iterate over both in parallel
+		{
+			// page bumps
+			int32 mod = (a + entry_size) % PG_TOAST_PAGE_FRAGMENT;
+			if (mod > 0 && mod < entry_size)
+				a += entry_size - mod;
+			moc_interval & x = *interval_ptr(moc_a, a);
+
+			mod = (b + entry_size) % PG_TOAST_PAGE_FRAGMENT;
+			if (mod > 0 && mod < entry_size)
+				b += entry_size - mod;
+			moc_interval & y = *interval_ptr(moc_b, b);
+
+			if (x.second <= y.first) // a entirely left of b, advance a
+			{
+				a += entry_size;
+				continue;
+			}
+			if (y.second <= x.first) // b entirely left of a, advance b
+			{
+				b += entry_size;
+				continue;
+			}
+
+			// add intersection of the two intervals we are at now
+			add_to_map(m.input_map, std::max(x.first, y.first), std::min(x.second, y.second));
+
+			if (x.second <= y.second) // advance interval that has the lowest end (there might be more overlaps)
+				a += entry_size;
+			else
+				b += entry_size;
+		}
+	PGS_CATCH
+}

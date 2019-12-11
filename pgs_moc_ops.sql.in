@@ -4,8 +4,20 @@ CREATE FUNCTION smoc_union (smoc, smoc)
 	LANGUAGE C
 	STRICT;
 
+CREATE FUNCTION smoc_intersection (smoc, smoc)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	STRICT;
+
 CREATE OPERATOR || (
 	LEFTARG   = smoc,
 	RIGHTARG  = smoc,
 	PROCEDURE = smoc_union
+);
+
+CREATE OPERATOR * (
+	LEFTARG   = smoc,
+	RIGHTARG  = smoc,
+	PROCEDURE = smoc_intersection
 );

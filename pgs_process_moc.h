@@ -139,7 +139,11 @@ moc_interval*
 interval_lower_bound(moc_interval*, moc_interval*, hpint64);
 
 void
-moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+moc_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
+												pgs_error_handler error_out);
+
+void
+moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32 moc_b_end,
 												pgs_error_handler error_out);
 
 #ifdef __cplusplus

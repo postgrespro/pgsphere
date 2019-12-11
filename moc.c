@@ -19,6 +19,7 @@ PG_FUNCTION_INFO_V1(spoint_not_subset_smoc);
 PG_FUNCTION_INFO_V1(smoc_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
+PG_FUNCTION_INFO_V1(smoc_intersection);
 
 int32 smoc_output_type = 0;
 
@@ -604,7 +605,35 @@ smoc_union(PG_FUNCTION_ARGS)
 	void*	moc_in_context = create_moc_in_context(moc_error_out);
 	int32	moc_size;
 
-	moc_in_context_union(moc_in_context, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_b, VARSIZE(moc_b) - VARHDRSZ, moc_error_out);
+	moc_union(moc_in_context, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_b, VARSIZE(moc_b) - VARHDRSZ, moc_error_out);
+
+	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
+	/* palloc() will leak the moc_in_context if it fails :-/ */
+	moc_ret = (Smoc*) palloc0(moc_size);
+	SET_VARSIZE(moc_ret, moc_size);
+
+	if (create_moc_release_context(moc_in_context, moc_ret, moc_error_out))
+	{
+		PG_RETURN_POINTER(moc_ret);
+	}
+	else
+	{
+		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
+				errmsg("Internal error in creation of MOC from text input.")));
+		PG_RETURN_NULL();
+	}
+}
+
+Datum
+smoc_intersection(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	Smoc*	moc_ret;
+	void*	moc_in_context = create_moc_in_context(moc_error_out);
+	int32	moc_size;
+
+	moc_intersection(moc_in_context, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_b, VARSIZE(moc_b) - VARHDRSZ, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	/* palloc() will leak the moc_in_context if it fails :-/ */
