@@ -113,7 +113,9 @@ SELECT smoc('28/1101-1103');
 
 SELECT smoc_union('1/1,4-6', '1/3-5 2/8');
 SELECT '1/1'::smoc || '1/2' AS union;
+SELECT sum(moc) FROM (VALUES ('0/1'::smoc), ('0/2'), ('0/4')) sub(moc);
 
 SELECT smoc_intersection('1/1,4-6', '1/3-5 2/8');
 SELECT '0/1'::smoc * '1/3,5,7,9' AS intersection;
 SELECT '1/9,11,13,15'::smoc * '0/1,2' AS intersection;
+SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(moc);
