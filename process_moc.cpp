@@ -847,9 +847,10 @@ moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* m
 	int32 begin	= moc_a->data_begin;
 	//int32 end	= VARSIZE(moc_a) - VARHDRSZ;
 	int32 entry_size = MOC_INTERVAL_SIZE;
-	char* p = 0; // PGS_TRY wants this, TODO get rid
-
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
 	PGS_TRY
+		moc_input & m = *p;
+
 		for (int32 j = begin; j < moc_a_end; j += entry_size)
 		{
 			// page bumps
@@ -857,8 +858,7 @@ moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* m
 			if (mod > 0 && mod < entry_size)
 				j += entry_size - mod;
 			moc_interval & x = *interval_ptr(moc_a, j);
-
-			add_to_moc(moc_in_context, HEALPIX_MAX_ORDER, x.first, x.second, error_out);
+			add_to_map(m.input_map, x.first, x.second);
 		}
 
 		begin	= moc_b->data_begin;
@@ -871,8 +871,7 @@ moc_in_context_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* m
 			if (mod > 0 && mod < entry_size)
 				j += entry_size - mod;
 			moc_interval & x = *interval_ptr(moc_b, j);
-
-			add_to_moc(moc_in_context, HEALPIX_MAX_ORDER, x.first, x.second, error_out);
+			add_to_map(m.input_map, x.first, x.second);
 		}
 	PGS_CATCH
 };
