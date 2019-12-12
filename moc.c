@@ -9,6 +9,8 @@ PG_FUNCTION_INFO_V1(smoc_out);
 PG_FUNCTION_INFO_V1(moc_debug);
 PG_FUNCTION_INFO_V1(set_smoc_output_type);
 PG_FUNCTION_INFO_V1(smoc_order);
+PG_FUNCTION_INFO_V1(smoc_eq);
+PG_FUNCTION_INFO_V1(smoc_neq);
 
 PG_FUNCTION_INFO_V1(healpix_subset_smoc);
 PG_FUNCTION_INFO_V1(healpix_not_subset_smoc);
@@ -411,6 +413,55 @@ moc_debug(PG_FUNCTION_ARGS)
 	const char *x = (const char*) palloc(x_size);
 	memmove((void*) x, (void*) c_str, x_size);
 	PG_RETURN_TEXT_P(cstring_to_text(x));
+}
+
+static bool
+smoc_eq_impl(Smoc* moc_a, Smoc* moc_b)
+{
+	int32	a = moc_a->data_begin;
+	int32	b = moc_b->data_begin;
+	int32	entry_size = MOC_INTERVAL_SIZE;
+	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	char*	moc_a_base = MOC_BASE(moc_a);
+	char*	moc_b_base = MOC_BASE(moc_b);
+
+	if (moc_a->data_begin != moc_b->data_begin || moc_a_end != moc_b_end) /* this needs to be reconsidered if the MOC version is updated */
+		return false;
+
+	if (moc_a->order != moc_b->order || moc_a->first != moc_b->first || moc_a->last != moc_b->last || moc_a->area != moc_b->area)
+		return false;
+
+	for (int j = moc_a->data_begin; j < moc_a_end; j += entry_size) // iterate over both in parallel
+	{
+		// page bumps
+		int32 mod = (j + entry_size) % PG_TOAST_PAGE_FRAGMENT;
+		if (mod > 0 && mod < entry_size)
+			j += entry_size - mod;
+		moc_interval *x = MOC_INTERVAL(moc_a_base, j);
+		moc_interval *y = MOC_INTERVAL(moc_b_base, j);
+
+		if (x->first != y->first || x->second != y->second)
+			return false;
+	}
+
+	return true;
+}
+
+Datum
+smoc_eq(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(smoc_eq_impl(moc_a, moc_b));
+}
+
+Datum
+smoc_neq(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(! smoc_eq_impl(moc_a, moc_b));
 }
 
 static bool

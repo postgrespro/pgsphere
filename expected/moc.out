@@ -42,6 +42,30 @@ SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,1000-2000'::smoc;
  f
 (1 row)
 
+SELECT '0/'::smoc = '1/'::smoc AS eq;
+ eq 
+----
+ t
+(1 row)
+
+SELECT '0/1,3,7'::smoc = '0/1,3,7' AS eq;
+ eq 
+----
+ t
+(1 row)
+
+SELECT '0/1,4,7'::smoc = '0/1,3,7' AS eq;
+ eq 
+----
+ f
+(1 row)
+
+SELECT '0/1,2,3'::smoc <> '0/1-3'::smoc AS neq;
+ neq 
+-----
+ f
+(1 row)
+
 SELECT 1 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339,0-1'));
  ?column? 
 ----------

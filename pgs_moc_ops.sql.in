@@ -1,3 +1,35 @@
+CREATE FUNCTION smoc_eq (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	STRICT;
+
+CREATE OPERATOR = (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_eq,
+	COMMUTATOR = '=',
+	NEGATOR    = '<>',
+	RESTRICT   = eqsel,
+	JOIN       = eqjoinsel
+);
+
+CREATE FUNCTION smoc_neq (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	STRICT;
+
+CREATE OPERATOR <> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_neq,
+	COMMUTATOR = '<>',
+	NEGATOR    = '=',
+	RESTRICT   = neqsel,
+	JOIN       = neqjoinsel
+);
+
 CREATE FUNCTION smoc_union (smoc, smoc)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME'
