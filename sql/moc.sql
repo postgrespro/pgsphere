@@ -124,3 +124,9 @@ SELECT smoc_intersection('1/1,4-6', '1/3-5 2/8');
 SELECT '0/1'::smoc * '1/3,5,7,9' AS intersection;
 SELECT '1/9,11,13,15'::smoc * '0/1,2' AS intersection;
 SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(moc);
+
+SELECT smoc_disc(0, 0, 0, 1);
+SELECT smoc_disc(1, 0, 0, 1);
+SELECT smoc_disc(2, 0, 0, 1);
+SELECT smoc_disc(0, 0, 0, 3.2);
+SELECT smoc_disc(2, 0, 0, 3.2);

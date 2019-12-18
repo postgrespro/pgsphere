@@ -22,6 +22,7 @@ PG_FUNCTION_INFO_V1(smoc_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
 PG_FUNCTION_INFO_V1(smoc_intersection);
+PG_FUNCTION_INFO_V1(smoc_disc);
 
 int32 smoc_output_type = 0;
 
@@ -699,6 +700,33 @@ smoc_intersection(PG_FUNCTION_ARGS)
 	{
 		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
 				errmsg("Internal error in creation of MOC from text input.")));
+		PG_RETURN_NULL();
+	}
+}
+
+Datum
+smoc_disc(PG_FUNCTION_ARGS)
+{
+	int		order = PG_GETARG_INT32(0);
+	double	theta = PG_GETARG_FLOAT8(1);
+	double	phi = PG_GETARG_FLOAT8(2);
+	double	radius = PG_GETARG_FLOAT8(3);
+	void*	moc_in_context = create_moc_in_context(moc_error_out);
+	int32	moc_size;
+	Smoc*	moc_ret;
+
+	moc_disc(moc_in_context, order, theta, phi, radius, moc_error_out);
+
+	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
+	moc_ret = (Smoc*) palloc0(moc_size);
+	SET_VARSIZE(moc_ret, moc_size);
+
+	if (create_moc_release_context(moc_in_context, moc_ret, moc_error_out))
+		PG_RETURN_POINTER(moc_ret);
+	else
+	{
+		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
+				errmsg("Internal error in creation of MOC from disc")));
 		PG_RETURN_NULL();
 	}
 }

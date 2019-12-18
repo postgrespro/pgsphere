@@ -4,6 +4,8 @@ stages:
 .build: &build
   stage: build
   image: credativ/postgresql-build:${PGVERSION}
+  before_script:
+    - apt-get -y install libhealpix-cxx-dev
   script:
     - make
     - make install

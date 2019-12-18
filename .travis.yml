@@ -19,7 +19,7 @@ dist: xenial
 before_install:
   # extra apt.pg.o.sh options added in version 204, travis currently has 199 (2019-11-27)
   - sudo apt-get -qq update
-  - sudo apt-get -y install postgresql-common
+  - sudo apt-get -y install postgresql-common libhealpix-cxx-dev
 
 install:
   - sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -p -v $PG_SUPPORTED_VERSIONS -i

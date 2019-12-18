@@ -63,3 +63,9 @@ CREATE AGGREGATE intersection (smoc) (
 	SFUNC = smoc_intersection,
 	STYPE = smoc
 );
+
+CREATE FUNCTION smoc_disc ("order" int, theta double precision, phi double precision, radius double precision)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	STRICT;

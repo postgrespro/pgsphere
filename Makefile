@@ -63,6 +63,8 @@ else
   include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
+override CPPFLAGS += -I/usr/include/healpix_cxx
+SHLIB_LINK += -lhealpix_cxx
 # link a second time as PGXS does not allow to change the linker
 PGS_LINKER = g++ $(CXXFLAGS) $(filter-out $(CC) $(CFLAGS), $(LINK.shared))
 pgs_link:  $(shlib) $(OBJS) | $(SHLIB_PREREQS)

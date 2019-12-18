@@ -13,6 +13,8 @@
 #include <exception>
 #include <stdexcept>
 
+#include <healpix_base.h>
+
 #include "pgs_process_moc.h"
 
 #define LAYDEB 0
@@ -919,5 +921,31 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 			else
 				b += entry_size;
 		}
+	PGS_CATCH
+}
+
+void
+moc_disc(void* moc_in_context, long order, double theta, double phi, double radius,
+												pgs_error_handler error_out)
+{
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	moc_input & m = *p;
+	PGS_TRY
+		rangeset<int64> pixset;
+		Healpix_Base2 hp(order, NEST);
+		pointing p(theta, phi);
+
+		hp.query_disc(p, radius, pixset);
+
+		for (tsize j = 0; j < pixset.nranges(); j++)
+		{
+			hpint64 first = pixset.ivbegin(j);
+			hpint64 last = pixset.ivend(j);
+			healpix_convert(first, order); // convert to order 29
+			healpix_convert(last, order);
+			moc_map_entry input(first, last);
+			m.input_map.insert(m.input_map.end(), input);
+		}
+
 	PGS_CATCH
 }
