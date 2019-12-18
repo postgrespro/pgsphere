@@ -2,9 +2,7 @@
 ---
 # versions to run on
 env:
-  - PG_SUPPORTED_VERSIONS=9.1
-  - PG_SUPPORTED_VERSIONS=9.2
-  - PG_SUPPORTED_VERSIONS=9.3
+  - PG_SUPPORTED_VERSIONS=9.3 # minimum version supported on bionic
   - PG_SUPPORTED_VERSIONS=9.4
   - PG_SUPPORTED_VERSIONS=9.5
   - PG_SUPPORTED_VERSIONS=9.6
@@ -14,7 +12,7 @@ env:
   #- PG_SUPPORTED_VERSIONS=13
 
 language: C
-dist: xenial
+dist: bionic
 
 before_install:
   # extra apt.pg.o.sh options added in version 204, travis currently has 199 (2019-11-27)
