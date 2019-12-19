@@ -70,8 +70,14 @@ CREATE AGGREGATE intersection (smoc) (
 
 -- moc constructors
 
-CREATE FUNCTION smoc_disc ("order" int, theta double precision, phi double precision, radius double precision)
+CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	STRICT;
+
+CREATE FUNCTION smoc ("order" int, scircle)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_scircle'
 	LANGUAGE C
 	STRICT;

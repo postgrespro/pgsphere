@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "circle.h"
+
 PG_FUNCTION_INFO_V1(smoc_in);
 PG_FUNCTION_INFO_V1(smoc_out);
 PG_FUNCTION_INFO_V1(moc_debug);
@@ -23,6 +25,7 @@ PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
 PG_FUNCTION_INFO_V1(smoc_intersection);
 PG_FUNCTION_INFO_V1(smoc_disc);
+PG_FUNCTION_INFO_V1(smoc_scircle);
 
 int32 smoc_output_type = 0;
 
@@ -681,15 +684,39 @@ Datum
 smoc_disc(PG_FUNCTION_ARGS)
 {
 	int		order = PG_GETARG_INT32(0);
-	double	theta = PG_GETARG_FLOAT8(1);
-	double	phi = PG_GETARG_FLOAT8(2);
+	double	lng = PG_GETARG_FLOAT8(1);
+	double	lat = PG_GETARG_FLOAT8(2);
 	double	radius = PG_GETARG_FLOAT8(3);
-	void*	moc_in_context = create_moc_in_context(moc_error_out);
+	void*	moc_in_context;
 	int32	moc_size;
 	Smoc*	moc_ret;
 
 	check_order(order);
-	moc_disc(moc_in_context, order, theta, phi, radius, moc_error_out);
+
+	moc_in_context = create_moc_in_context(moc_error_out);
+	moc_disc(moc_in_context, order, conv_theta(lng), lat, radius, moc_error_out);
+
+	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
+	moc_ret = (Smoc*) palloc0(moc_size);
+	SET_VARSIZE(moc_ret, moc_size);
+
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
+}
+
+Datum
+smoc_scircle(PG_FUNCTION_ARGS)
+{
+	int		order = PG_GETARG_INT32(0);
+	SCIRCLE *c = (SCIRCLE *) PG_GETARG_POINTER(1);
+	void*	moc_in_context;
+	int32	moc_size;
+	Smoc*	moc_ret;
+
+	check_order(order);
+
+	moc_in_context = create_moc_in_context(moc_error_out);
+	moc_disc(moc_in_context, order, conv_theta(c->center.lat), c->center.lng, c->radius, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	moc_ret = (Smoc*) palloc0(moc_size);

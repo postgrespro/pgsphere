@@ -130,3 +130,5 @@ SELECT smoc_disc(1, 0, 0, 1);
 SELECT smoc_disc(2, 0, 0, 1);
 SELECT smoc_disc(0, 0, 0, 3.2);
 SELECT smoc_disc(2, 0, 0, 3.2);
+
+SELECT smoc(1, '<(1,1),1>'::scircle);

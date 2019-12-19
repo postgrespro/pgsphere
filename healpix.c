@@ -179,7 +179,8 @@ Datum pg_npix2nside(PG_FUNCTION_ARGS)
 	PG_RETURN_INT64(nside);
 }
 
-static double conv_theta(double x)
+/* convert pg_sphere theta [pi/2 .. -pi/2] to healpix theta [0 .. pi] ([north .. south pole]) */
+double conv_theta(double x)
 {
 	double y = PIH - x;
 	if (fabs(x) < PI_EPS / 2)
