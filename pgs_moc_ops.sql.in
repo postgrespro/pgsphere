@@ -1,3 +1,5 @@
+-- = and <>
+
 CREATE FUNCTION smoc_eq (smoc, smoc)
 	RETURNS boolean
 	AS 'MODULE_PATHNAME'
@@ -30,13 +32,15 @@ CREATE OPERATOR <> (
 	JOIN       = neqjoinsel
 );
 
+-- union and intersection
+
 CREATE FUNCTION smoc_union (smoc, smoc)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME'
 	LANGUAGE C
 	STRICT;
 
-CREATE OPERATOR || (
+CREATE OPERATOR | (
 	LEFTARG   = smoc,
 	RIGHTARG  = smoc,
 	PROCEDURE = smoc_union
@@ -53,7 +57,7 @@ CREATE FUNCTION smoc_intersection (smoc, smoc)
 	LANGUAGE C
 	STRICT;
 
-CREATE OPERATOR * (
+CREATE OPERATOR & (
 	LEFTARG   = smoc,
 	RIGHTARG  = smoc,
 	PROCEDURE = smoc_intersection
@@ -63,6 +67,8 @@ CREATE AGGREGATE intersection (smoc) (
 	SFUNC = smoc_intersection,
 	STYPE = smoc
 );
+
+-- moc constructors
 
 CREATE FUNCTION smoc_disc ("order" int, theta double precision, phi double precision, radius double precision)
 	RETURNS smoc
