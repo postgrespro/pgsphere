@@ -538,12 +538,11 @@ get_moc_size(void* moc_in_context, pgs_error_handler error_out)
 // moc:				-- must be allocated with a size returned by get_moc_size()
 //
 
-int
+void
 create_moc_release_context(void* moc_in_context, Smoc* moc,
 													pgs_error_handler error_out)
 {
 	const moc_input* p = static_cast<const moc_input*>(moc_in_context);
-	int ret = 1;
 	PGS_TRY
 		const moc_input & m = *p;
 
@@ -659,7 +658,6 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 
 	PGS_CATCH
 	release_moc_in_context(moc_in_context, error_out);
-	return ret;
 };
 
 static

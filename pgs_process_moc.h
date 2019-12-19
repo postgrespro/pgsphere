@@ -100,7 +100,7 @@ add_to_moc(void*, long, hpint64, hpint64, pgs_error_handler);
 int
 get_moc_size(void*, pgs_error_handler);
 
-int
+void
 create_moc_release_context(void*, Smoc*, pgs_error_handler);
 
 typedef struct

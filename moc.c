@@ -270,17 +270,8 @@ smoc_in(PG_FUNCTION_ARGS)
 	/* palloc() will leak the moc_in_context if it fails :-/ */
 	moc = (Smoc*) palloc0(moc_size);
 	SET_VARSIZE(moc, moc_size);
-
-	if (create_moc_release_context(moc_in_context, moc, moc_error_out))
-	{
-		PG_RETURN_POINTER(moc);
-	}
-	else
-	{
-		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
-				errmsg("Internal error in creation of MOC from text input.")));
-		PG_RETURN_NULL();
-	}
+	create_moc_release_context(moc_in_context, moc, moc_error_out);
+	PG_RETURN_POINTER(moc);
 }
 
 /**
@@ -663,17 +654,8 @@ smoc_union(PG_FUNCTION_ARGS)
 	/* palloc() will leak the moc_in_context if it fails :-/ */
 	moc_ret = (Smoc*) palloc0(moc_size);
 	SET_VARSIZE(moc_ret, moc_size);
-
-	if (create_moc_release_context(moc_in_context, moc_ret, moc_error_out))
-	{
-		PG_RETURN_POINTER(moc_ret);
-	}
-	else
-	{
-		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
-				errmsg("Internal error in creation of MOC from text input.")));
-		PG_RETURN_NULL();
-	}
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
 }
 
 Datum
@@ -691,17 +673,8 @@ smoc_intersection(PG_FUNCTION_ARGS)
 	/* palloc() will leak the moc_in_context if it fails :-/ */
 	moc_ret = (Smoc*) palloc0(moc_size);
 	SET_VARSIZE(moc_ret, moc_size);
-
-	if (create_moc_release_context(moc_in_context, moc_ret, moc_error_out))
-	{
-		PG_RETURN_POINTER(moc_ret);
-	}
-	else
-	{
-		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
-				errmsg("Internal error in creation of MOC from text input.")));
-		PG_RETURN_NULL();
-	}
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
 }
 
 Datum
@@ -722,12 +695,6 @@ smoc_disc(PG_FUNCTION_ARGS)
 	moc_ret = (Smoc*) palloc0(moc_size);
 	SET_VARSIZE(moc_ret, moc_size);
 
-	if (create_moc_release_context(moc_in_context, moc_ret, moc_error_out))
-		PG_RETURN_POINTER(moc_ret);
-	else
-	{
-		ereport(ERROR, (errcode(ERRCODE_INTERNAL_ERROR),
-				errmsg("Internal error in creation of MOC from disc")));
-		PG_RETURN_NULL();
-	}
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
 }
