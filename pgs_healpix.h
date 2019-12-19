@@ -11,6 +11,7 @@
 
 int order_invalid(int);
 hpint64 c_npix(int);
+void check_order(int order);
 
 /* function prototypes for the Healpix support functions */
 

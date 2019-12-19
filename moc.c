@@ -715,6 +715,7 @@ smoc_disc(PG_FUNCTION_ARGS)
 	int32	moc_size;
 	Smoc*	moc_ret;
 
+	check_order(order);
 	moc_disc(moc_in_context, order, theta, phi, radius, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);

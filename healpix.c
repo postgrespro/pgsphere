@@ -58,7 +58,7 @@ hpint64 c_npix(int order)
 	return nside2npix(c_nside(order));
 }
 
-static void check_order(int order)
+void check_order(int order)
 {
 	if (order_invalid(order))
 		ereport(ERROR,
