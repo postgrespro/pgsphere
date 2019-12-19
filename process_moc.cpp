@@ -925,7 +925,7 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 }
 
 void
-moc_disc(void* moc_in_context, long order, double theta, double phi, double radius,
+moc_disc(void* moc_in_context, int order, double theta, double phi, double radius,
 												pgs_error_handler error_out)
 {
 	moc_input* p = static_cast<moc_input*>(moc_in_context);
@@ -933,9 +933,9 @@ moc_disc(void* moc_in_context, long order, double theta, double phi, double radi
 	PGS_TRY
 		rangeset<int64> pixset;
 		Healpix_Base2 hp(order, NEST);
-		pointing p(theta, phi);
+		pointing center(theta, phi);
 
-		hp.query_disc(p, radius, pixset);
+		hp.query_disc(center, radius, pixset);
 
 		for (tsize j = 0; j < pixset.nranges(); j++)
 		{

@@ -147,7 +147,7 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 												pgs_error_handler error_out);
 
 void
-moc_disc(void* moc_in_context, long order, double theta, double phi, double radius,
+moc_disc(void* moc_in_context, int order, double theta, double phi, double radius,
 												pgs_error_handler error_out);
 
 #ifdef __cplusplus
