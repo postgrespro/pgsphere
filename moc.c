@@ -415,8 +415,6 @@ moc_debug(PG_FUNCTION_ARGS)
 static bool
 smoc_eq_impl(Smoc* moc_a, Smoc* moc_b)
 {
-	int32	a = moc_a->data_begin;
-	int32	b = moc_b->data_begin;
 	int32	entry_size = MOC_INTERVAL_SIZE;
 	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
 	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
@@ -431,12 +429,14 @@ smoc_eq_impl(Smoc* moc_a, Smoc* moc_b)
 
 	for (int j = moc_a->data_begin; j < moc_a_end; j += entry_size) // iterate over both in parallel
 	{
+		moc_interval *x;
+		moc_interval *y;
 		// page bumps
 		int32 mod = (j + entry_size) % PG_TOAST_PAGE_FRAGMENT;
 		if (mod > 0 && mod < entry_size)
 			j += entry_size - mod;
-		moc_interval *x = MOC_INTERVAL(moc_a_base, j);
-		moc_interval *y = MOC_INTERVAL(moc_b_base, j);
+		x = MOC_INTERVAL(moc_a_base, j);
+		y = MOC_INTERVAL(moc_b_base, j);
 
 		if (x->first != y->first || x->second != y->second)
 			return false;
