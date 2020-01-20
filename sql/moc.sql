@@ -14,6 +14,10 @@ SELECT '0/1,3,7'::smoc = '0/1,3,7' AS eq;
 SELECT '0/1,4,7'::smoc = '0/1,3,7' AS eq;
 SELECT '0/1,2,3'::smoc <> '0/1-3'::smoc AS neq;
 
+SELECT '0/4-6'::smoc && '0/3,7-8'::smoc AS overlap;
+SELECT '0/4-6'::smoc && '0/3,6-8'::smoc AS overlap;
+SELECT '0/4-6'::smoc !&& '0/6'::smoc AS not_overlap;
+
 SELECT 1 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339,0-1'));
 SELECT 1 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
 SELECT 2 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));

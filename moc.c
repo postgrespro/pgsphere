@@ -13,6 +13,8 @@ PG_FUNCTION_INFO_V1(set_smoc_output_type);
 PG_FUNCTION_INFO_V1(smoc_order);
 PG_FUNCTION_INFO_V1(smoc_eq);
 PG_FUNCTION_INFO_V1(smoc_neq);
+PG_FUNCTION_INFO_V1(smoc_overlap);
+PG_FUNCTION_INFO_V1(smoc_overlap_neg);
 
 PG_FUNCTION_INFO_V1(healpix_subset_smoc);
 PG_FUNCTION_INFO_V1(healpix_not_subset_smoc);
@@ -457,6 +459,65 @@ smoc_neq(PG_FUNCTION_ARGS)
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
 	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
 	PG_RETURN_BOOL(! smoc_eq_impl(moc_a, moc_b));
+}
+
+static bool
+smoc_overlap_impl(Smoc* moc_a, Smoc* moc_b)
+{
+	int32	a = moc_a->data_begin;
+	int32	b = moc_b->data_begin;
+	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	char*	moc_a_base = MOC_BASE(moc_a);
+	char*	moc_b_base = MOC_BASE(moc_b);
+
+	while (a < moc_a_end && b < moc_b_end) // iterate over both in parallel
+	{
+		moc_interval *x;
+		moc_interval *y;
+
+		// page bumps
+		int32 mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+			a += MOC_INTERVAL_SIZE - mod;
+		x = MOC_INTERVAL(moc_a_base, a);
+
+		mod = (b + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+			b += MOC_INTERVAL_SIZE - mod;
+		y = MOC_INTERVAL(moc_b_base, b);
+
+		if (x->second <= y->first) // a entirely left of b, advance a
+		{
+			a += MOC_INTERVAL_SIZE;
+			continue;
+		}
+		if (y->second <= x->first) // b entirely left of a, advance b
+		{
+			b += MOC_INTERVAL_SIZE;
+			continue;
+		}
+
+		return true; // entries overlap
+	}
+
+	return false;
+}
+
+Datum
+smoc_overlap(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(smoc_overlap_impl(moc_a, moc_b));
+}
+
+Datum
+smoc_overlap_neg(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(! smoc_overlap_impl(moc_a, moc_b));
 }
 
 static bool

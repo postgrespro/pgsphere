@@ -1,4 +1,4 @@
--- = and <>
+-- boolean operations
 
 CREATE FUNCTION smoc_eq (smoc, smoc)
 	RETURNS boolean
@@ -31,6 +31,44 @@ CREATE OPERATOR <> (
 	RESTRICT   = neqsel,
 	JOIN       = neqjoinsel
 );
+
+CREATE FUNCTION smoc_overlap (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	IMMUTABLE
+	STRICT;
+
+CREATE OPERATOR && (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_overlap,
+	COMMUTATOR = '&&',
+	NEGATOR    = '!&&',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR && (smoc, smoc) IS 'true if smoc overlaps smoc';
+
+CREATE FUNCTION smoc_overlap_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	IMMUTABLE
+	STRICT;
+
+CREATE OPERATOR !&& (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_overlap_neg,
+	COMMUTATOR = '!&&',
+	NEGATOR    = '&&',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !&& (smoc, smoc) IS 'true if smoc does not overlap smoc';
 
 -- union and intersection
 
