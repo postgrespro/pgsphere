@@ -7,7 +7,7 @@ stages:
   before_script:
     - apt-get -y install libhealpix-cxx-dev
   script:
-    - make
+    - make PROFILE="-Werror"
     - make install
     - if ! pg_virtualenv make installcheck; then cat regression.diffs; exit 1; fi
 

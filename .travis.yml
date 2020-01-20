@@ -23,7 +23,7 @@ install:
   - sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -p -v $PG_SUPPORTED_VERSIONS -i
 
 script:
-  - make
+  - make PROFILE="-Werror"
   - sudo make install
   - pg_virtualenv make installcheck
   - if test -s regression.diffs; then cat regression.diffs; fi

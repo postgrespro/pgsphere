@@ -70,6 +70,9 @@ PGS_LINKER = g++ $(CXXFLAGS) $(filter-out $(CC) $(CFLAGS), $(LINK.shared))
 pgs_link:  $(shlib) $(OBJS) | $(SHLIB_PREREQS)
 	$(PGS_LINKER) -o $(shlib) $(OBJS) $(LDFLAGS) $(LDFLAGS_SL) $(SHLIB_LINK)
 
+healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
+	$(COMPILE.c) -Wno-error=declaration-after-statement -o $@ $^
+
 # experimental for spoint3
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 pg_version_9_5_plus = $(if $(filter-out 9.1% 9.2% 9.3% 9.4%,$(pg_version)),y,n)
