@@ -56,6 +56,10 @@ Datum smoc_out(PG_FUNCTION_ARGS);
 Datum moc_debug(PG_FUNCTION_ARGS);
 Datum set_smoc_output_type(PG_FUNCTION_ARGS);
 Datum smoc_order(PG_FUNCTION_ARGS);
+Datum smoc_eq(PG_FUNCTION_ARGS);
+Datum smoc_neq(PG_FUNCTION_ARGS);
+Datum smoc_overlap(PG_FUNCTION_ARGS);
+Datum smoc_overlap_neg(PG_FUNCTION_ARGS);
 
 Datum healpix_subset_smoc(PG_FUNCTION_ARGS);
 Datum healpix_not_subset_smoc(PG_FUNCTION_ARGS);
@@ -72,6 +76,11 @@ Datum healpix_subset_smoc_c(hpint64, Datum);
 Datum healpix_not_subset_smoc_c(hpint64, Datum); 
 Datum spoint_subset_smoc_c(SPoint*, Datum);
 Datum spoint_not_subset_smoc_c(SPoint*, Datum); 
+
+Datum smoc_union(PG_FUNCTION_ARGS);
+Datum smoc_intersection(PG_FUNCTION_ARGS);
+Datum smoc_disc(PG_FUNCTION_ARGS);
+Datum smoc_scircle(PG_FUNCTION_ARGS);
 
 /* parsing subroutines */
 hpint64 readNumber(const char*, int*);
