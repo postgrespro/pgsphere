@@ -63,12 +63,10 @@ else
   include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
+# compiler settings
 override CPPFLAGS += -I/usr/include/healpix_cxx
 SHLIB_LINK += -lhealpix_cxx
-# link a second time as PGXS does not allow to change the linker
-PGS_LINKER = g++ $(CXXFLAGS) $(filter-out $(CC) $(CFLAGS), $(LINK.shared))
-pgs_link:  $(shlib) $(OBJS) | $(SHLIB_PREREQS)
-	$(PGS_LINKER) -o $(shlib) $(OBJS) $(LDFLAGS) $(LDFLAGS_SL) $(SHLIB_LINK)
+LINK.shared = g++ -shared
 
 healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 	$(COMPILE.c) -Wno-error=declaration-after-statement -o $@ $^
@@ -102,8 +100,8 @@ pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 	tail -n+3 $< | sed 's,MODULE_PATHNAME,$(realpath $(shlib)),g' >$@
 
 
-$(RELEASE_SQL): $(addsuffix .in, $(RELEASE_SQL) $(PGS_SQL)) pgs_link
-	cat $(filter-out pgs_link, $^) > $@
+$(RELEASE_SQL): $(addsuffix .in, $(RELEASE_SQL) $(PGS_SQL))
+	cat $^ > $@
 
 # for "create extension from unpacked*":
 
