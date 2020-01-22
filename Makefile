@@ -68,8 +68,9 @@ override CPPFLAGS += -I/usr/include/healpix_cxx
 SHLIB_LINK += -lhealpix_cxx
 LINK.shared = g++ -shared
 
+# healpix_bare.c isn't ours so we refrain from fixing the warnings in there
 healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
-	$(COMPILE.c) -Wno-error=declaration-after-statement -o $@ $^
+	$(COMPILE.c) -Wno-declaration-after-statement -o $@ $^
 
 # experimental for spoint3
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
