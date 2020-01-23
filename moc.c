@@ -16,6 +16,10 @@ PG_FUNCTION_INFO_V1(smoc_eq);
 PG_FUNCTION_INFO_V1(smoc_neq);
 PG_FUNCTION_INFO_V1(smoc_overlap);
 PG_FUNCTION_INFO_V1(smoc_overlap_neg);
+PG_FUNCTION_INFO_V1(smoc_subset_smoc);
+PG_FUNCTION_INFO_V1(smoc_subset_smoc_neg);
+PG_FUNCTION_INFO_V1(smoc_superset_smoc);
+PG_FUNCTION_INFO_V1(smoc_superset_smoc_neg);
 
 PG_FUNCTION_INFO_V1(healpix_subset_smoc);
 PG_FUNCTION_INFO_V1(healpix_not_subset_smoc);
@@ -520,6 +524,110 @@ smoc_overlap_neg(PG_FUNCTION_ARGS)
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
 	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
 	PG_RETURN_BOOL(! smoc_overlap_impl(moc_a, moc_b));
+}
+
+/* check if moc_a is a subset of moc_b */
+static bool
+smoc_subset_impl(Smoc* moc_a, Smoc* moc_b)
+{
+	int32	a = moc_a->data_begin;
+	int32	b = moc_b->data_begin;
+	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	char*	moc_a_base = MOC_BASE(moc_a);
+	char*	moc_b_base = MOC_BASE(moc_b);
+
+	// an empty moc is subset of all mocs
+	if (moc_a->area == 0)
+		return true;
+	// and empty moc cannot have any other subsets than the empty one
+	if (moc_b->area == 0)
+		return false;
+
+	// quick exit if the mocs do not overlap at all
+	if (moc_a->first >= moc_b->last || moc_a->last <= moc_b->first)
+		return false;
+
+	while (a < moc_a_end) // iterate over a
+	{
+		int32 mod;
+		moc_interval *x;
+		moc_interval *y;
+
+		// end of b reached while there's still 'a' intervals
+		if (b >= moc_b_end)
+			return false;
+
+		// page bumps
+		mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+			a += MOC_INTERVAL_SIZE - mod;
+		x = MOC_INTERVAL(moc_a_base, a);
+
+		mod = (b + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+			b += MOC_INTERVAL_SIZE - mod;
+		y = MOC_INTERVAL(moc_b_base, b);
+
+		// advance b until as long as we are before the 'a' interval
+		if (y->second <= x->first)
+		{
+			b += MOC_INTERVAL_SIZE;
+			continue;
+		}
+
+		// we can check for a match now
+		if (x->first < y->first) // a starts left of b
+			return false;
+		if (x->second > y->second) // b ends right of a
+			return false;
+
+		// advance interval that has the lowest end
+		if (x->second == y->second)
+		{
+			a += MOC_INTERVAL_SIZE;
+			b += MOC_INTERVAL_SIZE;
+		}
+		else if (x->second <= y->second)
+			a += MOC_INTERVAL_SIZE;
+		else
+			b += MOC_INTERVAL_SIZE;
+		// TODO: we could walk the tree structure to find the next interesting interval
+	}
+
+	return true;
+}
+
+Datum
+smoc_subset_smoc(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(smoc_subset_impl(moc_a, moc_b));
+}
+
+Datum
+smoc_subset_smoc_neg(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(! smoc_subset_impl(moc_a, moc_b));
+}
+
+Datum
+smoc_superset_smoc(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(smoc_subset_impl(moc_b, moc_a));
+}
+
+Datum
+smoc_superset_smoc_neg(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	PG_RETURN_BOOL(! smoc_subset_impl(moc_b, moc_a));
 }
 
 static bool

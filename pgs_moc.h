@@ -60,6 +60,10 @@ Datum smoc_eq(PG_FUNCTION_ARGS);
 Datum smoc_neq(PG_FUNCTION_ARGS);
 Datum smoc_overlap(PG_FUNCTION_ARGS);
 Datum smoc_overlap_neg(PG_FUNCTION_ARGS);
+Datum smoc_subset_smoc(PG_FUNCTION_ARGS);
+Datum smoc_subset_smoc_neg(PG_FUNCTION_ARGS);
+Datum smoc_superset_smoc(PG_FUNCTION_ARGS);
+Datum smoc_superset_smoc_neg(PG_FUNCTION_ARGS);
 
 Datum healpix_subset_smoc(PG_FUNCTION_ARGS);
 Datum healpix_not_subset_smoc(PG_FUNCTION_ARGS);

@@ -88,6 +88,94 @@ CREATE OPERATOR !&& (
 
 COMMENT ON OPERATOR !&& (smoc, smoc) IS 'overlaps not';
 
+CREATE FUNCTION smoc_subset_smoc (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_subset_smoc (smoc, smoc) IS 'is contained by';
+
+CREATE OPERATOR <@ (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_subset_smoc,
+	COMMUTATOR = '@>',
+	NEGATOR    = '!<@',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR <@ (smoc, smoc) IS 'is contained by';
+
+CREATE FUNCTION smoc_subset_smoc_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_subset_smoc_neg (smoc, smoc) IS 'is not contained by';
+
+CREATE OPERATOR !<@ (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_subset_smoc_neg,
+	COMMUTATOR = '!@>',
+	NEGATOR    = '<@',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !<@ (smoc, smoc) IS 'is not contained by';
+
+CREATE FUNCTION smoc_superset_smoc (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_superset_smoc (smoc, smoc) IS 'contains';
+
+CREATE OPERATOR @> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_superset_smoc,
+	COMMUTATOR = '<@',
+	NEGATOR    = '!@>',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR @> (smoc, smoc) IS 'contains';
+
+CREATE FUNCTION smoc_superset_smoc_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_superset_smoc_neg (smoc, smoc) IS 'does not contain';
+
+CREATE OPERATOR !@> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_superset_smoc_neg,
+	COMMUTATOR = '!<@',
+	NEGATOR    = '@>',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !@> (smoc, smoc) IS 'does not contain';
+
 -- union and intersection
 
 CREATE FUNCTION smoc_union (smoc, smoc)
