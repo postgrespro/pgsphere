@@ -150,6 +150,10 @@ void
 moc_disc(void* moc_in_context, int order, double theta, double phi, double radius,
 												pgs_error_handler error_out);
 
+void
+moc_polygon(void* moc_in_context, int order, int32 npts, float8* polygon,
+												pgs_error_handler error_out);
+
 #ifdef __cplusplus
 }
 #endif

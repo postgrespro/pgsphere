@@ -948,3 +948,36 @@ moc_disc(void* moc_in_context, int order, double theta, double phi, double radiu
 
 	PGS_CATCH
 }
+
+void
+moc_polygon(void* moc_in_context, int order, int32 npts, float8 *polygon,
+												pgs_error_handler error_out)
+{
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	moc_input & m = *p;
+	PGS_TRY
+		rangeset<int64> pixset;
+		Healpix_Base2 hp(order, NEST);
+
+		/* convert spoly's spoint array to a pointing array */
+		std::vector<pointing> vertex;
+		for (int i = 0; i < 2 * npts; i += 2)
+		{
+			pointing v(conv_theta(polygon[i+1]), polygon[i]);
+			vertex.push_back(v);
+		}
+
+		hp.query_polygon(vertex, pixset);
+
+		for (tsize j = 0; j < pixset.nranges(); j++)
+		{
+			hpint64 first = pixset.ivbegin(j);
+			hpint64 last = pixset.ivend(j);
+			healpix_convert(first, order); // convert to order 29
+			healpix_convert(last, order);
+			moc_map_entry input(first, last);
+			m.input_map.insert(m.input_map.end(), input);
+		}
+
+	PGS_CATCH
+}

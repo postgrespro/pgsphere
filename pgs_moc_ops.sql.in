@@ -133,3 +133,11 @@ CREATE FUNCTION smoc ("order" int, scircle)
 	PARALLEL SAFE
 	IMMUTABLE
 	STRICT;
+
+CREATE FUNCTION smoc ("order" int, spoly)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_spoly'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;

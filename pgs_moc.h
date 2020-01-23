@@ -81,6 +81,7 @@ Datum smoc_union(PG_FUNCTION_ARGS);
 Datum smoc_intersection(PG_FUNCTION_ARGS);
 Datum smoc_disc(PG_FUNCTION_ARGS);
 Datum smoc_scircle(PG_FUNCTION_ARGS);
+Datum smoc_spoly(PG_FUNCTION_ARGS);
 
 /* parsing subroutines */
 hpint64 readNumber(const char*, int*);
