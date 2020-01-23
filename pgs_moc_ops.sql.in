@@ -8,6 +8,8 @@ CREATE FUNCTION smoc_eq (smoc, smoc)
 	IMMUTABLE
 	STRICT;
 
+COMMENT ON FUNCTION smoc_eq (smoc, smoc) IS 'equal';
+
 CREATE OPERATOR = (
 	LEFTARG    = smoc,
 	RIGHTARG   = smoc,
@@ -18,6 +20,8 @@ CREATE OPERATOR = (
 	JOIN       = eqjoinsel
 );
 
+COMMENT ON OPERATOR = (smoc, smoc) IS 'equal';
+
 CREATE FUNCTION smoc_neq (smoc, smoc)
 	RETURNS boolean
 	AS 'MODULE_PATHNAME'
@@ -25,6 +29,8 @@ CREATE FUNCTION smoc_neq (smoc, smoc)
 	PARALLEL SAFE
 	IMMUTABLE
 	STRICT;
+
+COMMENT ON FUNCTION smoc_neq (smoc, smoc) IS 'not equal';
 
 CREATE OPERATOR <> (
 	LEFTARG    = smoc,
@@ -36,6 +42,8 @@ CREATE OPERATOR <> (
 	JOIN       = neqjoinsel
 );
 
+COMMENT ON OPERATOR <> (smoc, smoc) IS 'not equal';
+
 CREATE FUNCTION smoc_overlap (smoc, smoc)
 	RETURNS boolean
 	AS 'MODULE_PATHNAME'
@@ -43,6 +51,8 @@ CREATE FUNCTION smoc_overlap (smoc, smoc)
 	PARALLEL SAFE
 	IMMUTABLE
 	STRICT;
+
+COMMENT ON FUNCTION smoc_overlap (smoc, smoc) IS 'overlaps';
 
 CREATE OPERATOR && (
 	LEFTARG    = smoc,
@@ -54,7 +64,7 @@ CREATE OPERATOR && (
 	JOIN       = contjoinsel
 );
 
-COMMENT ON OPERATOR && (smoc, smoc) IS 'true if smoc overlaps smoc';
+COMMENT ON OPERATOR && (smoc, smoc) IS 'overlaps';
 
 CREATE FUNCTION smoc_overlap_neg (smoc, smoc)
 	RETURNS boolean
@@ -63,6 +73,8 @@ CREATE FUNCTION smoc_overlap_neg (smoc, smoc)
 	PARALLEL SAFE
 	IMMUTABLE
 	STRICT;
+
+COMMENT ON FUNCTION smoc_overlap_neg (smoc, smoc) IS 'overlaps not';
 
 CREATE OPERATOR !&& (
 	LEFTARG    = smoc,
@@ -74,7 +86,7 @@ CREATE OPERATOR !&& (
 	JOIN       = contjoinsel
 );
 
-COMMENT ON OPERATOR !&& (smoc, smoc) IS 'true if smoc does not overlap smoc';
+COMMENT ON OPERATOR !&& (smoc, smoc) IS 'overlaps not';
 
 -- union and intersection
 
@@ -86,16 +98,22 @@ CREATE FUNCTION smoc_union (smoc, smoc)
 	IMMUTABLE
 	STRICT;
 
+COMMENT ON FUNCTION smoc_union (smoc, smoc) IS 'union';
+
 CREATE OPERATOR | (
 	LEFTARG   = smoc,
 	RIGHTARG  = smoc,
 	PROCEDURE = smoc_union
 );
 
+COMMENT ON OPERATOR | (smoc, smoc) IS 'union';
+
 CREATE AGGREGATE sum (smoc) (
 	SFUNC = smoc_union,
 	STYPE = smoc
 );
+
+COMMENT ON AGGREGATE sum (smoc) IS 'smoc union aggregate';
 
 CREATE FUNCTION smoc_intersection (smoc, smoc)
 	RETURNS smoc
@@ -105,18 +123,24 @@ CREATE FUNCTION smoc_intersection (smoc, smoc)
 	IMMUTABLE
 	STRICT;
 
+COMMENT ON FUNCTION smoc_intersection (smoc, smoc) IS 'intersection';
+
 CREATE OPERATOR & (
 	LEFTARG   = smoc,
 	RIGHTARG  = smoc,
 	PROCEDURE = smoc_intersection
 );
 
+COMMENT ON OPERATOR & (smoc, smoc) IS 'intersection';
+
 CREATE AGGREGATE intersection (smoc) (
 	SFUNC = smoc_intersection,
 	STYPE = smoc
 );
 
--- moc constructors
+COMMENT ON AGGREGATE intersection (smoc) IS 'smoc intersection aggregate';
+
+-- smoc constructors
 
 CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
 	RETURNS smoc
@@ -126,6 +150,9 @@ CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precisi
 	IMMUTABLE
 	STRICT;
 
+COMMENT ON FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
+	IS 'constructs smoc of given order from circle parameters';
+
 CREATE FUNCTION smoc ("order" int, scircle)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME', 'smoc_scircle'
@@ -134,6 +161,8 @@ CREATE FUNCTION smoc ("order" int, scircle)
 	IMMUTABLE
 	STRICT;
 
+COMMENT ON FUNCTION smoc ("order" int, scircle) IS 'constructs smoc of given order from scircle';
+
 CREATE FUNCTION smoc ("order" int, spoly)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME', 'smoc_spoly'
@@ -141,3 +170,5 @@ CREATE FUNCTION smoc ("order" int, spoly)
 	PARALLEL SAFE
 	IMMUTABLE
 	STRICT;
+
+COMMENT ON FUNCTION smoc ("order" int, spoly) IS 'constructs smoc of given order from spoly';
