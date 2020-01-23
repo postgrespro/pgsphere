@@ -6,6 +6,7 @@
 #include <catalog/pg_type.h>
 #include "point.h" /* SPoint */
 #include <math.h>
+#include "pgs_util.h"
 
 PG_FUNCTION_INFO_V1(pg_nest2ring);
 PG_FUNCTION_INFO_V1(pg_ring2nest);
@@ -177,17 +178,6 @@ Datum pg_npix2nside(PG_FUNCTION_ARGS)
 					 " nside2npix(order2nside(level)),"
 					 " for level in [0..29].")));
 	PG_RETURN_INT64(nside);
-}
-
-/* convert pg_sphere theta [pi/2 .. -pi/2] to healpix theta [0 .. pi] ([north .. south pole]) */
-double conv_theta(double x)
-{
-	double y = PIH - x;
-	if (fabs(x) < PI_EPS / 2)
-		return PIH;
-	if (fabs(y) < PI_EPS / 2)
-		return 0;
-	return y;
 }
 
 hpint64 healpix_nest_c(int32 order, SPoint* p)

@@ -28,7 +28,6 @@ Datum healpix_ring(PG_FUNCTION_ARGS);
 Datum inv_healpix_nest(PG_FUNCTION_ARGS);
 Datum inv_healpix_ring(PG_FUNCTION_ARGS);
 
-double conv_theta(double x);
 hpint64 healpix_nest_c(int32, SPoint*);
 
 #endif

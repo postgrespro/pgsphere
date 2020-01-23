@@ -755,7 +755,7 @@ smoc_disc(PG_FUNCTION_ARGS)
 	check_order(order);
 
 	moc_in_context = create_moc_in_context(moc_error_out);
-	moc_disc(moc_in_context, order, conv_theta(lng), lat, radius, moc_error_out);
+	moc_disc(moc_in_context, order, lng, lat, radius, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	moc_ret = (Smoc*) palloc0(moc_size);
@@ -777,7 +777,7 @@ smoc_scircle(PG_FUNCTION_ARGS)
 	check_order(order);
 
 	moc_in_context = create_moc_in_context(moc_error_out);
-	moc_disc(moc_in_context, order, conv_theta(c->center.lat), c->center.lng, c->radius, moc_error_out);
+	moc_disc(moc_in_context, order, c->center.lat, c->center.lng, c->radius, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	moc_ret = (Smoc*) palloc0(moc_size);

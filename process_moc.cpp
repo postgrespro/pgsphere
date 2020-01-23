@@ -16,6 +16,7 @@
 #include <healpix_base.h>
 
 #include "pgs_process_moc.h"
+#include "pgs_util.h"
 
 #define LAYDEB 0
 
@@ -931,7 +932,7 @@ moc_disc(void* moc_in_context, int order, double theta, double phi, double radiu
 	PGS_TRY
 		rangeset<int64> pixset;
 		Healpix_Base2 hp(order, NEST);
-		pointing center(theta, phi);
+		pointing center(conv_theta(theta), phi);
 
 		hp.query_disc(center, radius, pixset);
 

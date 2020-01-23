@@ -33,14 +33,6 @@
 #include <math.h>
 #include <float.h>
 
-#define PI			3.14159265358979323846		/* pi */
-#define PIH			1.57079632679489661923		/* pi/2 */
-#define PID			6.2831853071795864769		/* 2*pi */
-#define RADIANS		57.295779513082320877		/* 180/pi */
-#define PI_EPS		4.4408920985006261617e-16	/* 2 ** -51 */
-
-#define Sqr(a)	 	( (a) * (a) )		/* square function as macro */
-
 #include "postgres.h"
 #include "fmgr.h"
 #include "utils/geo_decls.h"
@@ -52,10 +44,7 @@
 #include "access/gist.h"
 #include "access/itup.h"
 
-#ifdef EPSILON
-#undef EPSILON
-#endif
-#define EPSILON		1.0E-09				/* precision of floating point values */
+#include "pgs_util.h"
 
 void	sphere_yyparse(void);
 
