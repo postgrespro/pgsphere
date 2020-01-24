@@ -145,4 +145,8 @@ SELECT smoc_disc(0, 0, 0, 3.2);
 SELECT smoc_disc(2, 0, 0, 3.2);
 
 SELECT smoc(1, '<(1,1),1>'::scircle);
+SELECT smoc(3, '<(0,1.3),.5>'::scircle);
+
 SELECT smoc(5, '{(.1,.1), (.2,.1), (.2,.2), (.1, .2)}'::spoly);
+SELECT smoc(3, '{(.1,.1), (-1,.1), (-1,-1), (.1, -1)}'::spoly);
+SELECT smoc(3, '{(.1,.1), (.1,-1), (-1,-1), (-1, .1)}'::spoly);

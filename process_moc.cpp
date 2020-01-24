@@ -934,7 +934,7 @@ moc_disc(void* moc_in_context, int order, double theta, double phi, double radiu
 		Healpix_Base2 hp(order, NEST);
 		pointing center(conv_theta(theta), phi);
 
-		hp.query_disc(center, radius, pixset);
+		hp.query_disc_inclusive(center, radius, pixset);
 
 		for (tsize j = 0; j < pixset.nranges(); j++)
 		{
@@ -967,7 +967,7 @@ moc_polygon(void* moc_in_context, int order, int32 npts, float8 *polygon,
 			vertex.push_back(v);
 		}
 
-		hp.query_polygon(vertex, pixset);
+		hp.query_polygon_inclusive(vertex, pixset);
 
 		for (tsize j = 0; j < pixset.nranges(); j++)
 		{
