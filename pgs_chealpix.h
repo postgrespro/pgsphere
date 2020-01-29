@@ -13,10 +13,6 @@
 
 typedef int64 hpint64;
 
-#ifdef UINT32_MAX
-#define MOC_FORMAT_64X "lx"
-#else
-#define MOC_FORMAT_64X "llx"
-#endif
+#define MOC_FORMAT_64X INT64_MODIFIER "x"
 
 #endif
