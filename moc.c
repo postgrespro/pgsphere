@@ -901,7 +901,7 @@ Datum
 smoc_spoly(PG_FUNCTION_ARGS)
 {
 	int		order = PG_GETARG_INT32(0);
-	SPOLY*	polygon = (SPOLY *) PG_GETARG_POINTER(1);
+	SPOLY*	polygon = (SPOLY *) PG_GETARG_SPOLY(1);
 	void*	moc_in_context;
 	int32	moc_size;
 	Smoc*	moc_ret;
