@@ -13,6 +13,4 @@
 
 typedef int64 hpint64;
 
-#define MOC_FORMAT_64X INT64_MODIFIER "x"
-
 #endif

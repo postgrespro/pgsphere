@@ -675,8 +675,6 @@ order_break(output_map & outputs, const moc_interval & x, int max_order)
 	int order;
 	hpint64 mask = 0;
 	mask = ~mask ^ 3;
-char mask_x[88];
-sprintf(mask_x, "%016" MOC_FORMAT_64X, mask);
 	hpint64 first	= x.first >> 2 * (29 - max_order);
 	hpint64 second = x.second >> 2 * (29 - max_order);
 	for (order = max_order; order > 0; --order, first >>= 2, second >>= 2)
