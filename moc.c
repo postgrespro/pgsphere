@@ -433,17 +433,31 @@ moc_debug(PG_FUNCTION_ARGS)
 }
 
 static bool
-smoc_eq_impl(Smoc* moc_a, Smoc* moc_b)
+smoc_eq_impl(Datum a, Datum b)
 {
-	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
-	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
-	char*	moc_a_base = MOC_BASE(moc_a);
-	char*	moc_b_base = MOC_BASE(moc_b);
+	Smoc*	moc_a = (Smoc *)PG_DETOAST_DATUM_SLICE(a, 0, MOC_HEADER_PAGE);
+	Smoc*	moc_b = (Smoc *)PG_DETOAST_DATUM_SLICE(b, 0, MOC_HEADER_PAGE);
+	int32	moc_a_end;
+	int32	moc_b_end;
+	char*	moc_a_base;
+	char*	moc_b_base;
 
-	if (moc_a->data_begin != moc_b->data_begin || moc_a_end != moc_b_end) /* this needs to be reconsidered if the MOC version is updated */
+	/* quick exit if header values don't agree */
+	if (moc_a->order != moc_b->order || moc_a->first != moc_b->first || moc_a->last != moc_b->last || moc_a->area != moc_b->area)
+		return false;
+	if (moc_a->data_begin != moc_b->data_begin) /* this needs to be reconsidered if the MOC version is updated */
 		return false;
 
-	if (moc_a->order != moc_b->order || moc_a->first != moc_b->first || moc_a->last != moc_b->last || moc_a->area != moc_b->area)
+	/* get full moc */
+	moc_a = (Smoc *)PG_DETOAST_DATUM(a);
+	moc_b = (Smoc *)PG_DETOAST_DATUM(b);
+
+	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	moc_a_base = MOC_BASE(moc_a);
+	moc_b_base = MOC_BASE(moc_b);
+
+	if (moc_a_end != moc_b_end) /* this needs to be reconsidered if the MOC version is updated */
 		return false;
 
 	for (int j = moc_a->data_begin; j < moc_a_end; j += MOC_INTERVAL_SIZE) // iterate over both in parallel
@@ -467,17 +481,17 @@ smoc_eq_impl(Smoc* moc_a, Smoc* moc_b)
 Datum
 smoc_eq(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(smoc_eq_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(smoc_eq_impl(a, b));
 }
 
 Datum
 smoc_neq(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(! smoc_eq_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(! smoc_eq_impl(a, b));
 }
 
 static bool
