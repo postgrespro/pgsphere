@@ -1,3 +1,13 @@
+-- debugging
+
+CREATE FUNCTION smoc_info (smoc)
+	RETURNS text
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
 -- boolean operations
 
 CREATE FUNCTION smoc_eq (smoc, smoc)

@@ -11,6 +11,7 @@ PG_FUNCTION_INFO_V1(smoc_in);
 PG_FUNCTION_INFO_V1(smoc_out);
 PG_FUNCTION_INFO_V1(moc_debug);
 PG_FUNCTION_INFO_V1(set_smoc_output_type);
+PG_FUNCTION_INFO_V1(smoc_info);
 PG_FUNCTION_INFO_V1(smoc_order);
 PG_FUNCTION_INFO_V1(smoc_eq);
 PG_FUNCTION_INFO_V1(smoc_neq);
@@ -385,6 +386,19 @@ set_smoc_output_type(PG_FUNCTION_ARGS)
 			moc_error_out("set_smoc_output_type()", 0);
 	}
 	PG_RETURN_CSTRING(buffer);
+}
+
+Datum
+smoc_info(PG_FUNCTION_ARGS)
+{
+	/* get just the MOC header: */
+	Smoc *moc = (Smoc *) PG_DETOAST_DATUM_SLICE(PG_GETARG_DATUM(0), 0,
+															MOC_HEADER_VARSIZE);
+	char *p = psprintf("version: %u, order: %u, depth: %u, first: " MOC_FORMAT_64U
+			", last: " MOC_FORMAT_64U ", area: " MOC_FORMAT_64U ", tree_begin: %d, data_begin: %d",
+			moc->version, moc->order, moc-> depth, moc->first, moc->last, moc->area,
+			moc->tree_begin, moc->data_begin);
+	PG_RETURN_TEXT_P(cstring_to_text(p));
 }
 
 Datum

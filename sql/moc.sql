@@ -6,6 +6,10 @@ SELECT '0/'::smoc;          -- expected: '0/'
 SELECT '29/'::smoc;         -- expected: '0/'
 SELECT '0/0-3,7'::smoc;     -- expected: '0/0-3,7'
 SELECT '0/0,1,2,3,7'::smoc; -- expected: '0/0-3,7'
+
+SELECT smoc_info('0/'::smoc);
+SELECT smoc_info('0/1-2'::smoc);
+
 SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,10000-20000'::smoc;
 SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,1000-2000'::smoc;
 

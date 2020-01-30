@@ -55,6 +55,7 @@ Datum smoc_in(PG_FUNCTION_ARGS);
 Datum smoc_out(PG_FUNCTION_ARGS);
 Datum moc_debug(PG_FUNCTION_ARGS);
 Datum set_smoc_output_type(PG_FUNCTION_ARGS);
+Datum smoc_info(PG_FUNCTION_ARGS);
 Datum smoc_order(PG_FUNCTION_ARGS);
 Datum smoc_eq(PG_FUNCTION_ARGS);
 Datum smoc_neq(PG_FUNCTION_ARGS);
