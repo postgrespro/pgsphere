@@ -26,3 +26,31 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
    Buffers: shared hit=3
 (4 rows)
 
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/';
+                                 QUERY PLAN                                  
+-----------------------------------------------------------------------------
+ Seq Scan on moc1  (cost=0.00..1.01 rows=1 width=18) (actual rows=0 loops=1)
+   Filter: (coverage && '0/'::smoc)
+   Rows Removed by Filter: 1
+   Buffers: shared hit=3
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/1';
+                                 QUERY PLAN                                  
+-----------------------------------------------------------------------------
+ Seq Scan on moc1  (cost=0.00..1.01 rows=1 width=18) (actual rows=1 loops=1)
+   Filter: (coverage && '0/1'::smoc)
+   Buffers: shared hit=25
+(3 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/0-11';
+                                 QUERY PLAN                                  
+-----------------------------------------------------------------------------
+ Seq Scan on moc1  (cost=0.00..1.01 rows=1 width=18) (actual rows=1 loops=1)
+   Filter: (coverage && '0/0-11'::smoc)
+   Buffers: shared hit=3
+(3 rows)
+

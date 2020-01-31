@@ -16,3 +16,10 @@ SELECT length(coverage::text) FROM moc1;
 -- verify that equality doesn't read the whole toasted value
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT coverage FROM moc1 WHERE coverage = '0/';
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/1';
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT coverage FROM moc1 WHERE coverage && '0/0-11';

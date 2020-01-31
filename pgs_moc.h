@@ -92,4 +92,6 @@ Datum smoc_spoly(PG_FUNCTION_ARGS);
 hpint64 readNumber(const char*, int*);
 char readChar(const char*, int*);
 
+#define MOC_AREA_ALL_SKY 3458764513820540928
+
 #endif

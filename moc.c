@@ -495,39 +495,60 @@ smoc_neq(PG_FUNCTION_ARGS)
 }
 
 static bool
-smoc_overlap_impl(Smoc* moc_a, Smoc* moc_b)
+smoc_overlap_impl(Datum a, Datum b)
 {
-	int32	a = moc_a->data_begin;
-	int32	b = moc_b->data_begin;
-	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
-	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
-	char*	moc_a_base = MOC_BASE(moc_a);
-	char*	moc_b_base = MOC_BASE(moc_b);
+	Smoc*	moc_a = (Smoc *)PG_DETOAST_DATUM_SLICE(a, 0, MOC_HEADER_PAGE);
+	Smoc*	moc_b = (Smoc *)PG_DETOAST_DATUM_SLICE(b, 0, MOC_HEADER_PAGE);
+	int32	i = moc_a->data_begin;
+	int32	j = moc_b->data_begin;
+	int32	moc_a_end;
+	int32	moc_b_end;
+	char*	moc_a_base;
+	char*	moc_b_base;
 
-	while (a < moc_a_end && b < moc_b_end) // iterate over both in parallel
+	// empty mocs do not overlap
+	if (moc_a->area == 0 || moc_b->area == 0)
+		return false;
+	// quick exit if the mocs do not overlap at all
+	if (moc_a->first >= moc_b->last || moc_a->last <= moc_b->first)
+		return false;
+	// all-sky mocs overlap everything
+	if (moc_a->area == MOC_AREA_ALL_SKY || moc_b->area == MOC_AREA_ALL_SKY)
+		return true;
+
+	// get full moc
+	moc_a = (Smoc *)PG_DETOAST_DATUM(a);
+	moc_b = (Smoc *)PG_DETOAST_DATUM(b);
+
+	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	moc_a_base = MOC_BASE(moc_a);
+	moc_b_base = MOC_BASE(moc_b);
+
+	while (i < moc_a_end && j < moc_b_end) // iterate over both in parallel
 	{
 		moc_interval *x;
 		moc_interval *y;
 
 		// page bumps
-		int32 mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		int32 mod = (i + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
 		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
-			a += MOC_INTERVAL_SIZE - mod;
-		x = MOC_INTERVAL(moc_a_base, a);
+			i += MOC_INTERVAL_SIZE - mod;
+		x = MOC_INTERVAL(moc_a_base, i);
 
-		mod = (b + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		mod = (j + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
 		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
-			b += MOC_INTERVAL_SIZE - mod;
-		y = MOC_INTERVAL(moc_b_base, b);
+			j += MOC_INTERVAL_SIZE - mod;
+		y = MOC_INTERVAL(moc_b_base, j);
 
 		if (x->second <= y->first) // a entirely left of b, advance a
 		{
-			a += MOC_INTERVAL_SIZE;
+			i += MOC_INTERVAL_SIZE;
 			continue;
 		}
 		if (y->second <= x->first) // b entirely left of a, advance b
 		{
-			b += MOC_INTERVAL_SIZE;
+			j += MOC_INTERVAL_SIZE;
 			continue;
 		}
 
@@ -540,17 +561,17 @@ smoc_overlap_impl(Smoc* moc_a, Smoc* moc_b)
 Datum
 smoc_overlap(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(smoc_overlap_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(smoc_overlap_impl(a, b));
 }
 
 Datum
 smoc_overlap_neg(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(! smoc_overlap_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(! smoc_overlap_impl(a, b));
 }
 
 /* check if moc_a is a subset of moc_b */
