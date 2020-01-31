@@ -576,51 +576,65 @@ smoc_overlap_neg(PG_FUNCTION_ARGS)
 
 /* check if moc_a is a subset of moc_b */
 static bool
-smoc_subset_impl(Smoc* moc_a, Smoc* moc_b)
+smoc_subset_impl(Datum a, Datum b)
 {
-	int32	a = moc_a->data_begin;
-	int32	b = moc_b->data_begin;
-	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
-	int32	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
-	char*	moc_a_base = MOC_BASE(moc_a);
-	char*	moc_b_base = MOC_BASE(moc_b);
+	Smoc*	moc_a = (Smoc *)PG_DETOAST_DATUM_SLICE(a, 0, MOC_HEADER_PAGE);
+	Smoc*	moc_b = (Smoc *)PG_DETOAST_DATUM_SLICE(b, 0, MOC_HEADER_PAGE);
+	int32	i = moc_a->data_begin;
+	int32	j = moc_b->data_begin;
+	int32	moc_a_end;
+	int32	moc_b_end;
+	char*	moc_a_base;
+	char*	moc_b_base;
 
 	// an empty moc is subset of all mocs
 	if (moc_a->area == 0)
 		return true;
-	// and empty moc cannot have any other subsets than the empty one
-	if (moc_b->area == 0)
+	// b is the whole sky
+	if (moc_b->area == MOC_AREA_ALL_SKY)
+		return true;
+	// a cannot be larger than b
+	if (moc_a->area > moc_b->area)
 		return false;
 
 	// quick exit if the mocs do not overlap at all
 	if (moc_a->first >= moc_b->last || moc_a->last <= moc_b->first)
 		return false;
 
-	while (a < moc_a_end) // iterate over a
+	// get full moc
+	moc_a = (Smoc *)PG_DETOAST_DATUM(a);
+	moc_b = (Smoc *)PG_DETOAST_DATUM(b);
+
+	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	moc_b_end = VARSIZE(moc_b) - VARHDRSZ;
+	moc_a_base = MOC_BASE(moc_a);
+	moc_b_base = MOC_BASE(moc_b);
+
+	while (i < moc_a_end) // iterate over a
 	{
 		int32 mod;
 		moc_interval *x;
 		moc_interval *y;
 
 		// end of b reached while there's still 'a' intervals
-		if (b >= moc_b_end)
+		if (j >= moc_b_end)
 			return false;
 
 		// page bumps
-		mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		mod = (i + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
 		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
-			a += MOC_INTERVAL_SIZE - mod;
-		x = MOC_INTERVAL(moc_a_base, a);
+			i += MOC_INTERVAL_SIZE - mod;
+		x = MOC_INTERVAL(moc_a_base, i);
 
-		mod = (b + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+		mod = (j + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
 		if (mod > 0 && mod < MOC_INTERVAL_SIZE)
-			b += MOC_INTERVAL_SIZE - mod;
-		y = MOC_INTERVAL(moc_b_base, b);
+			j += MOC_INTERVAL_SIZE - mod;
+		y = MOC_INTERVAL(moc_b_base, j);
 
 		// advance b until as long as we are before the 'a' interval
 		if (y->second <= x->first)
 		{
-			b += MOC_INTERVAL_SIZE;
+			j += MOC_INTERVAL_SIZE;
 			continue;
 		}
 
@@ -633,13 +647,13 @@ smoc_subset_impl(Smoc* moc_a, Smoc* moc_b)
 		// advance interval that has the lowest end
 		if (x->second == y->second)
 		{
-			a += MOC_INTERVAL_SIZE;
-			b += MOC_INTERVAL_SIZE;
+			i += MOC_INTERVAL_SIZE;
+			j += MOC_INTERVAL_SIZE;
 		}
 		else if (x->second <= y->second)
-			a += MOC_INTERVAL_SIZE;
+			i += MOC_INTERVAL_SIZE;
 		else
-			b += MOC_INTERVAL_SIZE;
+			j += MOC_INTERVAL_SIZE;
 		// TODO: we could walk the tree structure to find the next interesting interval
 	}
 
@@ -649,33 +663,33 @@ smoc_subset_impl(Smoc* moc_a, Smoc* moc_b)
 Datum
 smoc_subset_smoc(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(smoc_subset_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(smoc_subset_impl(a, b));
 }
 
 Datum
 smoc_subset_smoc_neg(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(! smoc_subset_impl(moc_a, moc_b));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(! smoc_subset_impl(a, b));
 }
 
 Datum
 smoc_superset_smoc(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(smoc_subset_impl(moc_b, moc_a));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(smoc_subset_impl(b, a));
 }
 
 Datum
 smoc_superset_smoc_neg(PG_FUNCTION_ARGS)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	Smoc*	moc_b = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
-	PG_RETURN_BOOL(! smoc_subset_impl(moc_b, moc_a));
+	Datum	a = PG_GETARG_DATUM(0);
+	Datum	b = PG_GETARG_DATUM(1);
+	PG_RETURN_BOOL(! smoc_subset_impl(b, a));
 }
 
 static bool
