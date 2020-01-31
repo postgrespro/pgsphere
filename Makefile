@@ -76,6 +76,7 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 pg_version_9_5_plus = $(if $(filter-out 9.1% 9.2% 9.3% 9.4%,$(pg_version)),y,n)
 has_parallel = $(if $(filter-out 9.1% 9.2% 9.3% 9.4% 9.5%,$(pg_version)),y,n)
+has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 #
 
 ## the use of spoint 3 is too experimental and preliminary:
@@ -88,6 +89,9 @@ has_parallel = $(if $(filter-out 9.1% 9.2% 9.3% 9.4% 9.5%,$(pg_version)),y,n)
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
 
+ifeq ($(has_explain_summary),y)
+        REGRESS += moc1
+endif
 
 ifeq ($(pg_version_9_5_plus),y)
         PGS_TMP_DIR = --temp-instance=tmp_check
