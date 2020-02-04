@@ -32,6 +32,7 @@ PG_FUNCTION_INFO_V1(smoc_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
 PG_FUNCTION_INFO_V1(smoc_intersection);
+PG_FUNCTION_INFO_V1(smoc_round);
 PG_FUNCTION_INFO_V1(smoc_disc);
 PG_FUNCTION_INFO_V1(smoc_scircle);
 PG_FUNCTION_INFO_V1(smoc_spoly);
@@ -904,6 +905,27 @@ smoc_intersection(PG_FUNCTION_ARGS)
 	int32	moc_size;
 
 	moc_intersection(moc_in_context, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_b, VARSIZE(moc_b) - VARHDRSZ, moc_error_out);
+
+	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
+	/* palloc() will leak the moc_in_context if it fails :-/ */
+	moc_ret = (Smoc*) palloc0(moc_size);
+	SET_VARSIZE(moc_ret, moc_size);
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
+}
+
+Datum
+smoc_round(PG_FUNCTION_ARGS)
+{
+	int		order = PG_GETARG_INT32(0);
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
+	Smoc*	moc_ret;
+	void*	moc_in_context = create_moc_in_context(moc_error_out);
+	int32	moc_size;
+
+	check_order(order);
+
+	moc_round(moc_in_context, order, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	/* palloc() will leak the moc_in_context if it fails :-/ */

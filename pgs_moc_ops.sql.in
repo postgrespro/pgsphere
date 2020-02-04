@@ -240,6 +240,16 @@ COMMENT ON AGGREGATE intersection (smoc) IS 'smoc intersection aggregate';
 
 -- smoc constructors
 
+CREATE FUNCTION smoc_round ("order" int, smoc)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_round ("order" int, smoc) IS 'reduce order of smoc';
+
 CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME'

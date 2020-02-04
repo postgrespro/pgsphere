@@ -922,6 +922,32 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 }
 
 void
+moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
+												pgs_error_handler error_out)
+{
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	PGS_TRY
+		moc_input & m = *p;
+
+		for (int32 a = moc_a->data_begin; a < moc_a_end; a += MOC_INTERVAL_SIZE)
+		{
+			// page bumps
+			int32 mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+			if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+				a += MOC_INTERVAL_SIZE - mod;
+			moc_interval & x = *interval_ptr(moc_a, a);
+
+			int		shift = 2 * (HEALPIX_MAX_ORDER - order);
+			hpint64	first = (x.first >> shift) << shift; // set low bits to zero
+			hpint64	low_bits_one = (1L << shift) - 1;
+			hpint64	second = ((x.second + low_bits_one) >> shift) << shift; // round low bits up
+
+			add_to_map(m.input_map, first, second);
+		}
+	PGS_CATCH
+}
+
+void
 moc_disc(void* moc_in_context, int order, double theta, double phi, double radius,
 												pgs_error_handler error_out)
 {
