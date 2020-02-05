@@ -135,6 +135,8 @@ SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(mo
 
 SELECT smoc_round(6, '7/1,3,5,9');
 SELECT smoc_round(5, '7/1,3,5,9');
+SELECT smoc_round(0, '1/0');
+SELECT smoc_round(0, '1/47');
 
 WITH mocs(x) AS (VALUES ('0/'::smoc), ('0/1'), ('0/2'), ('0/4'), ('0/1,3'), ('0/1-3'), ('0/2-4'))
   SELECT a.x AS a, b.x AS b,
