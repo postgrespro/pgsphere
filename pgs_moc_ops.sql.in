@@ -280,3 +280,41 @@ CREATE FUNCTION smoc ("order" int, spoly)
 	STRICT;
 
 COMMENT ON FUNCTION smoc ("order" int, spoly) IS 'constructs smoc of given order from spoly';
+
+-- GIN index
+
+CREATE FUNCTION smoc_gin_extract_value (smoc, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_extract_query (smoc, internal, int2, internal, internal, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE OPERATOR CLASS smoc_gin_ops
+	DEFAULT FOR TYPE smoc USING gin AS
+		OPERATOR 1 &&,
+		OPERATOR 2 <@,
+		FUNCTION 1 btint4cmp (int4, int4),
+		FUNCTION 2 smoc_gin_extract_value (smoc, internal, internal),
+		FUNCTION 3 smoc_gin_extract_query (smoc, internal, int2, internal, internal, internal, internal),
+		FUNCTION 4 smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal),
+		--FUNCTION 5 smoc_gin_compare_partial (),
+		--FUNCTION 6 smoc_gin_tri_consistent (),
+		STORAGE int4;

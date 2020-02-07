@@ -37,6 +37,10 @@ PG_FUNCTION_INFO_V1(smoc_disc);
 PG_FUNCTION_INFO_V1(smoc_scircle);
 PG_FUNCTION_INFO_V1(smoc_spoly);
 
+PG_FUNCTION_INFO_V1(smoc_gin_extract_value);
+PG_FUNCTION_INFO_V1(smoc_gin_extract_query);
+PG_FUNCTION_INFO_V1(smoc_gin_consistent);
+
 int32 smoc_output_type = 0;
 
 #define LAYDEB 0
@@ -1001,4 +1005,113 @@ smoc_spoly(PG_FUNCTION_ARGS)
 
 	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
 	PG_RETURN_POINTER(moc_ret);
+}
+
+/* GIN index ***********************************/
+
+Datum
+smoc_gin_extract_value(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	char*	moc_a_base = MOC_BASE(moc_a);
+	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+	int32	nalloc = 4;
+	Datum*	keys = palloc(nalloc * sizeof(Datum));
+
+	*nkeys = 0;
+
+	for (int32 a = moc_a->data_begin; a < moc_a_end; a = next_interval(a))
+	{
+		moc_interval *x = MOC_INTERVAL(moc_a_base, a);
+
+		int		shift = 2 * (HEALPIX_MAX_ORDER - MOC_GIN_ORDER); // degrade to MOC_GIN_ORDER
+		int32	first = (x->first >> shift); // set low bits to zero
+		hpint64	low_bits_one = (1L << shift) - 1;
+		int32	second = ((x->second + low_bits_one) >> shift); // round low bits up
+		Assert(shift > 32); // internal GIN datatype isn't 64 bits
+
+		// split interval into individual pixels of order MOC_GIN_ORDER
+		for (int32 p = first; p < second; p++)
+		{
+			if (*nkeys > 0 && keys[*nkeys - 1] == p) // has (larger) pixel already been added?
+				continue;
+			if (*nkeys >= nalloc)
+			{
+				nalloc *= 2;
+				Assert(nalloc < 1000000);
+				keys = repalloc(keys, nalloc * sizeof(Datum));
+			}
+			keys[(*nkeys)++] = Int32GetDatum(p);
+		}
+	}
+
+	PG_RETURN_POINTER(keys);
+}
+
+Datum
+smoc_gin_extract_query(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	char*	moc_a_base = MOC_BASE(moc_a);
+	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+	//StrategyNumber st = PG_GETARG_UINT16(2);
+	int32	nalloc = 4;
+	Datum*	keys = palloc(nalloc * sizeof(Datum));
+
+	*nkeys = 0;
+
+	//Assert(st == 1);
+
+	for (int32 a = moc_a->data_begin; a < moc_a_end; a = next_interval(a))
+	{
+		moc_interval *x = MOC_INTERVAL(moc_a_base, a);
+
+		int		shift = 2 * (HEALPIX_MAX_ORDER - MOC_GIN_ORDER); // degrade to MOC_GIN_ORDER
+		int32	first = (x->first >> shift); // set low bits to zero
+		hpint64	low_bits_one = (1L << shift) - 1;
+		int32	second = ((x->second + low_bits_one) >> shift); // round low bits up
+		Assert(shift > 32); // internal GIN datatype isn't 64 bits
+
+		// split interval into individual pixels of order MOC_GIN_ORDER
+		for (int32 p = first; p < second; p++)
+		{
+			if (*nkeys > 0 && keys[*nkeys - 1] == p) // has (larger) pixel already been added?
+				continue;
+			if (*nkeys >= nalloc)
+			{
+				nalloc *= 2;
+				Assert(nalloc < 1000000);
+				keys = repalloc(keys, nalloc * sizeof(Datum));
+			}
+			keys[(*nkeys)++] = Int32GetDatum(p);
+		}
+	}
+
+	PG_RETURN_POINTER(keys);
+}
+
+Datum
+smoc_gin_consistent(PG_FUNCTION_ARGS)
+{
+	bool*	check = (bool *) PG_GETARG_POINTER(0);
+	//StrategyNumber st = PG_GETARG_UINT16(1);
+	//Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(2));
+	//int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
+	int32	nkeys = PG_GETARG_INT32(3);
+	bool*	recheck = (bool *) PG_GETARG_POINTER(5);
+
+	//Assert(st == 1);
+
+	for (int i = 0; i < nkeys; i++)
+	{
+		if (check[i])
+		{
+			*recheck = true;
+			PG_RETURN_BOOL(true);
+		}
+	}
+
+	PG_RETURN_BOOL(false);
 }

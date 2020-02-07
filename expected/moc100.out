@@ -1,0 +1,71 @@
+CREATE TABLE moc100 (
+	ivoid text,
+	coverage smoc,
+	ref_system_name text
+);
+COPY moc100 FROM STDIN;
+CREATE INDEX ON moc100 USING GIN (coverage);
+SELECT ivoid FROM moc100 WHERE coverage && '4/0' ORDER BY ivoid;
+                  ivoid                   
+------------------------------------------
+ ivo://byu.arvo/dfbsspec/q/getssa
+ ivo://cadc.nrc.ca/archive/cfht
+ ivo://cadc.nrc.ca/archive/hst
+ ivo://cds.vizier/b/assocdata
+ ivo://cds.vizier/b/swift
+ ivo://cds.vizier/i/241
+ ivo://cds.vizier/iv/12
+ ivo://cds.vizier/ix/13
+ ivo://cds.vizier/j/a+a/316/147
+ ivo://cds.vizier/j/a+as/105/311
+ ivo://cds.vizier/j/a+as/122/235
+ ivo://chivo/gaia/q/dr1
+ ivo://chivo/openngc/q/data
+ ivo://cxc.harvard.edu/csc
+ ivo://irsa.ipac/2mass/catalog/psc
+ ivo://irsa.ipac/2mass/catalog/xsc
+ ivo://irsa.ipac/2mass/images/asky-ql
+ ivo://irsa.ipac/cosmos/images
+ ivo://irsa.ipac/iras/images/issa
+ ivo://irsa.ipac/mast/scrapbook
+ ivo://irsa.ipac/spitzer/images/swire
+ ivo://mssl.ucl.ac.uk/xmmsuss_dsa/xmmsuss
+ ivo://ned.ipac/sia
+ ivo://ned.ipac/tap
+ ivo://svo.cab/cat/gbs
+ ivo://svo.cab/cat/uves
+ ivo://svo.cab/cat/xshooter
+ ivo://vopdc.iap/fss
+ ivo://vopdc.obspm/imcce/m4ast
+ ivo://vopdc.obspm/imcce/miriade
+ ivo://vopdc.obspm/imcce/skybot
+ ivo://vopdc.obspm/lesia/bestars/besc
+ ivo://vopdc.obspm/lesia/bestars/bess
+ ivo://vopdc.obspm/luth/exoplanet
+ ivo://vopdc.obspm/luth/hess
+(35 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage && '4/0';
+                                   QUERY PLAN                                   
+--------------------------------------------------------------------------------
+ Seq Scan on moc100  (cost=0.00..6.25 rows=1 width=96) (actual rows=35 loops=1)
+   Filter: (coverage && '4/0'::smoc)
+   Rows Removed by Filter: 65
+   Buffers: shared hit=114
+(4 rows)
+
+SET enable_seqscan = off;
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage && '4/0';
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=36.00..40.01 rows=1 width=96) (actual rows=35 loops=1)
+   Recheck Cond: (coverage && '4/0'::smoc)
+   Heap Blocks: exact=5
+   Buffers: shared hit=85
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..36.00 rows=1 width=0) (actual rows=35 loops=1)
+         Index Cond: (coverage && '4/0'::smoc)
+         Buffers: shared hit=9
+(7 rows)
+

@@ -89,10 +89,32 @@ Datum smoc_disc(PG_FUNCTION_ARGS);
 Datum smoc_scircle(PG_FUNCTION_ARGS);
 Datum smoc_spoly(PG_FUNCTION_ARGS);
 
+Datum smoc_gin_extract_value(PG_FUNCTION_ARGS);
+Datum smoc_gin_extract_query(PG_FUNCTION_ARGS);
+Datum smoc_gin_consistent(PG_FUNCTION_ARGS);
+
 /* parsing subroutines */
 hpint64 readNumber(const char*, int*);
 char readChar(const char*, int*);
 
+static inline int32
+next_interval(int32 a)
+{
+	int32	mod;
+
+	a += MOC_INTERVAL_SIZE;
+
+	// page bumps
+	mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
+	if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+		a += MOC_INTERVAL_SIZE - mod;
+
+	return a;
+}
+
 #define MOC_AREA_ALL_SKY 3458764513820540928
+
+#define MOC_GIN_ORDER 5 /* order 5 has 12 * 4^5 = 12288 pixels */
+#define MOC_GIN_STRATEGY_INTERSECTS	1
 
 #endif

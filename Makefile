@@ -90,7 +90,7 @@ crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
 
 ifeq ($(has_explain_summary),y)
-        REGRESS += moc1
+        REGRESS += moc1 moc100
 endif
 
 ifeq ($(pg_version_9_5_plus),y)
