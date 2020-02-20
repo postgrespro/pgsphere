@@ -46,6 +46,16 @@ SELECT ivoid FROM moc100 WHERE coverage && '4/0' ORDER BY ivoid;
 (35 rows)
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage && '0/';
+                                                QUERY PLAN                                                
+----------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=0.00..4.01 rows=1 width=96) (actual rows=0 loops=1)
+   Recheck Cond: (coverage && '0/'::smoc)
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..0.00 rows=1 width=0) (actual rows=0 loops=1)
+         Index Cond: (coverage && '0/'::smoc)
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT * FROM moc100 WHERE coverage && '4/0';
                                    QUERY PLAN                                   
 --------------------------------------------------------------------------------

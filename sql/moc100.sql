@@ -112,6 +112,9 @@ CREATE INDEX ON moc100 USING GIN (coverage);
 SELECT ivoid FROM moc100 WHERE coverage && '4/0' ORDER BY ivoid;
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage && '0/';
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT * FROM moc100 WHERE coverage && '4/0';
 
 SET enable_seqscan = off;
