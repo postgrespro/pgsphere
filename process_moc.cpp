@@ -740,15 +740,15 @@ ascii_out(std::string & m_s, char* s, Smoc* moc, int32 begin, int32 end,
 				hpint64 first	= i->first;
 				hpint64 last	= i->second - 1;
 				if (first == last)
-					sprintf(s, "" MOC_FORMAT_64U ",", first);
+					sprintf(s, "" MOC_FORMAT_64U " ", first);
 				else
-					sprintf(s, "" MOC_FORMAT_64U "-" MOC_FORMAT_64U ",", first, last);
+					sprintf(s, "" MOC_FORMAT_64U "-" MOC_FORMAT_64U " ", first, last);
 				m_s.append(s);
 		}
 		if (output.size())
 			*m_s.rbegin() = ' ';
 	}
-	m_s.resize(m_s.size() - 1);
+	m_s.resize(m_s.size() - 1); // strip trailing space
 }
 
 moc_out_data
