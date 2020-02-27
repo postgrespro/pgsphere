@@ -85,7 +85,7 @@ Datum spoint_not_subset_smoc_c(SPoint*, Datum);
 
 Datum smoc_union(PG_FUNCTION_ARGS);
 Datum smoc_intersection(PG_FUNCTION_ARGS);
-Datum smoc_round(PG_FUNCTION_ARGS);
+Datum smoc_degrade(PG_FUNCTION_ARGS);
 Datum smoc_disc(PG_FUNCTION_ARGS);
 Datum smoc_scircle(PG_FUNCTION_ARGS);
 Datum smoc_spoly(PG_FUNCTION_ARGS);

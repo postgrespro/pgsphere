@@ -37,4 +37,4 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT coverage FROM moc1 WHERE coverage <@ '0/0-11';
 
-SELECT smoc_round(4, coverage) FROM moc1;
+SELECT smoc_degrade(4, coverage) FROM moc1;

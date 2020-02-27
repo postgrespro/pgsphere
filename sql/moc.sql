@@ -133,10 +133,10 @@ SELECT '0/1'::smoc & '1/3,5,7,9' AS intersection;
 SELECT '1/9,11,13,15'::smoc & '0/1,2' AS intersection;
 SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(moc);
 
-SELECT smoc_round(6, '7/1,3,5,9');
-SELECT smoc_round(5, '7/1,3,5,9');
-SELECT smoc_round(0, '1/0');
-SELECT smoc_round(0, '1/47');
+SELECT smoc_degrade(6, '7/1,3,5,9');
+SELECT smoc_degrade(5, '7/1,3,5,9');
+SELECT smoc_degrade(0, '1/0');
+SELECT smoc_degrade(0, '1/47');
 
 WITH mocs(x) AS (VALUES ('0/'::smoc), ('0/1'), ('0/2'), ('0/4'), ('0/1,3'), ('0/1-3'), ('0/2-4'))
   SELECT a.x AS a, b.x AS b,

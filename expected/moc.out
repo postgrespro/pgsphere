@@ -589,27 +589,27 @@ SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(mo
  0/2-4
 (1 row)
 
-SELECT smoc_round(6, '7/1,3,5,9');
- smoc_round 
-------------
+SELECT smoc_degrade(6, '7/1,3,5,9');
+ smoc_degrade 
+--------------
  6/0-2
 (1 row)
 
-SELECT smoc_round(5, '7/1,3,5,9');
- smoc_round 
-------------
+SELECT smoc_degrade(5, '7/1,3,5,9');
+ smoc_degrade 
+--------------
  5/0
 (1 row)
 
-SELECT smoc_round(0, '1/0');
- smoc_round 
-------------
+SELECT smoc_degrade(0, '1/0');
+ smoc_degrade 
+--------------
  0/0
 (1 row)
 
-SELECT smoc_round(0, '1/47');
- smoc_round 
-------------
+SELECT smoc_degrade(0, '1/47');
+ smoc_degrade 
+--------------
  0/11
 (1 row)
 

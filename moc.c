@@ -34,7 +34,7 @@ PG_FUNCTION_INFO_V1(smoc_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
 PG_FUNCTION_INFO_V1(smoc_intersection);
-PG_FUNCTION_INFO_V1(smoc_round);
+PG_FUNCTION_INFO_V1(smoc_degrade);
 PG_FUNCTION_INFO_V1(smoc_disc);
 PG_FUNCTION_INFO_V1(smoc_scircle);
 PG_FUNCTION_INFO_V1(smoc_spoly);
@@ -930,7 +930,7 @@ smoc_intersection(PG_FUNCTION_ARGS)
 }
 
 Datum
-smoc_round(PG_FUNCTION_ARGS)
+smoc_degrade(PG_FUNCTION_ARGS)
 {
 	int		order = PG_GETARG_INT32(0);
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(1));
