@@ -56,6 +56,7 @@ Datum smoc_out(PG_FUNCTION_ARGS);
 Datum moc_debug(PG_FUNCTION_ARGS);
 Datum set_smoc_output_type(PG_FUNCTION_ARGS);
 Datum smoc_info(PG_FUNCTION_ARGS);
+Datum smoc_area(PG_FUNCTION_ARGS);
 Datum smoc_order(PG_FUNCTION_ARGS);
 Datum smoc_eq(PG_FUNCTION_ARGS);
 Datum smoc_neq(PG_FUNCTION_ARGS);
@@ -116,5 +117,7 @@ next_interval(int32 a)
 
 #define MOC_GIN_ORDER 5 /* order 5 has 12 * 4^5 = 12288 pixels */
 #define MOC_GIN_STRATEGY_INTERSECTS	1
+#define MOC_GIN_STRATEGY_SUBSET		2
+#define MOC_GIN_STRATEGY_SUPERSET	3
 
 #endif

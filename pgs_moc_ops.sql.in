@@ -8,6 +8,14 @@ CREATE FUNCTION smoc_info (smoc)
 	IMMUTABLE
 	STRICT;
 
+CREATE FUNCTION smoc_area (smoc)
+	RETURNS bigint
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
 -- boolean operations
 
 CREATE FUNCTION smoc_eq (smoc, smoc)
@@ -311,6 +319,7 @@ CREATE OPERATOR CLASS smoc_gin_ops
 	DEFAULT FOR TYPE smoc USING gin AS
 		OPERATOR 1 &&,
 		OPERATOR 2 <@,
+		OPERATOR 3 @>,
 		FUNCTION 1 btint4cmp (int4, int4),
 		FUNCTION 2 smoc_gin_extract_value (smoc, internal, internal),
 		FUNCTION 3 smoc_gin_extract_query (smoc, internal, int2, internal, internal, internal, internal),

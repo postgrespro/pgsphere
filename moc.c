@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <string.h>
+#include <access/gin.h>
 
 #include "circle.h"
 #include "polygon.h"
@@ -12,6 +13,7 @@ PG_FUNCTION_INFO_V1(smoc_out);
 PG_FUNCTION_INFO_V1(moc_debug);
 PG_FUNCTION_INFO_V1(set_smoc_output_type);
 PG_FUNCTION_INFO_V1(smoc_info);
+PG_FUNCTION_INFO_V1(smoc_area);
 PG_FUNCTION_INFO_V1(smoc_order);
 PG_FUNCTION_INFO_V1(smoc_eq);
 PG_FUNCTION_INFO_V1(smoc_neq);
@@ -404,6 +406,15 @@ smoc_info(PG_FUNCTION_ARGS)
 			moc->version, moc->order, moc-> depth, moc->first, moc->last, moc->area,
 			moc->tree_begin, moc->data_begin);
 	PG_RETURN_TEXT_P(cstring_to_text(p));
+}
+
+Datum
+smoc_area(PG_FUNCTION_ARGS)
+{
+	/* get just the MOC header: */
+	Smoc *moc = (Smoc *) PG_DETOAST_DATUM_SLICE(PG_GETARG_DATUM(0), 0,
+															MOC_HEADER_VARSIZE);
+	PG_RETURN_INT64(moc->area);
 }
 
 Datum
@@ -1056,13 +1067,15 @@ smoc_gin_extract_query(PG_FUNCTION_ARGS)
 	char*	moc_a_base = MOC_BASE(moc_a);
 	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
 	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
-	//StrategyNumber st = PG_GETARG_UINT16(2);
+	StrategyNumber st = PG_GETARG_UINT16(2);
+	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
 	int32	nalloc = 4;
 	Datum*	keys = palloc(nalloc * sizeof(Datum));
 
 	*nkeys = 0;
 
-	//Assert(st == 1);
+	if (st == MOC_GIN_STRATEGY_SUBSET)
+		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 
 	for (int32 a = moc_a->data_begin; a < moc_a_end; a = next_interval(a))
 	{
@@ -1096,22 +1109,49 @@ Datum
 smoc_gin_consistent(PG_FUNCTION_ARGS)
 {
 	bool*	check = (bool *) PG_GETARG_POINTER(0);
-	//StrategyNumber st = PG_GETARG_UINT16(1);
+	StrategyNumber st = PG_GETARG_UINT16(1);
 	//Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(2));
 	//int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
 	int32	nkeys = PG_GETARG_INT32(3);
 	bool*	recheck = (bool *) PG_GETARG_POINTER(5);
 
-	//Assert(st == 1);
-
-	for (int i = 0; i < nkeys; i++)
+	switch (st)
 	{
-		if (check[i])
-		{
+		case MOC_GIN_STRATEGY_INTERSECTS:
+			/* return true if we have any overlap */
+			for (int i = 0; i < nkeys; i++)
+			{
+				if (check[i])
+				{
+					*recheck = true;
+					PG_RETURN_BOOL(true);
+				}
+			}
+
+			PG_RETURN_BOOL(false);
+
+		case MOC_GIN_STRATEGY_SUBSET:
+			/* defer decision to recheck */
 			*recheck = true;
 			PG_RETURN_BOOL(true);
-		}
+
+		case MOC_GIN_STRATEGY_SUPERSET:
+			/* return true when all pixels are contained in the indexed value */
+			for (int i = 0; i < nkeys; i++)
+			{
+				if (! check[i])
+				{
+					PG_RETURN_BOOL(false);
+				}
+			}
+
+			*recheck = true;
+			PG_RETURN_BOOL(true);
+
+		default:
+			Assert(0);
 	}
 
-	PG_RETURN_BOOL(false);
+	/* not reached */
+	PG_RETURN_NULL();
 }

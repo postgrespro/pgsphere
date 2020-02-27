@@ -59,9 +59,9 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT * FROM moc100 WHERE coverage && '4/0';
                                    QUERY PLAN                                   
 --------------------------------------------------------------------------------
- Seq Scan on moc100  (cost=0.00..6.25 rows=1 width=96) (actual rows=35 loops=1)
+ Seq Scan on moc100  (cost=0.00..6.26 rows=1 width=96) (actual rows=35 loops=1)
    Filter: (coverage && '4/0'::smoc)
-   Rows Removed by Filter: 65
+   Rows Removed by Filter: 66
    Buffers: shared hit=114
 (4 rows)
 
@@ -78,4 +78,32 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
          Index Cond: (coverage && '4/0'::smoc)
          Buffers: shared hit=9
 (7 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <@ '4/0';
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=44.00..48.01 rows=1 width=96) (actual rows=1 loops=1)
+   Recheck Cond: (coverage <@ '4/0'::smoc)
+   Rows Removed by Index Recheck: 35
+   Heap Blocks: exact=5
+   Buffers: shared hit=33
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..44.00 rows=1 width=0) (actual rows=36 loops=1)
+         Index Cond: (coverage <@ '4/0'::smoc)
+         Buffers: shared hit=12
+(8 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage @> '4/0';
+                                                 QUERY PLAN                                                 
+------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=36.00..40.01 rows=1 width=96) (actual rows=28 loops=1)
+   Recheck Cond: (coverage @> '4/0'::smoc)
+   Rows Removed by Index Recheck: 1
+   Heap Blocks: exact=4
+   Buffers: shared hit=36
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..36.00 rows=1 width=0) (actual rows=29 loops=1)
+         Index Cond: (coverage @> '4/0'::smoc)
+         Buffers: shared hit=9
+(8 rows)
 
