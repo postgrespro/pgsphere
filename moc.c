@@ -1020,13 +1020,11 @@ smoc_spoly(PG_FUNCTION_ARGS)
 
 /* GIN index ***********************************/
 
-Datum
-smoc_gin_extract_value(PG_FUNCTION_ARGS)
+static Datum
+smoc_gin_extract_internal(Smoc *moc_a, int32 *nkeys, int gin_order)
 {
-	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
 	char*	moc_a_base = MOC_BASE(moc_a);
 	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
-	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
 	int32	nalloc = 4;
 	Datum*	keys = palloc(nalloc * sizeof(Datum));
 
@@ -1036,7 +1034,7 @@ smoc_gin_extract_value(PG_FUNCTION_ARGS)
 	{
 		moc_interval *x = MOC_INTERVAL(moc_a_base, a);
 
-		int		shift = 2 * (HEALPIX_MAX_ORDER - MOC_GIN_ORDER); // degrade to MOC_GIN_ORDER
+		int		shift = 2 * (HEALPIX_MAX_ORDER - gin_order); // degrade to MOC_GIN_ORDER
 		int32	first = (x->first >> shift); // set low bits to zero
 		hpint64	low_bits_one = (1L << shift) - 1;
 		int32	second = ((x->second + low_bits_one) >> shift); // round low bits up
@@ -1061,48 +1059,26 @@ smoc_gin_extract_value(PG_FUNCTION_ARGS)
 }
 
 Datum
+smoc_gin_extract_value(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
+}
+
+Datum
 smoc_gin_extract_query(PG_FUNCTION_ARGS)
 {
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
-	char*	moc_a_base = MOC_BASE(moc_a);
-	int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
 	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
 	StrategyNumber st = PG_GETARG_UINT16(2);
 	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
-	int32	nalloc = 4;
-	Datum*	keys = palloc(nalloc * sizeof(Datum));
-
-	*nkeys = 0;
 
 	if (st == MOC_GIN_STRATEGY_SUBSET)
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 
-	for (int32 a = moc_a->data_begin; a < moc_a_end; a = next_interval(a))
-	{
-		moc_interval *x = MOC_INTERVAL(moc_a_base, a);
-
-		int		shift = 2 * (HEALPIX_MAX_ORDER - MOC_GIN_ORDER); // degrade to MOC_GIN_ORDER
-		int32	first = (x->first >> shift); // set low bits to zero
-		hpint64	low_bits_one = (1L << shift) - 1;
-		int32	second = ((x->second + low_bits_one) >> shift); // round low bits up
-		Assert(shift > 32); // internal GIN datatype isn't 64 bits
-
-		// split interval into individual pixels of order MOC_GIN_ORDER
-		for (int32 p = first; p < second; p++)
-		{
-			if (*nkeys > 0 && keys[*nkeys - 1] == p) // has (larger) pixel already been added?
-				continue;
-			if (*nkeys >= nalloc)
-			{
-				nalloc *= 2;
-				Assert(nalloc < 1000000);
-				keys = repalloc(keys, nalloc * sizeof(Datum));
-			}
-			keys[(*nkeys)++] = Int32GetDatum(p);
-		}
-	}
-
-	PG_RETURN_POINTER(keys);
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
 }
 
 Datum
