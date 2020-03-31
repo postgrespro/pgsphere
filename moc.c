@@ -40,7 +40,9 @@ PG_FUNCTION_INFO_V1(smoc_scircle);
 PG_FUNCTION_INFO_V1(smoc_spoly);
 
 PG_FUNCTION_INFO_V1(smoc_gin_extract_value);
+PG_FUNCTION_INFO_V1(smoc_gin_extract_value_fine);
 PG_FUNCTION_INFO_V1(smoc_gin_extract_query);
+PG_FUNCTION_INFO_V1(smoc_gin_extract_query_fine);
 PG_FUNCTION_INFO_V1(smoc_gin_consistent);
 
 int32 smoc_output_type = 0;
@@ -1048,7 +1050,7 @@ smoc_gin_extract_internal(Smoc *moc_a, int32 *nkeys, int gin_order)
 			if (*nkeys >= nalloc)
 			{
 				nalloc *= 2;
-				Assert(nalloc < 1000000);
+				Assert(nalloc < 2000000);
 				keys = repalloc(keys, nalloc * sizeof(Datum));
 			}
 			keys[(*nkeys)++] = Int32GetDatum(p);
@@ -1068,6 +1070,15 @@ smoc_gin_extract_value(PG_FUNCTION_ARGS)
 }
 
 Datum
+smoc_gin_extract_value_fine(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER_FINE));
+}
+
+Datum
 smoc_gin_extract_query(PG_FUNCTION_ARGS)
 {
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
@@ -1079,6 +1090,20 @@ smoc_gin_extract_query(PG_FUNCTION_ARGS)
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 
 	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
+}
+
+Datum
+smoc_gin_extract_query_fine(PG_FUNCTION_ARGS)
+{
+	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
+	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+	StrategyNumber st = PG_GETARG_UINT16(2);
+	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
+
+	if (st == MOC_GIN_STRATEGY_SUBSET)
+		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
+
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER_FINE));
 }
 
 Datum
