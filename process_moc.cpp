@@ -933,7 +933,7 @@ moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 		{
 			// page bumps
 			int32 mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
-			if (mod > 0 && mod < MOC_INTERVAL_SIZE)
+			if (mod > 0 && mod < (int32) MOC_INTERVAL_SIZE)
 				a += MOC_INTERVAL_SIZE - mod;
 			moc_interval & x = *interval_ptr(moc_a, a);
 
@@ -944,6 +944,18 @@ moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 
 			add_to_map(m.input_map, first, second);
 		}
+	PGS_CATCH
+}
+
+void
+moc_healpix(void* moc_in_context, hpint64 first, hpint64 last,
+												pgs_error_handler error_out)
+{
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	moc_input & m = *p;
+	PGS_TRY
+		moc_map_entry input(first, last);
+		m.input_map.insert(m.input_map.end(), input);
 	PGS_CATCH
 }
 

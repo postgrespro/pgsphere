@@ -35,6 +35,7 @@ PG_FUNCTION_INFO_V1(smoc_not_superset_spoint);
 PG_FUNCTION_INFO_V1(smoc_union);
 PG_FUNCTION_INFO_V1(smoc_intersection);
 PG_FUNCTION_INFO_V1(smoc_degrade);
+PG_FUNCTION_INFO_V1(smoc_spoint);
 PG_FUNCTION_INFO_V1(smoc_disc);
 PG_FUNCTION_INFO_V1(smoc_scircle);
 PG_FUNCTION_INFO_V1(smoc_spoly);
@@ -948,6 +949,33 @@ smoc_degrade(PG_FUNCTION_ARGS)
 	/* palloc() will leak the moc_in_context if it fails :-/ */
 	moc_ret = (Smoc*) palloc0(moc_size);
 	SET_VARSIZE(moc_ret, moc_size);
+	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
+	PG_RETURN_POINTER(moc_ret);
+}
+
+Datum
+smoc_spoint(PG_FUNCTION_ARGS)
+{
+	int		order = PG_GETARG_INT32(0);
+	SPoint* p = (SPoint*) PG_GETARG_POINTER(1);
+	hpint64 pixel, first, last;
+	void*	moc_in_context;
+	int32	moc_size;
+	Smoc*	moc_ret;
+
+	check_order(order);
+
+	pixel = healpix_nest_c(order, p);
+	first = c_healpix_convert_nest(pixel, order, HEALPIX_MAX_ORDER);
+	last = c_healpix_convert_nest(pixel + 1, order, HEALPIX_MAX_ORDER);
+
+	moc_in_context = create_moc_in_context(moc_error_out);
+	moc_healpix(moc_in_context, first, last, moc_error_out);
+
+	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
+	moc_ret = (Smoc*) palloc0(moc_size);
+	SET_VARSIZE(moc_ret, moc_size);
+
 	create_moc_release_context(moc_in_context, moc_ret, moc_error_out);
 	PG_RETURN_POINTER(moc_ret);
 }

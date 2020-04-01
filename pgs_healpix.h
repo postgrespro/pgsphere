@@ -17,6 +17,7 @@ void check_order(int order);
 
 Datum pg_nest2ring(PG_FUNCTION_ARGS);
 Datum pg_ring2nest(PG_FUNCTION_ARGS);
+hpint64 c_healpix_convert_nest(hpint64 idx, int32 from_order, int32 to_order);
 Datum healpix_convert_nest(PG_FUNCTION_ARGS);
 Datum healpix_convert_ring(PG_FUNCTION_ARGS);
 Datum pg_nside2order(PG_FUNCTION_ARGS);

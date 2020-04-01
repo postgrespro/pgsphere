@@ -153,6 +153,8 @@ SELECT smoc_disc(2, 0, 0, 1);
 SELECT smoc_disc(0, 0, 0, 3.2);
 SELECT smoc_disc(2, 0, 0, 3.2);
 
+SELECT smoc(6, '(0,0)'::spoint);
+
 SELECT smoc(1, '<(1,1),1>'::scircle);
 SELECT smoc(3, '<(0,1.3),.5>'::scircle);
 

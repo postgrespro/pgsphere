@@ -107,7 +107,8 @@ Datum pg_ring2nest(PG_FUNCTION_ARGS)
 	PG_RETURN_INT64(ring2nest(c_nside(order), ring));
 }
 
-static hpint64 c_healpix_convert_nest(hpint64 idx, int32 from_order,
+hpint64
+c_healpix_convert_nest(hpint64 idx, int32 from_order,
 													int32 to_order)
 {
 	check_order(to_order);

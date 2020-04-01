@@ -258,6 +258,16 @@ CREATE FUNCTION smoc_degrade ("order" int, smoc)
 
 COMMENT ON FUNCTION smoc_degrade ("order" int, smoc) IS 'reduce order of smoc';
 
+CREATE FUNCTION smoc ("order" int, spoint)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_spoint'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc ("order" int, spoint) IS 'constructs smoc of given order from spoint';
+
 CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
 	RETURNS smoc
 	AS 'MODULE_PATHNAME'
