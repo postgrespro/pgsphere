@@ -721,15 +721,17 @@ void
 ascii_out(std::string & m_s, char* s, Smoc* moc, int32 begin, int32 end,
 															int32 entry_size)
 {	
-
-	if (moc->first == moc->last)
-	{
-		m_s = "0/";
-		return;
-	}
 	// moc output fiddling:
 	int order = moc->order;
 	m_s.reserve(end); // rough guess
+
+	if (moc->first == moc->last)
+	{
+		sprintf(s, "%d/", order);
+		m_s.append(s);
+		return;
+	}
+
 	output_map outputs(1 + order);
 
 	for (int32 j = begin; j < end; j += entry_size)
@@ -743,7 +745,7 @@ ascii_out(std::string & m_s, char* s, Smoc* moc, int32 begin, int32 end,
 	for (int k = 0; k <= order; ++k)
 	{
 		const moc_map & output = outputs[k];
-		if (output.size())
+		if (output.size() || k == order) // always output "order/" to track input order
 		{
 			sprintf(s, "%d/", k);
 			m_s.append(s);
@@ -761,7 +763,8 @@ ascii_out(std::string & m_s, char* s, Smoc* moc, int32 begin, int32 end,
 		if (output.size())
 			*m_s.rbegin() = ' ';
 	}
-	m_s.resize(m_s.size() - 1); // strip trailing space
+	if (outputs[order].size())
+		m_s.resize(m_s.size() - 1); // strip trailing space
 }
 
 moc_out_data

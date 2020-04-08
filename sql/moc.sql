@@ -3,7 +3,7 @@ SET client_min_messages = 'notice';
 
 SELECT smoc('');            -- expected: '0/'
 SELECT '0/'::smoc;          -- expected: '0/'
-SELECT '29/'::smoc;         -- expected: '0/'
+SELECT '29/'::smoc;         -- expected: '29/'
 SELECT '0/0-3,7'::smoc;     -- expected: '0/0-3,7'
 SELECT '0/0,1,2,3,7'::smoc; -- expected: '0/0-3,7'
 
