@@ -57,7 +57,7 @@ SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,1000-2000'::smoc;
 SELECT '0/'::smoc = '1/'::smoc AS eq;
  eq 
 ----
- t
+ f
 (1 row)
 
 SELECT '0/1,3,7'::smoc = '0/1,3,7' AS eq;
@@ -347,7 +347,7 @@ SELECT max_order(smoc(''));
 SELECT max_order(smoc('1/'));
  max_order 
 -----------
-         0
+         1
 (1 row)
 
 SELECT max_order(smoc('1/1'));
@@ -364,7 +364,7 @@ HINT:  The first value of a range (here 10) must be less than the second one (he
 SELECT max_order(smoc('1/0-3'));
  max_order 
 -----------
-         0
+         1
 (1 row)
 
 SELECT max_order(smoc('1/0-1'));
@@ -382,19 +382,19 @@ SELECT max_order(smoc('29/0-1'));
 SELECT max_order(smoc('29/0-3'));
  max_order 
 -----------
-        28
+        29
 (1 row)
 
 SELECT max_order(smoc('29/0-7'));
  max_order 
 -----------
-        28
+        29
 (1 row)
 
 SELECT max_order(smoc('29/0-15'));
  max_order 
 -----------
-        27
+        29
 (1 row)
 
 select set_smoc_output_type(0);

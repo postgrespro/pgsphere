@@ -97,6 +97,9 @@ release_moc_in_context(void*, pgs_error_handler);
 void
 add_to_moc(void*, long, hpint64, hpint64, pgs_error_handler);
 
+void
+moc_in_context_set_order(void* moc_in_context, int order);
+
 int
 get_moc_size(void*, pgs_error_handler);
 
@@ -151,7 +154,7 @@ moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 												pgs_error_handler error_out);
 
 void
-moc_healpix(void* moc_in_context, hpint64 first, hpint64 last,
+moc_healpix(void* moc_in_context, int order, hpint64 first, hpint64 last,
 												pgs_error_handler error_out);
 
 void

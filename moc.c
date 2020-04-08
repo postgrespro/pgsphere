@@ -155,6 +155,7 @@ smoc_in(PG_FUNCTION_ARGS)
 			}
 			order = nb;
 			npix = c_npix(order);
+			moc_in_context_set_order(moc_in_context, order);
 		}
 		else if (c == ',') /* nb is a Healpix index */
 		{
@@ -970,7 +971,7 @@ smoc_spoint(PG_FUNCTION_ARGS)
 	last = c_healpix_convert_nest(pixel + 1, order, HEALPIX_MAX_ORDER);
 
 	moc_in_context = create_moc_in_context(moc_error_out);
-	moc_healpix(moc_in_context, first, last, moc_error_out);
+	moc_healpix(moc_in_context, order, first, last, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	moc_ret = (Smoc*) palloc0(moc_size);

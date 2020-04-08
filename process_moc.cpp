@@ -273,6 +273,7 @@ struct moc_input
 	size_t		options_bytes;
 	size_t		options_size;
 	layout_vec	layout;
+	int			order = 0;
 
 	std::string s;
 	moc_input() : options_bytes(0), options_size(0)
@@ -439,6 +440,15 @@ add_to_moc(void* moc_in_context, long order, hpint64 first, hpint64 last,
 		add_to_map(m.input_map, first, last);
 	PGS_CATCH
 };
+
+void
+moc_in_context_set_order(void* moc_in_context, int order)
+{
+	moc_input* p = static_cast<moc_input*>(moc_in_context);
+	moc_input & m = *p;
+	if (order > m.order)
+		m.order = order;
+}
 
 // get_moc_size() prepares creation of MOC
 
@@ -643,12 +653,15 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 
 		moc->tree_begin	= tree_begin;	// start of level-end section
 		moc->area	= area;
+		/*
 		// simple linear search shift loop to calculate the moc order
 		int order;
 		for (order = 29; order > 0; --order, order_log >>= 2)
 			if (order_log & 3)
 				break;
 		moc->order	= order;
+		*/
+		moc->order	= m.order; // moc order provided by caller
 		moc->first	= 0; // first Healpix index in set
 		moc->last	= 0; // 1 + (last Healpix index in set)
 		if (m.input_map.size())
@@ -872,6 +885,8 @@ moc_union(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b, int32
 			moc_interval & x = *interval_ptr(moc_b, j);
 			add_to_map(m.input_map, x.first, x.second);
 		}
+
+		m.order = std::max(moc_a->order, moc_b->order);
 	PGS_CATCH
 };
 
@@ -918,6 +933,8 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 			else
 				b += entry_size;
 		}
+
+		m.order = std::max(moc_a->order, moc_b->order);
 	PGS_CATCH
 }
 
@@ -944,11 +961,13 @@ moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 
 			add_to_map(m.input_map, first, second);
 		}
+
+		m.order = order;
 	PGS_CATCH
 }
 
 void
-moc_healpix(void* moc_in_context, hpint64 first, hpint64 last,
+moc_healpix(void* moc_in_context, int order, hpint64 first, hpint64 last,
 												pgs_error_handler error_out)
 {
 	moc_input* p = static_cast<moc_input*>(moc_in_context);
@@ -956,6 +975,7 @@ moc_healpix(void* moc_in_context, hpint64 first, hpint64 last,
 	PGS_TRY
 		moc_map_entry input(first, last);
 		m.input_map.insert(m.input_map.end(), input);
+		m.order = order;
 	PGS_CATCH
 }
 
@@ -982,6 +1002,7 @@ moc_disc(void* moc_in_context, int order, double theta, double phi, double radiu
 			m.input_map.insert(m.input_map.end(), input);
 		}
 
+		m.order = order;
 	PGS_CATCH
 }
 
@@ -1015,5 +1036,6 @@ moc_polygon(void* moc_in_context, int order, int32 npts, float8 *polygon,
 			m.input_map.insert(m.input_map.end(), input);
 		}
 
+		m.order = order;
 	PGS_CATCH
 }
