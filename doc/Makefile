@@ -4,6 +4,7 @@
 #
 #----------------------------------------------------------------------------
 
+USE_PGXS = 1
 ifdef USE_PGXS
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
@@ -23,7 +24,7 @@ COLLATEINDEX = $(DOCBOOKSTYLE)/bin/collateindex.pl
 endif
 
 ifndef JADE
-JADE = jade
+JADE = openjade
 endif
 SGMLINCLUDE = -D $(srcdir)
 

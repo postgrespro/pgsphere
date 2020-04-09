@@ -5,11 +5,13 @@ stages:
   stage: build
   image: credativ/postgresql-build:${PGVERSION}
   before_script:
-    - apt-get -y install libhealpix-cxx-dev
+    - apt-get -y install libhealpix-cxx-dev docbook-dsssl docbook-xml openjade
   script:
     - make PROFILE="-Werror"
     - make install
     - if ! pg_virtualenv make installcheck; then cat regression.diffs; exit 1; fi
+    - make -C doc
+    - make -C doc install
 
 build:9.4: { <<: *build, variables: { PGVERSION: '9.4' } }
 build:9.5: { <<: *build, variables: { PGVERSION: '9.5' } }
