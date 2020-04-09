@@ -748,3 +748,6 @@ SELECT smoc(6, p) FROM g;
  5/4522 6/
 (1 row)
 
+-- lswscans/data/part1/Bruceplatten/FITS/B3558b.fits
+SELECT smoc(6, '{(1.28867804735846 , 0.421769766439468),(1.40564002826964 , 0.201070262502835),(1.27597340819331 , 0.210561432516079),(1.28707379974056 , 0.351693515652388)}'::spoly);
+ERROR:  MOC processing error: polygon is not convex

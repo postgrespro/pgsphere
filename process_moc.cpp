@@ -12,6 +12,7 @@
 #include <sstream>
 #include <exception>
 #include <stdexcept>
+#include <cxxabi.h> /* __cxa_current_exception_type */
 
 #include <healpix_base.h>
 
@@ -37,10 +38,15 @@
 		delete p;							\
 		error_out(e.what(), 0);				\
 	}										\
+	catch (PlanckError & e)				\
+	{										\
+		delete p;							\
+		error_out(e.what(), 0);				\
+	}										\
 	catch (...)								\
 	{										\
 		delete p;							\
-		error_out("unknown exception", 0);	\
+		error_out(__cxxabiv1::__cxa_current_exception_type()->name(), 0);	\
 	}
 
 using std::size_t;
