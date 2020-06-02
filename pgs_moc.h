@@ -8,7 +8,11 @@
 #include <postgres.h>
 #include <fmgr.h>
 #include <catalog/pg_type.h>
+#if PG_VERSION_NUM >= 130000
+#include <access/detoast.h>
+#else
 #include <access/tuptoaster.h>
+#endif
 
 #include "point.h" /* SPoint */
 
