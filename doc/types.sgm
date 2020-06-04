@@ -693,7 +693,7 @@ i             syntax is a somewhat complex.
 
         <sect2 id="dt.smoc">
             <title>
-                HEALPix Multi-Order Coverage map
+              <type>smoc</type>: HEALPix Multi-Order Coverage map
             </title>
             <para>
               <mediaobject>

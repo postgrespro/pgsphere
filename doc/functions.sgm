@@ -566,6 +566,66 @@
 <![CDATA[sql> SELECT sw ( sbox '( (0d,0d), (90d,0d) )' ) ;]]>
             </programlisting>
           </example>
+        </sect2>
+
+        <sect2 id="funcs.smoc">
+          <title>
+            <type>smoc</type> functions
+          </title>
+
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><function>smoc_info</function></funcdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            Returns information about the internal representation of the smoc.
+          </para>
+          <example>
+            <title>A circle</title>
+            <programlisting>
+<![CDATA[sql> SELECT smoc_info('0/4 1/0 2 12-13 34-35 45 47 2/4 6 12 14 56-57 60-61 88 90-91 116-117 119 130-131 134-135 177 179 185 187');]]>
+<![CDATA[                                                           smoc_info]]>
+<![CDATA[--------------------------------------------------------------------------------------------------------------------------------]]>
+<![CDATA[ version: 0, order: 2, depth: 1, first: 0, last: 3458764513820540928, area: 1261007895663738880, tree_begin: 48, data_begin: 72]]>
+            </programlisting>
+          </example>
+
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><function>smoc_area</function></funcdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            Returns the size of an smoc in order 29 pixels.
+          </para>
+
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><function>smoc_degrade</function></funcdef>
+                <paramdef><parameter>order</parameter> int</paramdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            Adjusts the order of an smoc to be more or less precise.
+          </para>
+
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><function>sum</function></funcdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+            <funcprototype>
+              <funcdef><function>intersection</function></funcdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            Aggregate functions for smoc union and intersection.
+          </para>
 
         </sect2>
         

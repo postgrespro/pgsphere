@@ -68,5 +68,32 @@
         </example>
 
       </sect2>
-        
+
+      <sect2 id="ind.smoc">
+        <title>
+          <type>smoc</type> index
+        </title>
+        <para>
+          <application>pgSphere</application> uses <literal>GIN</literal>
+          to create smoc indices. An index speeds up the execution
+          time of operators <link
+          linkend="op.over"><literal>&lt;@</literal></link>, <link
+          linkend="op.over"><literal>@</literal></link>, <link
+          linkend="op.over"><literal>&amp;&amp;</literal></link>, <link
+          linkend="op.equal"><literal>=</literal></link>, and <link
+          linkend="op.equal"><literal>!=</literal></link>.
+        </para>
+        <example>
+          <title>Index of smoc coverage objects</title>
+          <programlisting>
+<![CDATA[CREATE TABLE ivoa (]]>
+<![CDATA[  coverage smoc NOT NULL]]>
+<![CDATA[);]]>
+<![CDATA[-- Put in data now]]>
+<![CDATA[CREATE INDEX ON ivoa USING GIN (coverage);]]>
+          </programlisting>
+        </example>
+
+      </sect2>
+
     </sect1>
