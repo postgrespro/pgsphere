@@ -1115,7 +1115,7 @@ smoc_gin_extract_query(PG_FUNCTION_ARGS)
 	StrategyNumber st = PG_GETARG_UINT16(2);
 	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
 
-	if (st == MOC_GIN_STRATEGY_SUBSET)
+	if (st == MOC_GIN_STRATEGY_SUBSET || (st == MOC_GIN_STRATEGY_EQUAL && moc_a->area == 0))
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 
 	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
@@ -1129,7 +1129,7 @@ smoc_gin_extract_query_fine(PG_FUNCTION_ARGS)
 	StrategyNumber st = PG_GETARG_UINT16(2);
 	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
 
-	if (st == MOC_GIN_STRATEGY_SUBSET)
+	if (st == MOC_GIN_STRATEGY_SUBSET || (st == MOC_GIN_STRATEGY_EQUAL && moc_a->area == 0))
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 
 	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER_FINE));
@@ -1140,8 +1140,6 @@ smoc_gin_consistent(PG_FUNCTION_ARGS)
 {
 	bool*	check = (bool *) PG_GETARG_POINTER(0);
 	StrategyNumber st = PG_GETARG_UINT16(1);
-	//Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(2));
-	//int32	moc_a_end = VARSIZE(moc_a) - VARHDRSZ;
 	int32	nkeys = PG_GETARG_INT32(3);
 	bool*	recheck = (bool *) PG_GETARG_POINTER(5);
 
@@ -1166,6 +1164,7 @@ smoc_gin_consistent(PG_FUNCTION_ARGS)
 			PG_RETURN_BOOL(true);
 
 		case MOC_GIN_STRATEGY_SUPERSET:
+		case MOC_GIN_STRATEGY_EQUAL:
 			/* return true when all pixels are contained in the indexed value */
 			for (int i = 0; i < nkeys; i++)
 			{
