@@ -66,6 +66,16 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 (4 rows)
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage = '0/0-11';
+                                   QUERY PLAN                                   
+--------------------------------------------------------------------------------
+ Seq Scan on moc100  (cost=0.00..6.26 rows=1 width=96) (actual rows=23 loops=1)
+   Filter: (coverage = '0/0-11'::smoc)
+   Rows Removed by Filter: 78
+   Buffers: shared hit=59
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT * FROM moc100 WHERE coverage = '6/43225,43227';
                                   QUERY PLAN                                   
 -------------------------------------------------------------------------------
@@ -82,6 +92,36 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
  Seq Scan on moc100  (cost=0.00..6.26 rows=1 width=96) (actual rows=1 loops=1)
    Filter: (coverage = '0/'::smoc)
    Rows Removed by Filter: 100
+   Buffers: shared hit=59
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '0/0-11';
+                                    QUERY PLAN                                    
+----------------------------------------------------------------------------------
+ Seq Scan on moc100  (cost=0.00..6.26 rows=100 width=96) (actual rows=78 loops=1)
+   Filter: (coverage <> '0/0-11'::smoc)
+   Rows Removed by Filter: 23
+   Buffers: shared hit=59
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '6/43225,43227';
+                                    QUERY PLAN                                     
+-----------------------------------------------------------------------------------
+ Seq Scan on moc100  (cost=0.00..6.26 rows=100 width=96) (actual rows=100 loops=1)
+   Filter: (coverage <> '6/43225 43227'::smoc)
+   Rows Removed by Filter: 1
+   Buffers: shared hit=59
+(4 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '0/';
+                                    QUERY PLAN                                     
+-----------------------------------------------------------------------------------
+ Seq Scan on moc100  (cost=0.00..6.26 rows=100 width=96) (actual rows=100 loops=1)
+   Filter: (coverage <> '0/'::smoc)
+   Rows Removed by Filter: 1
    Buffers: shared hit=59
 (4 rows)
 
@@ -128,6 +168,20 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 (8 rows)
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage = '0/0-11';
+                                                  QUERY PLAN                                                   
+---------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=98308.01..98312.02 rows=1 width=96) (actual rows=23 loops=1)
+   Recheck Cond: (coverage = '0/0-11'::smoc)
+   Rows Removed by Index Recheck: 1
+   Heap Blocks: exact=2
+   Buffers: shared hit=24581
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..98308.01 rows=1 width=0) (actual rows=24 loops=1)
+         Index Cond: (coverage = '0/0-11'::smoc)
+         Buffers: shared hit=24577
+(8 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
 	SELECT * FROM moc100 WHERE coverage = '6/43225,43227';
                                                  QUERY PLAN                                                 
 ------------------------------------------------------------------------------------------------------------
@@ -153,4 +207,46 @@ EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
          Index Cond: (coverage = '0/'::smoc)
          Buffers: shared hit=4
 (7 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '0/0-11';
+                                                    QUERY PLAN                                                    
+------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=98316.77..98323.02 rows=100 width=96) (actual rows=78 loops=1)
+   Recheck Cond: (coverage <> '0/0-11'::smoc)
+   Rows Removed by Index Recheck: 23
+   Heap Blocks: exact=5
+   Buffers: shared hit=24821
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..98316.75 rows=100 width=0) (actual rows=101 loops=1)
+         Index Cond: (coverage <> '0/0-11'::smoc)
+         Buffers: shared hit=24762
+(8 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '6/43225,43227';
+                                                    QUERY PLAN                                                    
+------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=98316.77..98323.02 rows=100 width=96) (actual rows=100 loops=1)
+   Recheck Cond: (coverage <> '6/43225 43227'::smoc)
+   Rows Removed by Index Recheck: 1
+   Heap Blocks: exact=5
+   Buffers: shared hit=247
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..98316.75 rows=100 width=0) (actual rows=101 loops=1)
+         Index Cond: (coverage <> '6/43225 43227'::smoc)
+         Buffers: shared hit=188
+(8 rows)
+
+EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
+	SELECT * FROM moc100 WHERE coverage <> '0/';
+                                                    QUERY PLAN                                                    
+------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on moc100  (cost=98316.77..98323.02 rows=100 width=96) (actual rows=100 loops=1)
+   Recheck Cond: (coverage <> '0/'::smoc)
+   Rows Removed by Index Recheck: 1
+   Heap Blocks: exact=5
+   Buffers: shared hit=245
+   ->  Bitmap Index Scan on moc100_coverage_idx  (cost=0.00..98316.75 rows=100 width=0) (actual rows=101 loops=1)
+         Index Cond: (coverage <> '0/'::smoc)
+         Buffers: shared hit=186
+(8 rows)
 

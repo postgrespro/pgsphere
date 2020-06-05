@@ -128,5 +128,6 @@ next_interval(int32 a)
 #define MOC_GIN_STRATEGY_SUBSET		2
 #define MOC_GIN_STRATEGY_SUPERSET	3
 #define MOC_GIN_STRATEGY_EQUAL		4
+#define MOC_GIN_STRATEGY_UNEQUAL	5
 
 #endif

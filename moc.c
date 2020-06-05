@@ -1117,6 +1117,8 @@ smoc_gin_extract_query(PG_FUNCTION_ARGS)
 
 	if (st == MOC_GIN_STRATEGY_SUBSET || (st == MOC_GIN_STRATEGY_EQUAL && moc_a->area == 0))
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
+	else if (st == MOC_GIN_STRATEGY_UNEQUAL)
+		*searchmode = GIN_SEARCH_MODE_ALL;
 
 	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
 }
@@ -1131,6 +1133,8 @@ smoc_gin_extract_query_fine(PG_FUNCTION_ARGS)
 
 	if (st == MOC_GIN_STRATEGY_SUBSET || (st == MOC_GIN_STRATEGY_EQUAL && moc_a->area == 0))
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
+	else if (st == MOC_GIN_STRATEGY_UNEQUAL)
+		*searchmode = GIN_SEARCH_MODE_ALL;
 
 	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER_FINE));
 }
@@ -1174,6 +1178,20 @@ smoc_gin_consistent(PG_FUNCTION_ARGS)
 				}
 			}
 
+			*recheck = true;
+			PG_RETURN_BOOL(true);
+
+		case MOC_GIN_STRATEGY_UNEQUAL:
+			/* return true when there is a difference */
+			for (int i = 0; i < nkeys; i++)
+			{
+				if (! check[i])
+				{
+					PG_RETURN_BOOL(true);
+				}
+			}
+
+			/* we still need to recheck otherwise */
 			*recheck = true;
 			PG_RETURN_BOOL(true);
 
