@@ -514,6 +514,14 @@
             </title>
 
             <para>
+                A unique feature of MOCs compared to the other
+                <application>pgSphere</application>
+                objects is that their unions and intersections are again MOCs.
+                Hence, smocs support two special operators which both yield
+                <type>smoc</type> as output:
+            </para>
+
+            <para>
               Union:
             </para>
               <programlisting>

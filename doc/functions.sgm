@@ -612,6 +612,12 @@
           <para>
             Adjusts the order of an smoc to be more or less precise.
           </para>
+          <para>
+            When order is smaller than smoc's maximal order, the MOC resolution
+            is degraded to the new order, and its maximal order is set to that
+            order. When order is larger than the smoc's maximal order, smoc's
+            shape is not modified, but its maximal order is raised to order.
+          </para>
 
           <funcsynopsis>
             <funcprototype>
@@ -624,8 +630,18 @@
             </funcprototype>
           </funcsynopsis>
           <para>
-            Aggregate functions for smoc union and intersection.
+            <type>smoc</type> union and intersection are available as aggregate functions
+            that compute the aggretated area over a given column.
           </para>
+          <example>
+            <title>Computing the overall coverage of a catalog</title>
+            <programlisting>
+<![CDATA[SELECT sum(coverage) FROM ivoa;]]>
+<![CDATA[    sum]]>
+<![CDATA[-----------]]>
+<![CDATA[ 0/0-11 6/]]>
+            </programlisting>
+          </example>
 
         </sect2>
         

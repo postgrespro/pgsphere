@@ -717,7 +717,10 @@ i             syntax is a somewhat complex.
               union, intersection and equality operations between them. In order
               to accomplish this task, we based the system on a regular and
               hierarchical partitioning of the sphere, a process called
-              tessellation.
+              tessellation, yielding pixels of different size. At level 0, the
+              sky is divided into 12 pixels numbered 0 to 11. At the maximally
+              defined level 29, there are 12 * 4^29 = 3458764513820540928
+              pixels.
             </para>
             <para>
               The MOC standard is described at http://www.ivoa.net/documents/MOC/
