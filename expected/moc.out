@@ -1,5 +1,5 @@
 SET client_min_messages = 'notice';
--- SET client_min_messages = 'warning';
+SET extra_float_digits = 0; -- make results compatible with 9.6 .. 11
 SELECT smoc('');            -- expected: '0/'
  smoc 
 ------
@@ -40,6 +40,30 @@ SELECT smoc_info('0/1-2'::smoc);
                                                                    smoc_info                                                                   
 -----------------------------------------------------------------------------------------------------------------------------------------------
  version: 0, order: 0, depth: 1, first: 288230376151711744, last: 864691128455135232, area: 576460752303423488, tree_begin: 48, data_begin: 72
+(1 row)
+
+SELECT area('0/'::smoc);
+ area 
+------
+    0
+(1 row)
+
+SELECT area('29/1'::smoc);
+         area         
+----------------------
+ 3.63319635209232e-18
+(1 row)
+
+SELECT area('0/1-3'::smoc);
+       area       
+------------------
+ 3.14159265358979
+(1 row)
+
+SELECT area('0/0-11'::smoc);
+       area       
+------------------
+ 12.5663706143592
 (1 row)
 
 SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,10000-20000'::smoc;

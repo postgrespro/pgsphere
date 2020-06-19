@@ -8,9 +8,9 @@ CREATE FUNCTION smoc_info (smoc)
 	IMMUTABLE
 	STRICT;
 
-CREATE FUNCTION smoc_area (smoc)
-	RETURNS bigint
-	AS 'MODULE_PATHNAME'
+CREATE FUNCTION area (smoc)
+	RETURNS double precision
+	AS 'MODULE_PATHNAME', 'smoc_area'
 	LANGUAGE C
 	PARALLEL SAFE
 	IMMUTABLE

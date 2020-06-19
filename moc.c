@@ -418,7 +418,7 @@ smoc_area(PG_FUNCTION_ARGS)
 	/* get just the MOC header: */
 	Smoc *moc = (Smoc *) PG_DETOAST_DATUM_SLICE(PG_GETARG_DATUM(0), 0,
 															MOC_HEADER_VARSIZE);
-	PG_RETURN_INT64(moc->area);
+	PG_RETURN_FLOAT8(moc->area * 4.0 * M_PI / MOC_AREA_ALL_SKY);
 }
 
 Datum
