@@ -944,7 +944,7 @@ smoc_degrade(PG_FUNCTION_ARGS)
 
 	check_order(order);
 
-	moc_round(moc_in_context, order, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_error_out);
+	moc_degrade(moc_in_context, order, moc_a, VARSIZE(moc_a) - VARHDRSZ, moc_error_out);
 
 	moc_size = VARHDRSZ + get_moc_size(moc_in_context, moc_error_out);
 	/* palloc() will leak the moc_in_context if it fails :-/ */

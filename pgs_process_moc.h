@@ -150,7 +150,7 @@ moc_intersection(void* moc_in_context, Smoc* moc_a, int32 moc_a_end, Smoc* moc_b
 												pgs_error_handler error_out);
 
 void
-moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
+moc_degrade(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 												pgs_error_handler error_out);
 
 void
