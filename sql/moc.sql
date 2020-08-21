@@ -11,7 +11,9 @@ SELECT smoc_info('0/'::smoc);
 SELECT smoc_info('0/1-2'::smoc);
 
 SELECT area('0/'::smoc);
+SET extra_float_digits = -1; -- last digit deviating on i386
 SELECT area('29/1'::smoc);
+SET extra_float_digits = 0;
 SELECT area('0/1-3'::smoc);
 SELECT area('0/0-11'::smoc);
 

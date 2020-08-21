@@ -48,12 +48,14 @@ SELECT area('0/'::smoc);
     0
 (1 row)
 
+SET extra_float_digits = -1; -- last digit deviating on i386
 SELECT area('29/1'::smoc);
-         area         
-----------------------
- 3.63319635209232e-18
+        area         
+---------------------
+ 3.6331963520923e-18
 (1 row)
 
+SET extra_float_digits = 0;
 SELECT area('0/1-3'::smoc);
        area       
 ------------------
