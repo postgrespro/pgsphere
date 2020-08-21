@@ -965,7 +965,7 @@ moc_round(void* moc_in_context, int order, Smoc* moc_a, int32 moc_a_end,
 
 			int		shift = 2 * (HEALPIX_MAX_ORDER - order);
 			hpint64	first = (x.first >> shift) << shift; // set low bits to zero
-			hpint64	low_bits_one = (1L << shift) - 1;
+			hpint64	low_bits_one = (1LL << shift) - 1;
 			hpint64	second = ((x.second + low_bits_one) >> shift) << shift; // round low bits up
 
 			add_to_map(m.input_map, first, second);
