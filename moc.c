@@ -1067,7 +1067,7 @@ smoc_gin_extract_internal(Smoc *moc_a, int32 *nkeys, int gin_order)
 
 		int		shift = 2 * (HEALPIX_MAX_ORDER - gin_order); // degrade to MOC_GIN_ORDER
 		int32	first = (x->first >> shift); // set low bits to zero
-		hpint64	low_bits_one = (1L << shift) - 1;
+		hpint64	low_bits_one = (1LL << shift) - 1;
 		int32	second = ((x->second + low_bits_one) >> shift); // round low bits up
 		Assert(shift > 32); // internal GIN datatype isn't 64 bits
 
