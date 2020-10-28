@@ -506,6 +506,7 @@ spherepath_in(PG_FUNCTION_ARGS)
 	char	   *c = PG_GETARG_CSTRING(0);
 	int32		i, nelem;
 	void		sphere_yyparse(void);
+	SPoint     *arr;
 
 	init_buffer(c);
 	sphere_yyparse();
@@ -513,13 +514,14 @@ spherepath_in(PG_FUNCTION_ARGS)
 	nelem = get_path_count();
 	if (nelem > 1)
 	{
-		SPoint		arr[nelem];
+		arr = (SPoint *)palloc(sizeof(SPoint)*nelem);
 
 		for (i = 0; i < nelem; i++)
 		{
 			get_path_elem(i, &arr[i].lng, &arr[i].lat);
 		}
 		path = spherepath_from_array(&arr[0], nelem);
+		pfree(arr);
 	}
 	else
 	{

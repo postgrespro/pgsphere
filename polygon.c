@@ -815,6 +815,7 @@ spherepoly_in(PG_FUNCTION_ARGS)
 	char	   *c = PG_GETARG_CSTRING(0);
 	int32		i,
 				nelem;
+	SPoint	   *arr;
 
 	void		sphere_yyparse(void);
 
@@ -824,13 +825,14 @@ spherepoly_in(PG_FUNCTION_ARGS)
 	nelem = get_path_count();
 	if (nelem > 2)
 	{
-		SPoint		arr[nelem];
+		arr = (SPoint *)palloc(sizeof(SPoint)*nelem);
 
 		for (i = 0; i < nelem; i++)
 		{
 			get_path_elem(i, &arr[i].lng, &arr[i].lat);
 		}
 		poly = spherepoly_from_array(&arr[0], nelem);
+		pfree(arr);
 	}
 	else
 	{
@@ -892,11 +894,12 @@ spherepoly_area(PG_FUNCTION_ARGS)
 {
 	SPOLY	   *poly = PG_GETARG_SPOLY(0);
 	int32		i;
-	SPoint		s[poly->npts + 2];
+	SPoint 	   *s;
 	SPoint		stmp[2];
 	SEuler		se;
 	float8		sum = 0.0;
 
+	s=(SPoint *)palloc(sizeof(SPoint)*(poly->npts + 2));
 	memcpy((void *) &s[1],
 		   (void *) &poly->p[0],
 		   poly->npts * sizeof(SPoint));
@@ -936,6 +939,7 @@ spherepoly_area(PG_FUNCTION_ARGS)
 		sum = 0.0;
 	}
 
+	pfree(s);
 	PG_RETURN_FLOAT8(sum);
 }
 
