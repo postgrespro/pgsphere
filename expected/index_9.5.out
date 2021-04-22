@@ -1,0 +1,62 @@
+-- test spoint3 operator class with and without index-only scan
+SET enable_seqscan = OFF;
+SET enable_bitmapscan = OFF;
+SET enable_indexonlyscan = ON;
+EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
+                       QUERY PLAN                       
+--------------------------------------------------------
+ Aggregate
+   ->  Index Only Scan using spoint3_idx on spheretmp1b
+         Index Cond: (p <@ '<(1 , 1) , 0.3>'::scircle)
+(3 rows)
+
+                    SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
+ count 
+-------
+    32
+(1 row)
+
+EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
+                       QUERY PLAN                       
+--------------------------------------------------------
+ Aggregate
+   ->  Index Only Scan using spoint3_idx on spheretmp1b
+         Index Cond: (p = '(3.09 , 1.25)'::spoint)
+(3 rows)
+
+                    SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
+ count 
+-------
+     4
+(1 row)
+
+SET enable_bitmapscan = ON;
+SET enable_indexonlyscan = OFF;
+EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
+                      QUERY PLAN                       
+-------------------------------------------------------
+ Aggregate
+   ->  Index Scan using spoint3_idx on spheretmp1b
+         Index Cond: (p <@ '<(1 , 1) , 0.3>'::scircle)
+(3 rows)
+
+                    SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
+ count 
+-------
+    32
+(1 row)
+
+EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
+                    QUERY PLAN                     
+---------------------------------------------------
+ Aggregate
+   ->  Index Scan using spoint3_idx on spheretmp1b
+         Index Cond: (p = '(3.09 , 1.25)'::spoint)
+(3 rows)
+
+                    SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
+ count 
+-------
+     4
+(1 row)
+

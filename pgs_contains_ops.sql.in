@@ -1112,7 +1112,7 @@ CREATE OPERATOR !@> (
    LEFTARG    = spoly,
    RIGHTARG   = sellipse,
    PROCEDURE  = spoly_contains_ellipse_neg,
-   COMMUTATOR = '!>@',
+   COMMUTATOR = '!<@',
    NEGATOR    = '@>',
    RESTRICT   = contsel,
    JOIN       = contjoinsel
@@ -1154,7 +1154,7 @@ CREATE OPERATOR <@ (
    JOIN       = contjoinsel
 );
 
-COMMENT ON OPERATOR <@ (spoly, sellipse) IS 'true if spherical polygon (LHS) is contained by spherical elli[pse (RHS)';
+COMMENT ON OPERATOR <@ (spoly, sellipse) IS 'true if spherical polygon (LHS) is contained by spherical ellipse (RHS)';
 
 CREATE OPERATOR !@> (
    LEFTARG    = sellipse,
@@ -1178,7 +1178,7 @@ CREATE OPERATOR !<@ (
    JOIN       = contjoinsel
 );
 
-COMMENT ON OPERATOR !<@ (spoly, sellipse) IS 'true if spherical polygon (LHS) is not contained by spherical elli[pse (RHS)';
+COMMENT ON OPERATOR !<@ (spoly, sellipse) IS 'true if spherical polygon (LHS) is not contained by spherical ellipse (RHS)';
 
 CREATE OPERATOR @> (
    LEFTARG    = spath,

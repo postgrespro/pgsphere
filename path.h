@@ -12,9 +12,9 @@
  */
 typedef struct
 {
-	int32	size;	/* total size in bytes */
-	int32	npts;	/* count of points */
-	SPoint	p[1];	/* variable length array of SPoints */
+	char	vl_len_[4];	/* total size in bytes */
+	int32	npts;		/* count of points */
+	SPoint	p[1];		/* variable length array of SPoints */
 } SPATH;
 
 

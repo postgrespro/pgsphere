@@ -161,6 +161,10 @@
                 queries using binary operators returning
                 <emphasis>true</emphasis> or <emphasis>false</emphasis>:
             </para>
+            <para>
+                <screen>
+                </screen>
+            </para>
             <table frame="all" rowsep="1" colsep="1">
               <title>Contain and overlap operators</title>
               <tgroup cols="2" colsep="1" rowsep="1">
@@ -175,7 +179,7 @@
                 <tbody>
                   <row>
                     <entry>
-                      @ or &lt;@
+                      &lt;@ or @ (deprecated, not for smoc)
                     </entry>
                     <entry>
                       the left object is contained by the right object
@@ -183,7 +187,7 @@
                   </row>
                   <row>
                     <entry>
-                      &tilde; or @&gt;
+                      @&gt; or &tilde; (deprecated, not for smoc)
                     </entry>
                     <entry>
                       the left object contains the right object
@@ -191,7 +195,7 @@
                   </row>
                   <row>
                     <entry>
-                      !@  or !&lt;@
+                      !&lt;@ or !@ (deprecated, not for smoc)
                     </entry>
                     <entry>
                       the left object is not contained by the right object
@@ -199,7 +203,7 @@
                   </row>
                   <row>
                     <entry>
-                      !&tilde; or !@&gt;
+                      !@&gt; or !&tilde; (deprecated, not for smoc)
                     </entry>
                     <entry>
                       the left object does not contain the right object
@@ -227,14 +231,14 @@
             <para>
                 An overlap or contain operator does not exist for all
                 combinations of data types.
-                For instance, scircle @ <type>spoint</type> is
+                For instance, scircle <@ <type>spoint</type> is
                 useless because a spherical point can never contain a
                 spherical circle.
             </para>
             <example>
               <title>Is the left circle contained by the right circle?</title>
               <programlisting>
-<![CDATA[sql> SELECT scircle '<(0d,20d),2d>' @ scircle '<(355d,20d),10d>' AS test ;]]>
+<![CDATA[sql> SELECT scircle '<(0d,20d),2d>' <@ scircle '<(355d,20d),10d>' AS test ;]]>
 <![CDATA[test]]>
 <![CDATA[------]]>
 <![CDATA[ t]]>
@@ -503,5 +507,34 @@
               </programlisting>
             </example>
         </sect2>
-        
+
+        <sect2 id="op.smoc">
+            <title>
+                <type>smoc</type> operators
+            </title>
+
+            <para>
+                A unique feature of MOCs compared to the other
+                <application>pgSphere</application>
+                objects is that their unions and intersections are again MOCs.
+                Hence, smocs support two special operators which both yield
+                <type>smoc</type> as output:
+            </para>
+
+            <para>
+              Union:
+            </para>
+              <programlisting>
+<![CDATA[smoc | smoc]]>
+              </programlisting>
+
+            <para>
+              Intersection:
+            </para>
+              <programlisting>
+<![CDATA[smoc & smoc]]>
+              </programlisting>
+
+        </sect2>
+
     </sect1>

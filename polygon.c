@@ -261,7 +261,7 @@ euler_spoly_trans(SPOLY *out, const SPOLY *in, const SEuler *se)
 {
 	int32		i;
 
-	out->size = in->size;
+	SET_VARSIZE(out, VARSIZE(in));
 	out->npts = in->npts;
 	for (i = 0; i < in->npts; i++)
 		euler_spoint_trans(&out->p[i], &in->p[i], se);

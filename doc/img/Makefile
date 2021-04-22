@@ -11,5 +11,8 @@ eps : $(EPS)
 %.eps: %.jpg
 	$(CONVERT) $< eps:$@
 
+%.eps: %.png
+	$(CONVERT) $< eps:$@
+
 clean :
 	rm -f $(EPS)

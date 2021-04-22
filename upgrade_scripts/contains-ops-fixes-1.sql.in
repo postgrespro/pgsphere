@@ -1,0 +1,39 @@
+-- catch up with the operator definitions that were fixed by commit bcdef9dcd2a8406d384f0d2cedd3aa349fd63cf3
+
+DROP OPERATOR !~ (sline, spoint) CASCADE;
+DROP OPERATOR !@ (spoint, sline) CASCADE;
+DROP OPERATOR !~ (spoly, spoint) CASCADE;
+
+CREATE OPERATOR !~ (
+   LEFTARG    = sline,
+   RIGHTARG   = spoint,
+   PROCEDURE  = sline_contains_point_neg,
+   COMMUTATOR = '!@',
+   NEGATOR    = '~',
+   RESTRICT   = contsel,
+   JOIN       = contjoinsel
+);
+COMMENT ON OPERATOR !~ (sline, spoint) IS 'true if spherical line (LHS) does not contain spherical point (RHS)';
+
+CREATE OPERATOR !@ (
+   LEFTARG    = spoint,
+   RIGHTARG   = sline,
+   PROCEDURE  = sline_contains_point_com_neg,
+   COMMUTATOR = '!~',
+   NEGATOR    = '@',
+   RESTRICT   = contsel,
+   JOIN       = contjoinsel
+);
+COMMENT ON OPERATOR !@ (spoint, sline) IS 'true if spherical point (LHS) is not contained by spherical line (RHS)';
+
+CREATE OPERATOR !~ (
+   LEFTARG    = spoly,
+   RIGHTARG   = spoint,
+   PROCEDURE  = spoly_contains_point_neg,
+   COMMUTATOR = '!@',
+   NEGATOR    = '~',
+   RESTRICT   = contsel,
+   JOIN       = contjoinsel
+);
+COMMENT ON OPERATOR !~ (spoly, spoint) IS 'true if spherical polygon (LHS) does not contain spherical point (RHS)';
+

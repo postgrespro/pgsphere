@@ -1,0 +1,26 @@
+-- fix typo in commutator of OPERATOR !@>(spoly, sellipse) (a.k.a. !~) introduced in commits 2798ed96f9282ddeee21d5ddd3e256bbb9b4f36f and 244c1549c492426b62bc926c9ac2ad21f3ccd0c1
+
+DROP OPERATOR !@> (spoly, sellipse) CASCADE;
+DROP OPERATOR  !~ (spoly, sellipse) CASCADE;
+
+CREATE OPERATOR !@> (
+   LEFTARG    = spoly,
+   RIGHTARG   = sellipse,
+   PROCEDURE  = spoly_contains_ellipse_neg,
+   COMMUTATOR = '!<@',
+   NEGATOR    = '@>',
+   RESTRICT   = contsel,
+   JOIN       = contjoinsel
+);
+COMMENT ON OPERATOR !@> (spoly, sellipse) IS 'true if spherical polygon (LHS) does not contain spherical ellipse (RHS)';
+
+CREATE OPERATOR !~ (
+   LEFTARG    = spoly,
+   RIGHTARG   = sellipse,
+   PROCEDURE  = spoly_contains_ellipse_neg,
+   COMMUTATOR = '!@',
+   NEGATOR    = '~',
+   RESTRICT   = contsel,
+   JOIN       = contjoinsel
+);
+COMMENT ON OPERATOR !~ (spoly, sellipse) IS 'true if spherical polygon (LHS) does not contain spherical ellipse (RHS)';

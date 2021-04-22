@@ -65,7 +65,7 @@ gq_cache_get_value(unsigned pgstype, const void *query, int32 **key)
 				{
 					if (memcmp((void *) cquery,
 							   (void *) &((SPATH *) query)->p,
-							   ((SPATH *) query)->size) == 0)
+							   ((SPATH *) query)->npts * sizeof(SPoint)) == 0)
 						res = true;
 				}
 				break;
@@ -74,7 +74,7 @@ gq_cache_get_value(unsigned pgstype, const void *query, int32 **key)
 				{
 					if (memcmp((void *) cquery,
 							   (void *) &((SPOLY *) query)->p,
-							   ((SPOLY *) query)->size) == 0)
+							   ((SPOLY *) query)->npts * sizeof(SPoint)) == 0)
 						res = true;
 				}
 				break;
@@ -132,18 +132,18 @@ gq_cache_set_value(unsigned pgstype, const void *query, const int32 *key)
 			GQ_MEMCPY(SBOX);
 			break;
 		case PGS_TYPE_SPATH:
-			cquery = (void *) malloc(((SPATH *) query)->size);
+			cquery = (void *) malloc(((SPATH *) query)->npts * sizeof(SPoint));
 			npts = ((SPATH *) query)->npts;
 			memcpy((void *) cquery,
 				   (void *) &((SPATH *) query)->p,
-				   ((SPATH *) query)->size);
+				   ((SPATH *) query)->npts * sizeof(SPoint));
 			break;
 		case PGS_TYPE_SPOLY:
-			cquery = (void *) malloc(((SPOLY *) query)->size);
+			cquery = (void *) malloc(((SPOLY *) query)->npts * sizeof(SPoint));
 			npts = ((SPOLY *) query)->npts;
 			memcpy((void *) cquery,
 				   (void *) &((SPOLY *) query)->p,
-				   ((SPOLY *) query)->size);
+				   ((SPOLY *) query)->npts * sizeof(SPoint));
 			break;
 		default:
 			keytype = 0;
