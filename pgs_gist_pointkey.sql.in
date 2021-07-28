@@ -1,0 +1,38 @@
+CREATE FUNCTION pointkey_in(CSTRING)
+   RETURNS pointkey
+   AS 'MODULE_PATHNAME', 'pointkey_in'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+
+CREATE FUNCTION pointkey_out(pointkey)
+   RETURNS CSTRING
+   AS 'MODULE_PATHNAME', 'pointkey_out'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+CREATE FUNCTION pointkey_volume(pointkey)
+   RETURNS float8
+   AS 'MODULE_PATHNAME', 'pointkey_volume'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+CREATE FUNCTION pointkey_area(pointkey)
+   RETURNS float8
+   AS 'MODULE_PATHNAME', 'pointkey_area'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+CREATE FUNCTION pointkey_perimeter(pointkey)
+   RETURNS float8
+   AS 'MODULE_PATHNAME', 'pointkey_perimeter'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+CREATE TYPE pointkey (
+   input = pointkey_in,
+   output = pointkey_out,
+   internallength = VARIABLE,
+   ALIGNMENT = double,
+   STORAGE = PLAIN
+);

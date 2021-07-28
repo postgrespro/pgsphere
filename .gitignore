@@ -1,6 +1,10 @@
+*.bc
 *.o
 *.so
 /*.sql
-/results
+/doc/html/
+/doc/pg_sphere.dsl
+/results/
 regression.out
 regression.diffs
+tags

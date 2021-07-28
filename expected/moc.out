@@ -1,0 +1,779 @@
+SET client_min_messages = 'notice';
+SET extra_float_digits = 0; -- make results compatible with 9.6 .. 11
+SELECT smoc('');            -- expected: '0/'
+ smoc 
+------
+ 0/
+(1 row)
+
+SELECT '0/'::smoc;          -- expected: '0/'
+ smoc 
+------
+ 0/
+(1 row)
+
+SELECT '29/'::smoc;         -- expected: '29/'
+ smoc 
+------
+ 29/
+(1 row)
+
+SELECT '0/0-3,7'::smoc;     -- expected: '0/0-3,7'
+  smoc   
+---------
+ 0/0-3 7
+(1 row)
+
+SELECT '0/0,1,2,3,7'::smoc; -- expected: '0/0-3,7'
+  smoc   
+---------
+ 0/0-3 7
+(1 row)
+
+SELECT smoc_info('0/'::smoc);
+                                         smoc_info                                          
+--------------------------------------------------------------------------------------------
+ version: 0, order: 0, depth: 1, first: 0, last: 0, area: 0, tree_begin: 36, data_begin: 56
+(1 row)
+
+SELECT smoc_info('0/1-2'::smoc);
+                                                                   smoc_info                                                                   
+-----------------------------------------------------------------------------------------------------------------------------------------------
+ version: 0, order: 0, depth: 1, first: 288230376151711744, last: 864691128455135232, area: 576460752303423488, tree_begin: 48, data_begin: 72
+(1 row)
+
+SELECT area('0/'::smoc);
+ area 
+------
+    0
+(1 row)
+
+SET extra_float_digits = -1; -- last digit deviating on i386
+SELECT area('29/1'::smoc);
+        area         
+---------------------
+ 3.6331963520923e-18
+(1 row)
+
+SET extra_float_digits = 0;
+SELECT area('0/1-3'::smoc);
+       area       
+------------------
+ 3.14159265358979
+(1 row)
+
+SELECT area('0/0-11'::smoc);
+       area       
+------------------
+ 12.5663706143592
+(1 row)
+
+SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,10000-20000'::smoc;
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT '(0.78, 0.81)'::spoint <@ '7/123-456,1000-2000'::smoc;
+ ?column? 
+----------
+ f
+(1 row)
+
+SELECT '0/'::smoc = '1/'::smoc AS eq;
+ eq 
+----
+ f
+(1 row)
+
+SELECT '0/1,3,7'::smoc = '0/1,3,7' AS eq;
+ eq 
+----
+ t
+(1 row)
+
+SELECT '0/1,4,7'::smoc = '0/1,3,7' AS eq;
+ eq 
+----
+ f
+(1 row)
+
+SELECT '0/1,2,3'::smoc <> '0/1-3'::smoc AS neq;
+ neq 
+-----
+ f
+(1 row)
+
+SELECT '0/4-6'::smoc && '0/3,7-8'::smoc AS overlap;
+ overlap 
+---------
+ f
+(1 row)
+
+SELECT '0/4-6'::smoc && '0/3,6-8'::smoc AS overlap;
+ overlap 
+---------
+ t
+(1 row)
+
+SELECT '0/4-6'::smoc !&& '0/6'::smoc AS not_overlap;
+ not_overlap 
+-------------
+ f
+(1 row)
+
+SELECT 1 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339,0-1'));
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT 1 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ f
+(1 row)
+
+SELECT 2 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT 6 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ f
+(1 row)
+
+SELECT 29 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT 333 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT 555 <@ (smoc('29/2-5,20-29,123,444,17-21,33-39,332-339'));
+ ?column? 
+----------
+ f
+(1 row)
+
+SELECT set_smoc_output_type(1);
+         set_smoc_output_type          
+---------------------------------------
+ Set output type to MOC intervals (1).
+(1 row)
+
+SELECT '29/0-3,7'::smoc;
+      smoc       
+-----------------
+ {[0, 4) [7, 8)}
+(1 row)
+
+SELECT '29/0,1,2,3,7'::smoc;
+      smoc       
+-----------------
+ {[0, 4) [7, 8)}
+(1 row)
+
+SELECT '29/3-11,70-88,22-34'::smoc;
+            smoc             
+-----------------------------
+ {[3, 12) [22, 35) [70, 89)}
+(1 row)
+
+SELECT '29/5-11,70-88,2-4'::smoc;
+        smoc        
+--------------------
+ {[2, 12) [70, 89)}
+(1 row)
+
+SELECT '29/11-18,22-27,31-35,42-55,62-69,100-111,15-49'::smoc;
+              smoc              
+--------------------------------
+ {[11, 56) [62, 70) [100, 112)}
+(1 row)
+
+SELECT '29/1-3,20-30,7-17'::smoc;
+           smoc            
+---------------------------
+ {[1, 4) [7, 18) [20, 31)}
+(1 row)
+
+SELECT '29/16-32,10-20'::smoc;
+    smoc    
+------------
+ {[10, 33)}
+(1 row)
+
+SELECT '29/1-3,11-14,17-21,40-50,9-33'::smoc;
+           smoc            
+---------------------------
+ {[1, 4) [9, 34) [40, 51)}
+(1 row)
+
+SELECT '29/10-20,16-32'::smoc;
+    smoc    
+------------
+ {[10, 33)}
+(1 row)
+
+SELECT '29/20-30,64-72,89-93,26-100'::smoc;
+    smoc     
+-------------
+ {[20, 101)}
+(1 row)
+
+SELECT '29/3-11,20-30,64-72,89-93,26-100'::smoc;
+        smoc         
+---------------------
+ {[3, 12) [20, 101)}
+(1 row)
+
+SELECT '29/3-11,20-30,64-72,89-93,222-333,26-100'::smoc;
+              smoc              
+--------------------------------
+ {[3, 12) [20, 101) [222, 334)}
+(1 row)
+
+SELECT '29/20-30,64-72,89-93,222-333,26-100'::smoc;
+          smoc          
+------------------------
+ {[20, 101) [222, 334)}
+(1 row)
+
+SELECT smoc(-1); -- expected: error
+ERROR:  function smoc(integer) does not exist
+LINE 1: SELECT smoc(-1);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+SELECT smoc(15); -- expected: error
+ERROR:  function smoc(integer) does not exist
+LINE 1: SELECT smoc(15);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+SELECT smoc(0);  -- expected: '0/'
+ERROR:  function smoc(integer) does not exist
+LINE 1: SELECT smoc(0);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+SELECT smoc('');
+ smoc 
+------
+ {}
+(1 row)
+
+SELECT smoc('abc');         -- expected: error
+ERROR:  [c.0] Incorrect MOC syntax: unsupported character 'a'.
+LINE 1: SELECT smoc('abc');
+                    ^
+HINT:  Expected syntax: '{healpix_order}/{healpix_index}[,...] ...', where {healpix_order} is between 0 and 29. Example: '1/0 2/3,5-10'.
+SELECT smoc('-1/');         -- expected: error
+ERROR:  [c.2] Healpix order must not be negative.
+LINE 1: SELECT smoc('-1/');
+                    ^
+HINT:  Expected syntax: '{healpix_order}/{healpix_index}[,...] ...', where {healpix_order} is between 0 and 29. Example: '1/0 2/3,5-10'.
+SELECT smoc('30/');         -- expected: error
+ERROR:  [c.2] Incorrect Healpix order 30.
+LINE 1: SELECT smoc('30/');
+                    ^
+HINT:  A valid Healpix order must be an integer between 0 and 29.
+SELECT smoc('0/');
+ smoc 
+------
+ {}
+(1 row)
+
+SELECT smoc('0/0-3,7');
+                                 smoc                                  
+-----------------------------------------------------------------------
+ {[0, 1152921504606846976) [2017612633061982208, 2305843009213693952)}
+(1 row)
+
+SELECT smoc('0/0,1,2,3,7');
+                                 smoc                                  
+-----------------------------------------------------------------------
+ {[0, 1152921504606846976) [2017612633061982208, 2305843009213693952)}
+(1 row)
+
+select set_smoc_output_type(0);
+       set_smoc_output_type        
+-----------------------------------
+ Set output type to MOC-ASCII (0).
+(1 row)
+
+SELECT ''::smoc;
+ smoc 
+------
+ 0/
+(1 row)
+
+SELECT 'abc'::smoc;         -- expected: error
+ERROR:  [c.0] Incorrect MOC syntax: unsupported character 'a'.
+LINE 1: SELECT 'abc'::smoc;
+               ^
+HINT:  Expected syntax: '{healpix_order}/{healpix_index}[,...] ...', where {healpix_order} is between 0 and 29. Example: '1/0 2/3,5-10'.
+SELECT '-1/'::smoc;         -- expected: error
+ERROR:  [c.2] Healpix order must not be negative.
+LINE 1: SELECT '-1/'::smoc;
+               ^
+HINT:  Expected syntax: '{healpix_order}/{healpix_index}[,...] ...', where {healpix_order} is between 0 and 29. Example: '1/0 2/3,5-10'.
+SELECT '30/'::smoc;         -- expected: error
+ERROR:  [c.2] Incorrect Healpix order 30.
+LINE 1: SELECT '30/'::smoc;
+               ^
+HINT:  A valid Healpix order must be an integer between 0 and 29.
+SELECT '0/'::smoc;          -- expected: '0/'
+ smoc 
+------
+ 0/
+(1 row)
+
+SELECT '0/0-3,7'::smoc;     -- expected: '0/0-3,7'
+  smoc   
+---------
+ 0/0-3 7
+(1 row)
+
+SELECT '0/0,1,2,3,7'::smoc; -- expected: '0/0-3,7'
+  smoc   
+---------
+ 0/0-3 7
+(1 row)
+
+select set_smoc_output_type(1);
+         set_smoc_output_type          
+---------------------------------------
+ Set output type to MOC intervals (1).
+(1 row)
+
+SELECT smoc('2/0,1,2,3,7 4/17,21-33,111');
+                               smoc                                
+-------------------------------------------------------------------
+ {[0, 72057594037927936) [124974889659531264, 144115188075855872)}
+(1 row)
+
+SELECT smoc('2/0,1,2,3,7 0/17,21-33,111');
+ERROR:  [c.16] Incorrect Healpix index 17.
+LINE 1: SELECT smoc('2/0,1,2,3,7 0/17,21-33,111');
+                    ^
+HINT:  At order 0, a Healpix index must be an integer between 0 and 11.
+SELECT max_order(smoc(''));
+ max_order 
+-----------
+         0
+(1 row)
+
+SELECT max_order(smoc('1/'));
+ max_order 
+-----------
+         1
+(1 row)
+
+SELECT max_order(smoc('1/1'));
+ max_order 
+-----------
+         1
+(1 row)
+
+SELECT max_order(smoc('1/10-3'));
+ERROR:  [c.5] Incorrect Healpix range 10-3.
+LINE 1: SELECT max_order(smoc('1/10-3'));
+                              ^
+HINT:  The first value of a range (here 10) must be less than the second one (here 3).
+SELECT max_order(smoc('1/0-3'));
+ max_order 
+-----------
+         1
+(1 row)
+
+SELECT max_order(smoc('1/0-1'));
+ max_order 
+-----------
+         1
+(1 row)
+
+SELECT max_order(smoc('29/0-1'));
+ max_order 
+-----------
+        29
+(1 row)
+
+SELECT max_order(smoc('29/0-3'));
+ max_order 
+-----------
+        29
+(1 row)
+
+SELECT max_order(smoc('29/0-7'));
+ max_order 
+-----------
+        29
+(1 row)
+
+SELECT max_order(smoc('29/0-15'));
+ max_order 
+-----------
+        29
+(1 row)
+
+select set_smoc_output_type(0);
+       set_smoc_output_type        
+-----------------------------------
+ Set output type to MOC-ASCII (0).
+(1 row)
+
+SELECT smoc('29/32-63');
+    smoc    
+------------
+ 27/2-3 29/
+(1 row)
+
+SELECT smoc('29/64-127');
+   smoc   
+----------
+ 26/1 29/
+(1 row)
+
+SELECT smoc('0/0-11');
+  smoc  
+--------
+ 0/0-11
+(1 row)
+
+SELECT smoc('0/1-3');
+ smoc  
+-------
+ 0/1-3
+(1 row)
+
+SELECT smoc('0/1');
+ smoc 
+------
+ 0/1
+(1 row)
+
+SELECT smoc('0/3-5');
+ smoc  
+-------
+ 0/3-5
+(1 row)
+
+SELECT smoc('0/3-11');
+  smoc  
+--------
+ 0/3-11
+(1 row)
+
+SELECT smoc('0/0,3-11');
+   smoc   
+----------
+ 0/0 3-11
+(1 row)
+
+SELECT smoc('1/0,3-42');
+       smoc        
+-------------------
+ 0/1-9 1/0 3 40-42
+(1 row)
+
+SELECT smoc('29/3-42');
+            smoc            
+----------------------------
+ 27/1 28/1-3 8-9 29/3 40-42
+(1 row)
+
+SELECT smoc('29/1');
+ smoc 
+------
+ 29/1
+(1 row)
+
+SELECT smoc('28/1');
+ smoc 
+------
+ 28/1
+(1 row)
+
+SELECT smoc('24/1');
+ smoc 
+------
+ 24/1
+(1 row)
+
+SELECT smoc('24/1 29/1');
+   smoc    
+-----------
+ 24/1 29/1
+(1 row)
+
+SELECT smoc('24/1 11/1 29/1');
+      smoc      
+----------------
+ 11/1 24/1 29/1
+(1 row)
+
+SELECT smoc('24/1 11/1 29/1,3');
+       smoc       
+------------------
+ 11/1 24/1 29/1 3
+(1 row)
+
+SELECT smoc('24/1 11/1 29/1,3 2/22-33');
+                 smoc                 
+--------------------------------------
+ 1/6-7 2/22-23 32-33 11/1 24/1 29/1 3
+(1 row)
+
+SELECT smoc('2/22-33');
+        smoc         
+---------------------
+ 1/6-7 2/22-23 32-33
+(1 row)
+
+SELECT smoc('24/1 11/1 29/1,3 2/22-33');
+                 smoc                 
+--------------------------------------
+ 1/6-7 2/22-23 32-33 11/1 24/1 29/1 3
+(1 row)
+
+SELECT smoc('');
+ smoc 
+------
+ 0/
+(1 row)
+
+SELECT smoc('1/6-7 2/22-23,32-33 11/1 24/1 29/1,3');
+                 smoc                 
+--------------------------------------
+ 1/6-7 2/22-23 32-33 11/1 24/1 29/1 3
+(1 row)
+
+SELECT smoc('5/1-127,999-1103');
+                    smoc                    
+--------------------------------------------
+ 2/1 16 3/1-3 63 68 4/1-3 250-251 5/1-3 999
+(1 row)
+
+SELECT smoc('5/1024-1103');
+     smoc     
+--------------
+ 2/16 3/68 5/
+(1 row)
+
+SELECT smoc('28/1101-1103');
+     smoc     
+--------------
+ 28/1101-1103
+(1 row)
+
+SELECT smoc_union('1/1,4-6', '1/3-5 2/8');
+ smoc_union  
+-------------
+ 1/1 3-6 2/8
+(1 row)
+
+SELECT '1/1'::smoc | '1/2' AS union;
+ union 
+-------
+ 1/1-2
+(1 row)
+
+SELECT sum(moc) FROM (VALUES ('0/1'::smoc), ('0/2'), ('0/4')) sub(moc);
+   sum   
+---------
+ 0/1-2 4
+(1 row)
+
+SELECT smoc_intersection('1/1,4-6', '1/3-5 2/8');
+ smoc_intersection 
+-------------------
+ 1/4-5 2/
+(1 row)
+
+SELECT '0/1'::smoc & '1/3,5,7,9' AS intersection;
+ intersection 
+--------------
+ 1/5 7
+(1 row)
+
+SELECT '1/9,11,13,15'::smoc & '0/1,2' AS intersection;
+ intersection 
+--------------
+ 1/9 11
+(1 row)
+
+SELECT intersection(moc) FROM (VALUES ('0/1-4'::smoc), ('0/2-5'), (NULL)) sub(moc);
+ intersection 
+--------------
+ 0/2-4
+(1 row)
+
+SELECT smoc_degrade(6, '7/1,3,5,9');
+ smoc_degrade 
+--------------
+ 6/0-2
+(1 row)
+
+SELECT smoc_degrade(5, '7/1,3,5,9');
+ smoc_degrade 
+--------------
+ 5/0
+(1 row)
+
+SELECT smoc_degrade(0, '1/0');
+ smoc_degrade 
+--------------
+ 0/0
+(1 row)
+
+SELECT smoc_degrade(0, '1/47');
+ smoc_degrade 
+--------------
+ 0/11
+(1 row)
+
+WITH mocs(x) AS (VALUES ('0/'::smoc), ('0/1'), ('0/2'), ('0/4'), ('0/1,3'), ('0/1-3'), ('0/2-4'))
+  SELECT a.x AS a, b.x AS b,
+         a.x = b.x AS "=", a.x <> b.x AS "<>",
+         a.x && b.x AS "&&",
+         a.x <@ b.x AS "<@", a.x !<@ b.x AS "!<@",
+         a.x !@> b.x AS "!@>", a.x @> b.x AS "@>",
+         a.x | b.x AS "|", a.x & b.x AS "&"
+    FROM mocs a, mocs b;
+   a   |   b   | = | <> | && | <@ | !<@ | !@> | @> |    |    |   &   
+-------+-------+---+----+----+----+-----+-----+----+---------+-------
+ 0/    | 0/    | t | f  | f  | t  | f   | f   | t  | 0/      | 0/
+ 0/    | 0/1   | f | t  | f  | t  | f   | t   | f  | 0/1     | 0/
+ 0/    | 0/2   | f | t  | f  | t  | f   | t   | f  | 0/2     | 0/
+ 0/    | 0/4   | f | t  | f  | t  | f   | t   | f  | 0/4     | 0/
+ 0/    | 0/1 3 | f | t  | f  | t  | f   | t   | f  | 0/1 3   | 0/
+ 0/    | 0/1-3 | f | t  | f  | t  | f   | t   | f  | 0/1-3   | 0/
+ 0/    | 0/2-4 | f | t  | f  | t  | f   | t   | f  | 0/2-4   | 0/
+ 0/1   | 0/    | f | t  | f  | f  | t   | f   | t  | 0/1     | 0/
+ 0/1   | 0/1   | t | f  | t  | t  | f   | f   | t  | 0/1     | 0/1
+ 0/1   | 0/2   | f | t  | f  | f  | t   | t   | f  | 0/1-2   | 0/
+ 0/1   | 0/4   | f | t  | f  | f  | t   | t   | f  | 0/1 4   | 0/
+ 0/1   | 0/1 3 | f | t  | t  | t  | f   | t   | f  | 0/1 3   | 0/1
+ 0/1   | 0/1-3 | f | t  | t  | t  | f   | t   | f  | 0/1-3   | 0/1
+ 0/1   | 0/2-4 | f | t  | f  | f  | t   | t   | f  | 0/1-4   | 0/
+ 0/2   | 0/    | f | t  | f  | f  | t   | f   | t  | 0/2     | 0/
+ 0/2   | 0/1   | f | t  | f  | f  | t   | t   | f  | 0/1-2   | 0/
+ 0/2   | 0/2   | t | f  | t  | t  | f   | f   | t  | 0/2     | 0/2
+ 0/2   | 0/4   | f | t  | f  | f  | t   | t   | f  | 0/2 4   | 0/
+ 0/2   | 0/1 3 | f | t  | f  | f  | t   | t   | f  | 0/1-3   | 0/
+ 0/2   | 0/1-3 | f | t  | t  | t  | f   | t   | f  | 0/1-3   | 0/2
+ 0/2   | 0/2-4 | f | t  | t  | t  | f   | t   | f  | 0/2-4   | 0/2
+ 0/4   | 0/    | f | t  | f  | f  | t   | f   | t  | 0/4     | 0/
+ 0/4   | 0/1   | f | t  | f  | f  | t   | t   | f  | 0/1 4   | 0/
+ 0/4   | 0/2   | f | t  | f  | f  | t   | t   | f  | 0/2 4   | 0/
+ 0/4   | 0/4   | t | f  | t  | t  | f   | f   | t  | 0/4     | 0/4
+ 0/4   | 0/1 3 | f | t  | f  | f  | t   | t   | f  | 0/1 3-4 | 0/
+ 0/4   | 0/1-3 | f | t  | f  | f  | t   | t   | f  | 0/1-4   | 0/
+ 0/4   | 0/2-4 | f | t  | t  | t  | f   | t   | f  | 0/2-4   | 0/4
+ 0/1 3 | 0/    | f | t  | f  | f  | t   | f   | t  | 0/1 3   | 0/
+ 0/1 3 | 0/1   | f | t  | t  | f  | t   | f   | t  | 0/1 3   | 0/1
+ 0/1 3 | 0/2   | f | t  | f  | f  | t   | t   | f  | 0/1-3   | 0/
+ 0/1 3 | 0/4   | f | t  | f  | f  | t   | t   | f  | 0/1 3-4 | 0/
+ 0/1 3 | 0/1 3 | t | f  | t  | t  | f   | f   | t  | 0/1 3   | 0/1 3
+ 0/1 3 | 0/1-3 | f | t  | t  | t  | f   | t   | f  | 0/1-3   | 0/1 3
+ 0/1 3 | 0/2-4 | f | t  | t  | f  | t   | t   | f  | 0/1-4   | 0/3
+ 0/1-3 | 0/    | f | t  | f  | f  | t   | f   | t  | 0/1-3   | 0/
+ 0/1-3 | 0/1   | f | t  | t  | f  | t   | f   | t  | 0/1-3   | 0/1
+ 0/1-3 | 0/2   | f | t  | t  | f  | t   | f   | t  | 0/1-3   | 0/2
+ 0/1-3 | 0/4   | f | t  | f  | f  | t   | t   | f  | 0/1-4   | 0/
+ 0/1-3 | 0/1 3 | f | t  | t  | f  | t   | f   | t  | 0/1-3   | 0/1 3
+ 0/1-3 | 0/1-3 | t | f  | t  | t  | f   | f   | t  | 0/1-3   | 0/1-3
+ 0/1-3 | 0/2-4 | f | t  | t  | f  | t   | t   | f  | 0/1-4   | 0/2-3
+ 0/2-4 | 0/    | f | t  | f  | f  | t   | f   | t  | 0/2-4   | 0/
+ 0/2-4 | 0/1   | f | t  | f  | f  | t   | t   | f  | 0/1-4   | 0/
+ 0/2-4 | 0/2   | f | t  | t  | f  | t   | f   | t  | 0/2-4   | 0/2
+ 0/2-4 | 0/4   | f | t  | t  | f  | t   | f   | t  | 0/2-4   | 0/4
+ 0/2-4 | 0/1 3 | f | t  | t  | f  | t   | t   | f  | 0/1-4   | 0/3
+ 0/2-4 | 0/1-3 | f | t  | t  | f  | t   | t   | f  | 0/1-4   | 0/2-3
+ 0/2-4 | 0/2-4 | t | f  | t  | t  | f   | f   | t  | 0/2-4   | 0/2-4
+(49 rows)
+
+SELECT smoc_disc(0, 0, 0, 1);
+   smoc_disc    
+----------------
+ 0/0 3-5 7-8 11
+(1 row)
+
+SELECT smoc_disc(1, 0, 0, 1);
+      smoc_disc       
+----------------------
+ 0/0 3-4 8 11 1/22 29
+(1 row)
+
+SELECT smoc_disc(2, 0, 0, 1);
+                                                smoc_disc                                                 
+----------------------------------------------------------------------------------------------------------
+ 0/4 1/0 2 12-13 34-35 45 47 2/4 6 12 14 56-57 60-61 88 90-91 116-117 119 130-131 134-135 177 179 185 187
+(1 row)
+
+SELECT smoc_disc(0, 0, 0, 3.2);
+ smoc_disc 
+-----------
+ 0/0-11
+(1 row)
+
+SELECT smoc_disc(2, 0, 0, 3.2);
+ smoc_disc 
+-----------
+ 0/0-11 2/
+(1 row)
+
+SELECT smoc(6, '(0,0)'::spoint);
+  smoc   
+---------
+ 6/19456
+(1 row)
+
+SELECT smoc(1, '<(1,1),1>'::scircle);
+           smoc            
+---------------------------
+ 0/0-1 3 5 1/9-11 17-19 35
+(1 row)
+
+SELECT smoc(3, '<(0,1.3),.5>'::scircle);
+                                                  smoc                                                   
+---------------------------------------------------------------------------------------------------------
+ 1/3 15 2/11 31 47 55 3/27 30-31 38-39 41-43 111 119 121-123 159 181-183 187 213-215 217 219 231 237 239
+(1 row)
+
+SELECT smoc(5, '{(.1,.1), (.2,.1), (.2,.2), (.1, .2)}'::spoly);
+                              smoc                               
+-----------------------------------------------------------------
+ 4/1135 1220-1221 1223 1232 5/4534 4537-4539 4586 4869 4889 4936
+(1 row)
+
+SELECT smoc(3, '{(.1,.1), (-1,.1), (-1,-1), (.1, -1)}'::spoly);
+                                                                  smoc                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------
+ 1/45 47 2/64 66-67 72-74 117 179 185 3/192-194 260 262-263 280 282-283 300-302 304-306 465 477 544 546 552 554-555 709-711 715 737 749
+(1 row)
+
+SELECT smoc(3, '{(.1,.1), (.1,-1), (-1,-1), (-1, .1)}'::spoly);
+                                                                  smoc                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------
+ 1/45 47 2/64 66-67 72-74 117 179 185 3/192-194 260 262-263 280 282-283 300-302 304-306 465 477 544 546 552 554-555 709-711 715 737 749
+(1 row)
+
+CREATE TABLE g (p spoly);
+INSERT INTO g (p) VALUES (spoly '{(1.48062434277764d , -0.112757492761271d),(1.48062583213677d , -0.0763898467955446d),(1.44427278313068d, -0.0762453395638312d),(1.44413625055362d , -0.112726631135703d)}');
+SELECT smoc(6, p) FROM g;
+   smoc    
+-----------
+ 5/4522 6/
+(1 row)
+
+-- lswscans/data/part1/Bruceplatten/FITS/B3558b.fits
+SELECT smoc(6, '{(1.28867804735846 , 0.421769766439468),(1.40564002826964 , 0.201070262502835),(1.27597340819331 , 0.210561432516079),(1.28707379974056 , 0.351693515652388)}'::spoly);
+ERROR:  MOC processing error: polygon is not convex

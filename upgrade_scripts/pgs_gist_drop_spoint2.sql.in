@@ -1,0 +1,11 @@
+DROP OPERATOR CLASS IF EXISTS spoint2 USING gist CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_union(bytea, internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_penalty (internal, internal, internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_picksplit(internal, internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_same (bytea, bytea, internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_compress(internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_consistent(internal, internal, int4, oid, internal) CASCADE;
+DROP FUNCTION IF EXISTS g_spoint2_distance(internal, internal, int4, oid) CASCADE;
+
+DROP FUNCTION IF EXISTS crossmatch(text, text, float8);
+DROP FUNCTION IF EXISTS crossmatch(text, text, float8, sbox);

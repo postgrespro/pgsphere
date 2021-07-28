@@ -129,6 +129,8 @@ CREATE OPERATOR CLASS spoint
    FUNCTION  7 g_spherekey_same (spherekey, spherekey, internal),
    STORAGE   spherekey;
 
+
+
 -- create the operator class for spherical circle
 
 CREATE FUNCTION g_scircle_compress(internal)

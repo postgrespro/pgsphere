@@ -1,0 +1,372 @@
+-- debugging
+
+CREATE FUNCTION smoc_info (smoc)
+	RETURNS text
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION area (smoc)
+	RETURNS double precision
+	AS 'MODULE_PATHNAME', 'smoc_area'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+-- boolean operations
+
+CREATE FUNCTION smoc_eq (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_eq (smoc, smoc) IS 'equal';
+
+CREATE OPERATOR = (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_eq,
+	COMMUTATOR = '=',
+	NEGATOR    = '<>',
+	RESTRICT   = eqsel,
+	JOIN       = eqjoinsel
+);
+
+COMMENT ON OPERATOR = (smoc, smoc) IS 'equal';
+
+CREATE FUNCTION smoc_neq (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_neq (smoc, smoc) IS 'not equal';
+
+CREATE OPERATOR <> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_neq,
+	COMMUTATOR = '<>',
+	NEGATOR    = '=',
+	RESTRICT   = neqsel,
+	JOIN       = neqjoinsel
+);
+
+COMMENT ON OPERATOR <> (smoc, smoc) IS 'not equal';
+
+CREATE FUNCTION smoc_overlap (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_overlap (smoc, smoc) IS 'overlaps';
+
+CREATE OPERATOR && (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_overlap,
+	COMMUTATOR = '&&',
+	NEGATOR    = '!&&',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR && (smoc, smoc) IS 'overlaps';
+
+CREATE FUNCTION smoc_overlap_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_overlap_neg (smoc, smoc) IS 'overlaps not';
+
+CREATE OPERATOR !&& (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_overlap_neg,
+	COMMUTATOR = '!&&',
+	NEGATOR    = '&&',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !&& (smoc, smoc) IS 'overlaps not';
+
+CREATE FUNCTION smoc_subset_smoc (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_subset_smoc (smoc, smoc) IS 'is contained by';
+
+CREATE OPERATOR <@ (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_subset_smoc,
+	COMMUTATOR = '@>',
+	NEGATOR    = '!<@',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR <@ (smoc, smoc) IS 'is contained by';
+
+CREATE FUNCTION smoc_subset_smoc_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_subset_smoc_neg (smoc, smoc) IS 'is not contained by';
+
+CREATE OPERATOR !<@ (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_subset_smoc_neg,
+	COMMUTATOR = '!@>',
+	NEGATOR    = '<@',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !<@ (smoc, smoc) IS 'is not contained by';
+
+CREATE FUNCTION smoc_superset_smoc (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_superset_smoc (smoc, smoc) IS 'contains';
+
+CREATE OPERATOR @> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_superset_smoc,
+	COMMUTATOR = '<@',
+	NEGATOR    = '!@>',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR @> (smoc, smoc) IS 'contains';
+
+CREATE FUNCTION smoc_superset_smoc_neg (smoc, smoc)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_superset_smoc_neg (smoc, smoc) IS 'does not contain';
+
+CREATE OPERATOR !@> (
+	LEFTARG    = smoc,
+	RIGHTARG   = smoc,
+	PROCEDURE  = smoc_superset_smoc_neg,
+	COMMUTATOR = '!<@',
+	NEGATOR    = '@>',
+	RESTRICT   = contsel,
+	JOIN       = contjoinsel
+);
+
+COMMENT ON OPERATOR !@> (smoc, smoc) IS 'does not contain';
+
+-- union and intersection
+
+CREATE FUNCTION smoc_union (smoc, smoc)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_union (smoc, smoc) IS 'union';
+
+CREATE OPERATOR | (
+	LEFTARG   = smoc,
+	RIGHTARG  = smoc,
+	PROCEDURE = smoc_union
+);
+
+COMMENT ON OPERATOR | (smoc, smoc) IS 'union';
+
+CREATE AGGREGATE sum (smoc) (
+	SFUNC = smoc_union,
+	STYPE = smoc
+);
+
+COMMENT ON AGGREGATE sum (smoc) IS 'smoc union aggregate';
+
+CREATE FUNCTION smoc_intersection (smoc, smoc)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_intersection (smoc, smoc) IS 'intersection';
+
+CREATE OPERATOR & (
+	LEFTARG   = smoc,
+	RIGHTARG  = smoc,
+	PROCEDURE = smoc_intersection
+);
+
+COMMENT ON OPERATOR & (smoc, smoc) IS 'intersection';
+
+CREATE AGGREGATE intersection (smoc) (
+	SFUNC = smoc_intersection,
+	STYPE = smoc
+);
+
+COMMENT ON AGGREGATE intersection (smoc) IS 'smoc intersection aggregate';
+
+-- smoc constructors
+
+CREATE FUNCTION smoc_degrade ("order" int, smoc)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_degrade ("order" int, smoc) IS 'reduce order of smoc';
+
+CREATE FUNCTION smoc ("order" int, spoint)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_spoint'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc ("order" int, spoint) IS 'constructs smoc of given order from spoint';
+
+CREATE FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc_disc ("order" int, lng double precision, lat double precision, radius double precision)
+	IS 'constructs smoc of given order from circle parameters';
+
+CREATE FUNCTION smoc ("order" int, scircle)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_scircle'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc ("order" int, scircle) IS 'constructs smoc of given order from scircle';
+
+CREATE FUNCTION smoc ("order" int, spoly)
+	RETURNS smoc
+	AS 'MODULE_PATHNAME', 'smoc_spoly'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+COMMENT ON FUNCTION smoc ("order" int, spoly) IS 'constructs smoc of given order from spoly';
+
+-- GIN index
+
+CREATE FUNCTION smoc_gin_extract_value (smoc, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_extract_value_fine (smoc, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_extract_query (smoc, internal, int2, internal, internal, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_extract_query_fine (smoc, internal, int2, internal, internal, internal, internal)
+	RETURNS internal
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE FUNCTION smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal)
+	RETURNS boolean
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+CREATE OPERATOR CLASS smoc_gin_ops
+	DEFAULT FOR TYPE smoc USING gin AS
+		OPERATOR 1 &&,
+		OPERATOR 2 <@,
+		OPERATOR 3 @>,
+		OPERATOR 4 =,
+		OPERATOR 5 <>,
+		FUNCTION 1 btint4cmp (int4, int4),
+		FUNCTION 2 smoc_gin_extract_value (smoc, internal, internal),
+		FUNCTION 3 smoc_gin_extract_query (smoc, internal, int2, internal, internal, internal, internal),
+		FUNCTION 4 smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal),
+		--FUNCTION 5 smoc_gin_compare_partial (),
+		--FUNCTION 6 smoc_gin_tri_consistent (),
+		STORAGE int4;
+
+CREATE OPERATOR CLASS smoc_gin_ops_fine
+	FOR TYPE smoc USING gin AS
+		OPERATOR 1 &&,
+		OPERATOR 2 <@,
+		OPERATOR 3 @>,
+		OPERATOR 4 =,
+		OPERATOR 5 <>,
+		FUNCTION 1 btint4cmp (int4, int4),
+		FUNCTION 2 smoc_gin_extract_value_fine (smoc, internal, internal),
+		FUNCTION 3 smoc_gin_extract_query_fine (smoc, internal, int2, internal, internal, internal, internal),
+		FUNCTION 4 smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal),
+		--FUNCTION 5 smoc_gin_compare_partial (),
+		--FUNCTION 6 smoc_gin_tri_consistent (),
+		STORAGE int4;

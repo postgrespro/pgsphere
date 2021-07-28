@@ -88,6 +88,14 @@
                       coordinate range
                     </entry>
                   </row>
+                  <row>
+                    <entry>
+                      <type>smoc</type>
+                    </entry>
+                    <entry>
+                      HEALPix Multi-Order Coverage map
+                    </entry>
+                  </row>
                 </tbody>
               </tgroup>
             </table>
@@ -679,6 +687,67 @@ i             syntax is a somewhat complex.
               </simpara>
               <programlisting>
 <![CDATA[sql> SELECT sbox '( (350d,-10d), (10d,+10d) )';]]>
+              </programlisting>
+            </example>
+        </sect2>
+
+        <sect2 id="dt.smoc">
+            <title>
+              <type>smoc</type>: HEALPix Multi-Order Coverage map
+            </title>
+            <para>
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="&graphsmoc;" width="287px" format="PNG"/>
+                </imageobject>
+              </mediaobject>
+            </para>
+            <para>
+              The datatype smoc allows one to define and manipulate any region
+              of the sky in such a way that basic operations like union,
+              intersection can be performed very efficiently. It is dedicated to
+              VO applications or VO data servers for building efficient
+              procedures for which mapping knowledge is required like generic
+              catalog cross-match, computation of data set intersections, etc.
+              This encoding method is called "Multi-Order Coverage map" or "MOC".
+            </para>
+            <para>
+              The goal behind the MOC is to get a spherical geometry description
+              for any sky region in order to provide very fast and accurate
+              union, intersection and equality operations between them. In order
+              to accomplish this task, we based the system on a regular and
+              hierarchical partitioning of the sphere, a process called
+              tessellation, yielding pixels of different size. At level 0, the
+              sky is divided into 12 pixels numbered 0 to 11. At the maximally
+              defined level 29, there are 12 * 4^29 = 3458764513820540928
+              pixels.
+            </para>
+            <para>
+              The MOC standard is described at http://www.ivoa.net/documents/MOC/
+            </para>
+            <synopsis>level/pixel1-pixel2 [...] level/pixel1-pixel2 [...]</synopsis>
+            <example>
+              <title>
+                The empty set
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT smoc '0/';]]>
+              </programlisting>
+            </example>
+            <example>
+              <title>
+                The whole sky
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT smoc '0/0-11';]]>
+              </programlisting>
+            </example>
+            <example>
+              <title>
+                A disk around the point (0, 0) with radius 1 at MOC level 2
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT smoc '0/4 1/0 2 12-13 34-35 45 47 2/4 6 12 14 56-57 60-61 88 90-91 116-117 119 130-131 134-135 177 179 185 187';]]>
               </programlisting>
             </example>
         </sect2>

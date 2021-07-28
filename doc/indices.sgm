@@ -62,11 +62,52 @@
 <![CDATA[  pos spoint NOT NULL]]>
 <![CDATA[);]]>
 <![CDATA[-- Put in data now]]>
-<![CDATA[CREATE INDEX test_pos_idx USING GIST ON test (pos);]]>
+<![CDATA[CREATE INDEX test_pos_idx ON test USING GIST (pos);]]>
 <![CDATA[VACUUM ANALYZE test;]]>
           </programlisting>
         </example>
 
       </sect2>
-        
+
+      <sect2 id="ind.smoc">
+        <title>
+          <type>smoc</type> index
+        </title>
+        <para>
+          <application>pgSphere</application> uses <literal>GIN</literal>
+          to create smoc indices. An index speeds up the execution
+          time of operators <link
+          linkend="op.over"><literal>&lt;@</literal></link>, <link
+          linkend="op.over"><literal>@&gt;</literal></link>, <link
+          linkend="op.over"><literal>&amp;&amp;</literal></link>, <link
+          linkend="op.equal"><literal>=</literal></link>, and <link
+          linkend="op.equal"><literal>&lt;&gt;</literal></link>.
+        </para>
+        <para>
+          The index works by casting all contained smocs to a fixed level, and
+          for each pixel at that level, storing which smocs overlap with that
+          pixel. This is especially beneficial for "overlaps" queries using
+          the <literal>&amp;&amp;</literal> operator. Two levels of granularity
+          are provided: the default opclass <literal>smoc_gin_ops</literal>
+          works on level 5 with a resolution of 12288 pixels, while the
+          opclass <literal>smoc_gin_ops_fine</literal> works on level 8 with
+          786432 pixels. The downside of that approach is that storing large
+          smocs like "all sky" (<literal>0/0-11</literal>) produces a large
+          number of index entries.
+        </para>
+        <example>
+          <title>Index of smoc coverage objects</title>
+          <programlisting>
+<![CDATA[CREATE TABLE ivoa (]]>
+<![CDATA[  coverage smoc NOT NULL]]>
+<![CDATA[);]]>
+<![CDATA[-- Put in data now]]>
+<![CDATA[CREATE INDEX ON ivoa USING GIN (coverage);]]>
+<![CDATA[-- Alternative index with more detail]]>
+<![CDATA[CREATE INDEX ivoa_fine_idx ON ivoa USING GIN (coverage smoc_gin_ops_fine);]]>
+          </programlisting>
+        </example>
+
+      </sect2>
+
     </sect1>

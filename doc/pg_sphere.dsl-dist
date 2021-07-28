@@ -194,6 +194,7 @@ Stylesheet//EN" CDATA DSSSL>
 (define %html-header-tags%
   (list 
     (list "META" '("NAME" "creation") (list "CONTENT" (time->string (time) #t)))
+    '("META" ("HTTP-EQUIV" "Content-Type") ("CONTENT" "text/html; charset=utf-8"))
   )
 )
 
@@ -258,7 +259,7 @@ Stylesheet//EN" CDATA DSSSL>
 
 (define %graphic-extensions%
   ;; graphic extensions allowed
-  '("jpg" "jpeg"))
+  '("jpg" "jpeg" "png"))
 
 (define %graphic-default-extension% 
   "jpg")
