@@ -17,6 +17,7 @@ typedef struct
 	SPoint	p[1];		/* variable length array of SPoints */
 } SPOLY;
 
+#define MAX_POINTS 1024
 
 /* Polygon and ellipse */
 #define PGS_ELLIPSE_POLY_AVOID 0	/* ellipse avoids polygon */

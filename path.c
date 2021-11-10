@@ -506,22 +506,26 @@ spherepath_in(PG_FUNCTION_ARGS)
 	char	   *c = PG_GETARG_CSTRING(0);
 	int32		i, nelem;
 	void		sphere_yyparse(void);
-	SPoint     *arr;
 
 	init_buffer(c);
 	sphere_yyparse();
 
 	nelem = get_path_count();
-	if (nelem > 1)
+	if (nelem > MAX_POINTS)
 	{
-		arr = (SPoint *)palloc(sizeof(SPoint)*nelem);
+		reset_buffer();
+		elog(ERROR, "spherepath_in: too much points");
+		PG_RETURN_NULL();
+	}
+	else if (nelem > 1)
+	{
+		SPoint		arr[MAX_POINTS];
 
 		for (i = 0; i < nelem; i++)
 		{
 			get_path_elem(i, &arr[i].lng, &arr[i].lat);
 		}
 		path = spherepath_from_array(&arr[0], nelem);
-		pfree(arr);
 	}
 	else
 	{

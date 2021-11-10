@@ -35,7 +35,6 @@
 
 #include "postgres.h"
 #include "fmgr.h"
-#include "utils/geo_decls.h"
 #include "utils/array.h"
 #include "utils/elog.h"
 #include "utils/builtins.h"
@@ -46,6 +45,56 @@
 
 #include "pgs_util.h"
 
+#define EPSILON					1.0E-09
+
+#define FPzero(A)				(fabs(A) <= EPSILON)
+
+static inline bool
+FPeq(double A, double B)
+{
+	return A == B || fabs(A - B) <= EPSILON;
+}
+
+static inline bool
+FPne(double A, double B)
+{
+	return A != B && fabs(A - B) > EPSILON;
+}
+
+static inline bool
+FPlt(double A, double B)
+{
+	return A + EPSILON < B;
+}
+
+static inline bool
+FPle(double A, double B)
+{
+	return A <= B + EPSILON;
+}
+
+static inline bool
+FPgt(double A, double B)
+{
+	return A > B + EPSILON;
+}
+
+static inline bool
+FPge(double A, double B)
+{
+	return A + EPSILON >= B;
+}
+
+/*---------------------------------------------------------------------
+ * Point - (x,y)
+ *-------------------------------------------------------------------*/
+typedef struct
+{
+	float8		x,
+				y;
+} Point;
+
 void	sphere_yyparse(void);
 
 #endif
+
