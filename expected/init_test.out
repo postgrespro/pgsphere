@@ -33,5 +33,5 @@ psql:pg_sphere.test.sql:8569: NOTICE:  argument type pointkey is only a shell
 psql:pg_sphere.test.sql:8575: NOTICE:  argument type pointkey is only a shell
 psql:pg_sphere.test.sql:8581: NOTICE:  argument type pointkey is only a shell
 psql:pg_sphere.test.sql:8587: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:9152: NOTICE:  return type smoc is only a shell
-psql:pg_sphere.test.sql:9158: NOTICE:  argument type smoc is only a shell
+psql:pg_sphere.test.sql:9154: NOTICE:  return type smoc is only a shell
+psql:pg_sphere.test.sql:9160: NOTICE:  argument type smoc is only a shell
