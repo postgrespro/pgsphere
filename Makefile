@@ -64,8 +64,9 @@ else
 endif
 
 # compiler settings
-override CPPFLAGS += -I/usr/include/healpix_cxx
-SHLIB_LINK += -lhealpix_cxx
+PKG_CONFIG = pkg-config
+override CPPFLAGS += $(shell $(PKG_CONFIG) --cflags healpix_cxx)
+SHLIB_LINK += $(shell $(PKG_CONFIG) --libs healpix_cxx)
 LINK.shared = g++ -shared
 
 # healpix_bare.c isn't ours so we refrain from fixing the warnings in there
