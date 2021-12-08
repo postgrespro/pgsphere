@@ -1,0 +1,374 @@
+-- MOC/geometry automatic casts.
+-- Generated 2021-12-08 by gen_moccast.py.
+-- You probably do not want to re-generate this; fixes need to be updates
+-- on the SQL level.
+
+
+-- #################################
+-- Cleanup
+-- DROP OPERATOR IF EXISTS
+--     <@ (smoc, scircle),
+--     <@ (scircle, smoc),
+--     <@ (smoc, spoly),
+--     <@ (spoly, smoc),
+--     !<@ (smoc, scircle),
+--     !<@ (scircle, smoc),
+--     !<@ (smoc, spoly),
+--     !<@ (spoly, smoc),
+--     @> (smoc, scircle),
+--     @> (scircle, smoc),
+--     @> (smoc, spoly),
+--     @> (spoly, smoc),
+--     !@> (smoc, scircle),
+--     !@> (scircle, smoc),
+--    !@> (smoc, spoly),
+--    !@> (spoly, smoc);
+
+-- #################################
+--  smoc/geo OVERLAPS
+CREATE OR REPLACE FUNCTION scircle_subset_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) <@ a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR <@ (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_subset_smoc,
+  COMMUTATOR = '@>',
+  NEGATOR    = '!<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_subset_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc <@ smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR <@ (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_subset_scircle,
+  COMMUTATOR = '@>',
+  NEGATOR    = '!<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_subset_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) <@ a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR <@ (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_subset_smoc,
+  COMMUTATOR = '@>',
+  NEGATOR    = '!<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_subset_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc <@ smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR <@ (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_subset_spoly,
+  COMMUTATOR = '@>',
+  NEGATOR    = '!<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+CREATE OR REPLACE FUNCTION scircle_not_subset_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !<@ a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !<@ (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_not_subset_smoc,
+  COMMUTATOR = '!@>',
+  NEGATOR    = '<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_subset_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc !<@ smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !<@ (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_not_subset_scircle,
+  COMMUTATOR = '!@>',
+  NEGATOR    = '<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_not_subset_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !<@ a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !<@ (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_not_subset_smoc,
+  COMMUTATOR = '!@>',
+  NEGATOR    = '<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_subset_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc !<@ smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !<@ (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_not_subset_spoly,
+  COMMUTATOR = '!@>',
+  NEGATOR    = '<@',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+CREATE OR REPLACE FUNCTION scircle_superset_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) @> a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR @> (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_superset_smoc,
+  COMMUTATOR = '<@',
+  NEGATOR    = '!@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_superset_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc @> smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR @> (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_superset_scircle,
+  COMMUTATOR = '<@',
+  NEGATOR    = '!@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_superset_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) @> a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR @> (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_superset_smoc,
+  COMMUTATOR = '<@',
+  NEGATOR    = '!@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_superset_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc @> smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR @> (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_superset_spoly,
+  COMMUTATOR = '<@',
+  NEGATOR    = '!@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+CREATE OR REPLACE FUNCTION scircle_not_superset_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !@> a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !@> (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_not_superset_smoc,
+  COMMUTATOR = '!<@',
+  NEGATOR    = '@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_superset_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc !@> smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !@> (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_not_superset_scircle,
+  COMMUTATOR = '!<@',
+  NEGATOR    = '@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_not_superset_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !@> a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !@> (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_not_superset_smoc,
+  COMMUTATOR = '!<@',
+  NEGATOR    = '@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_superset_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc !@> smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !@> (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_not_superset_spoly,
+  COMMUTATOR = '!<@',
+  NEGATOR    = '@>',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+
+-- #################################
+--  smoc/geo INTERSECTS
+CREATE OR REPLACE FUNCTION scircle_intersect_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) && a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR && (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_intersect_smoc,
+  COMMUTATOR = '&&',
+  NEGATOR    = '!&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_intersect_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc && smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR && (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_intersect_scircle,
+  COMMUTATOR = '&&',
+  NEGATOR    = '!&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_intersect_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) && a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR && (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_intersect_smoc,
+  COMMUTATOR = '&&',
+  NEGATOR    = '!&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_intersect_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc && smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR && (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_intersect_spoly,
+  COMMUTATOR = '&&',
+  NEGATOR    = '!&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+CREATE OR REPLACE FUNCTION scircle_not_intersect_smoc(
+  geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !&& a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !&& (
+  LEFTARG    = scircle,
+  RIGHTARG   = smoc,
+  PROCEDURE  = scircle_not_intersect_smoc,
+  COMMUTATOR = '!&&',
+  NEGATOR    = '&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_intersect_scircle(
+  a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
+    SELECT a_moc !&& smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !&& (
+  LEFTARG    = smoc,
+  RIGHTARG   = scircle,
+  PROCEDURE  = smoc_not_intersect_scircle,
+  COMMUTATOR = '!&&',
+  NEGATOR    = '&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION spoly_not_intersect_smoc(
+  geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
+    SELECT smoc(max_order(a_moc), geo_arg) !&& a_moc
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !&& (
+  LEFTARG    = spoly,
+  RIGHTARG   = smoc,
+  PROCEDURE  = spoly_not_intersect_smoc,
+  COMMUTATOR = '!&&',
+  NEGATOR    = '&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION smoc_not_intersect_spoly(
+  a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
+    SELECT a_moc !&& smoc(max_order(a_moc), geo_arg)
+  $body$ LANGUAGE SQL STABLE;
+CREATE OPERATOR !&& (
+  LEFTARG    = smoc,
+  RIGHTARG   = spoly,
+  PROCEDURE  = smoc_not_intersect_spoly,
+  COMMUTATOR = '!&&',
+  NEGATOR    = '&&',
+  RESTRICT   = contsel,
+  JOIN       = contjoinsel
+);
+
+
+
