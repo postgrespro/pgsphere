@@ -7,7 +7,8 @@ MODULE_big = pg_sphere
 OBJS       = sscan.o sparse.o sbuffer.o vector3d.o point.o \
              euler.o circle.o line.o ellipse.o polygon.o \
              path.o box.o output.o gq_cache.o gist.o key.o \
-             gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o
+             gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o \
+             epochprop.o
 
 EXTENSION   = pg_sphere
 RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
@@ -23,13 +24,13 @@ DATA_built  = $(RELEASE_SQL) \
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast
+			  moc mocautocast epochprop
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
 TESTS       = init_test tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast
+			  moc mocautocast epochprop
 
 ifndef CXXFLAGS
 # no support for CXXFLAGS in PGXS before v11
@@ -39,7 +40,7 @@ endif
 
 EXTRA_CLEAN = $(PGS_SQL) pg_sphere.test.sql
 
-CRUSH_TESTS = init_extended circle_extended 
+CRUSH_TESTS = init_extended circle_extended
 
 # order of sql files is important
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
@@ -47,7 +48,7 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
    pgs_gist.sql gnomo.sql \
    healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
-   pgs_moc_geo_casts.sql
+   pgs_moc_geo_casts.sql pgs_epochprop.sql
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
 USE_PGXS = 1
@@ -197,6 +198,9 @@ pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
 	cat $^ > $@
 ifeq ($(has_parallel), n)
 	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
+
+pg_sphere--1.2.0-1.2.1.sql: pgs_epochprop.sql.in
+	cat upgrade_scripts/$@.in $^ > $@
 endif
 
 pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in

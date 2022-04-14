@@ -37,4 +37,10 @@ float8	vector3d_scalar(Vector3D *v1, Vector3D *v2);
  */
 float8	vector3d_length(const Vector3D *v);
 
+/* 
+ * Calculate result + scalar*delta 
+ */
+void vector3d_addwithscalar(
+	Vector3D *result, double scalar, const Vector3D *delta);
+
 #endif
