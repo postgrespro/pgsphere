@@ -15,6 +15,7 @@
 #include <cxxabi.h> /* __cxa_current_exception_type */
 
 #include <healpix_base.h>
+#include <healpix_cxx/error_handling.h>
 
 #include "pgs_process_moc.h"
 #include "pgs_util.h"
@@ -575,7 +576,7 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 		// the above level-end values stay correct.
 
 		// process the interval pages
-		hpint64	order_log = 0;
+		//hpint64	order_log = 0;
 		rintv_iter	i(moc_data, m.layout[0].level_end);
 		rnode_iter	n(moc_data, m.layout[1].level_end);
 		// default for "empty" root node, points past the intervals:
@@ -590,8 +591,8 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 		{
 			first	= r->first;
 			last	= r->second;
-			order_log |= first;
-			order_log |= last;
+			//order_log |= first;
+			//order_log |= last;
 			area += last - first;
 			if (i.page_ready())
 			{
