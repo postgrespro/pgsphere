@@ -280,11 +280,12 @@ struct moc_input
 	size_t		options_bytes;
 	size_t		options_size;
 	layout_vec	layout;
-	int			order = 0;
+	int			order;
 
 	std::string s;
 	moc_input() : options_bytes(0), options_size(0)
 	{
+		order = 0;
 		layout.reserve(5);
 	}
 	void dump()
