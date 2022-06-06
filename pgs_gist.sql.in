@@ -39,19 +39,19 @@ CREATE FUNCTION pointkey_volume(pointkey)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'pointkey_volume'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION pointkey_area(pointkey)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'pointkey_area'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION pointkey_perimeter(pointkey)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'pointkey_perimeter'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE TYPE pointkey (
    input = pointkey_in,

@@ -9,7 +9,7 @@ CREATE FUNCTION area(scircle)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_area'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION area(scircle) IS
   'area of spherical circle';
@@ -18,7 +18,7 @@ CREATE FUNCTION radius(scircle)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_radius'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION radius(scircle) IS
   'radius of spherical circle';
@@ -27,7 +27,7 @@ CREATE FUNCTION scircle(spoint, float8)
    RETURNS scircle
    AS 'MODULE_PATHNAME' , 'spherecircle_by_center'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle(spoint, float8) IS
   'spherical circle with spherical point as center and float8 as radius in radians';
@@ -41,7 +41,7 @@ CREATE FUNCTION scircle(spoint)
    RETURNS scircle
    AS 'MODULE_PATHNAME' , 'spherepoint_to_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle(spoint) IS
   'spherical circle with radius 0 and spherical point as center';
@@ -66,7 +66,7 @@ CREATE FUNCTION scircle_equal(scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_equal'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_equal(scircle, scircle) IS
   'returns true, if spherical circles are equal';
@@ -93,7 +93,7 @@ CREATE FUNCTION scircle_equal_neg(scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_equal_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_equal_neg(scircle, scircle) IS
   'returns true, if spherical circles are not equal';
@@ -119,7 +119,7 @@ CREATE FUNCTION scircle_overlap(scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_overlap'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_overlap(scircle, scircle) IS
   'true if spherical circles overlap';
@@ -145,7 +145,7 @@ CREATE FUNCTION scircle_overlap_neg(scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_overlap_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_overlap_neg(scircle, scircle) IS
   'true if spherical circles do not overlap';
@@ -172,7 +172,7 @@ CREATE FUNCTION center(scircle)
    RETURNS spoint
    AS 'MODULE_PATHNAME' , 'spherecircle_center'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION center(scircle) IS
   'center of spherical circle';
@@ -194,7 +194,7 @@ CREATE FUNCTION circum(scircle)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_circ'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION circum(scircle) IS
   'circumference of spherical circle';
@@ -216,7 +216,7 @@ CREATE FUNCTION scircle_contained_by_circle(scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_in_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contained_by_circle(scircle, scircle) IS
   'true if spherical circle is contained by spherical circle';
@@ -229,7 +229,7 @@ CREATE FUNCTION scircle_contained_by_circle_neg (scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_in_circle_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contained_by_circle_neg (scircle, scircle) IS
   'true if spherical circle is not contained by spherical circle';
@@ -242,7 +242,7 @@ CREATE FUNCTION scircle_contains_circle (scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_in_circle_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_circle (scircle, scircle) IS
   'true if spherical circle contains spherical circle';
@@ -255,7 +255,7 @@ CREATE FUNCTION scircle_contains_circle_neg (scircle, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherecircle_in_circle_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_circle_neg (scircle, scircle) IS
   'true if spherical circle does not contain spherical circle';
@@ -268,7 +268,7 @@ CREATE FUNCTION spoint_contained_by_circle(spoint, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherepoint_in_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_contained_by_circle(spoint, scircle) IS
   'true if spherical point is contained by spherical circle';
@@ -282,7 +282,7 @@ CREATE FUNCTION spoint_contained_by_circle_neg(spoint, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_contained_by_circle_neg (spoint, scircle) IS
   'true if spherical point is not contained by spherical circle ';
@@ -296,7 +296,7 @@ CREATE FUNCTION spoint_contained_by_circle_com(scircle, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_contained_by_circle_com (scircle, spoint) IS
   'true if spherical circle contains spherical point ';
@@ -310,7 +310,7 @@ CREATE FUNCTION spoint_contained_by_circle_com_neg(scircle, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_contained_by_circle_com_neg (scircle, spoint) IS
   'true if spherical circle does not contain spherical point ';
@@ -324,7 +324,7 @@ CREATE FUNCTION dist(scircle, scircle)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_distance'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION dist(scircle, scircle) IS
   'distance between two spherical circles';
@@ -349,7 +349,7 @@ CREATE FUNCTION dist(scircle, spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_point_distance'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION dist(scircle, spoint) IS
   'distance between spherical circle and spherical point';
@@ -375,7 +375,7 @@ CREATE FUNCTION dist(spoint, scircle)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherecircle_point_distance_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION dist(spoint, scircle) IS
   'distance between spherical circle and spherical point';
@@ -401,7 +401,7 @@ CREATE FUNCTION strans_circle(scircle, strans)
    RETURNS scircle
    AS 'MODULE_PATHNAME' , 'spheretrans_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_circle (scircle, strans) IS
   'returns a transformated spherical circle';
@@ -420,7 +420,7 @@ CREATE FUNCTION strans_circle_inverse(scircle, strans)
    RETURNS scircle
    AS 'MODULE_PATHNAME' , 'spheretrans_circle_inverse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_circle_inverse (scircle, strans) IS
   'returns a inverse transformated spherical circle';
