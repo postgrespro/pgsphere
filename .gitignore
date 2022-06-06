@@ -8,3 +8,6 @@
 regression.out
 regression.diffs
 tags
+/sparse.c
+/sparse.h
+/sscan.c
