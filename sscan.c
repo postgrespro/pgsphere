@@ -1,6 +1,6 @@
-#line 2 "sscan.c"
+#line 1 "sscan.c"
 
-#line 4 "sscan.c"
+#line 3 "sscan.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -745,8 +745,8 @@ void sphere_flush_scanner_buffer(void)
 {
 	YY_FLUSH_BUFFER;
 }
+#line 748 "sscan.c"
 #line 749 "sscan.c"
-#line 750 "sscan.c"
 
 #define INITIAL 0
 
@@ -963,7 +963,7 @@ YY_DECL
 	{
 #line 35 "sscan.l"
 
-#line 967 "sscan.c"
+#line 966 "sscan.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1117,7 +1117,7 @@ YY_RULE_SETUP
 #line 55 "sscan.l"
 ECHO;
 	YY_BREAK
-#line 1121 "sscan.c"
+#line 1120 "sscan.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
