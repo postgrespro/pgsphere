@@ -19,6 +19,7 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
 			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql \
 			  pg_sphere--1.1.5beta4gavo--1.2.0.sql \
+			  pg_sphere--1.1.5beta4gavo--1.2.0.sql\
 			  pg_sphere--1.2.0--1.2.1.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
@@ -198,12 +199,9 @@ pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
 	cat $^ > $@
 ifeq ($(has_parallel), n)
 	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
-
-pg_sphere--1.2.0-1.2.1.sql: pgs_epochprop.sql.in
-	cat upgrade_scripts/$@.in $^ > $@
 endif
 
-pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in
+pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in pgs_epochprop.sql.in
 	cat $^ > $@
 ifeq ($(has_parallel), n)
 	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
