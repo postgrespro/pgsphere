@@ -200,6 +200,9 @@ endif
 
 pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in
 	cat $^ > $@
+ifeq ($(has_parallel), n)
+	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
+endif
 
 # end of local stuff
 
