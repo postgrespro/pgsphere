@@ -3,10 +3,10 @@ SET enable_seqscan = OFF;
 SET enable_bitmapscan = OFF;
 SET enable_indexonlyscan = ON;
 EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
-                       QUERY PLAN                       
---------------------------------------------------------
+                      QUERY PLAN                       
+-------------------------------------------------------
  Aggregate
-   ->  Index Only Scan using spoint3_idx on spheretmp1b
+   ->  Index Scan using spoint3_idx on spheretmp1b
          Index Cond: (p <@ '<(1 , 1) , 0.3>'::scircle)
 (3 rows)
 
@@ -17,10 +17,10 @@ EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),
 (1 row)
 
 EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
-                       QUERY PLAN                       
---------------------------------------------------------
+                    QUERY PLAN                     
+---------------------------------------------------
  Aggregate
-   ->  Index Only Scan using spoint3_idx on spheretmp1b
+   ->  Index Scan using spoint3_idx on spheretmp1b
          Index Cond: (p = '(3.09 , 1.25)'::spoint)
 (3 rows)
 
