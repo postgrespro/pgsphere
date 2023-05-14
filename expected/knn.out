@@ -6,12 +6,22 @@ EXPLAIN (costs off) SELECT p <-> spoint (0.2, 0.3) FROM points ORDER BY 1 LIMIT 
                    QUERY PLAN                    
 -------------------------------------------------
  Limit
-   ->  Index Scan using i on points
+   ->  Index Only Scan using i on points
          Order By: (p <-> '(0.2 , 0.3)'::spoint)
 (3 rows)
 
 UPDATE points SET pos = n FROM (SELECT id, row_number() OVER (ORDER BY p <-> spoint (0.2, 0.3)) n  FROM points ORDER BY p <-> spoint (0.2, 0.3) LIMIT 10) sel WHERE points.id = sel.id;
 SET enable_indexscan = false;
+SET enable_indexonlyscan = false;
+EXPLAIN (costs off) SELECT p <-> spoint (0.2, 0.3) FROM points ORDER BY 1 LIMIT 10;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Limit
+   ->  Sort
+         Sort Key: ((p <-> '(0.2 , 0.3)'::spoint))
+         ->  Seq Scan on points
+(4 rows)
+
 SELECT pos, row_number() OVER (ORDER BY p <-> spoint (0.2, 0.3)) n  FROM points ORDER BY p <-> spoint (0.2, 0.3) LIMIT 10;
  pos | n  
 -----+----
