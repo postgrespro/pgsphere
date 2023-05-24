@@ -231,9 +231,18 @@
             <para>
                 An overlap or contain operator does not exist for all
                 combinations of data types.
-                For instance, scircle <@ <type>spoint</type> is
+                For instance, scircle &lt;@ <type>spoint</type> is
                 useless because a spherical point can never contain a
                 spherical circle.
+            </para>
+            <para>
+                When one of the arguments of such an operator is a MOC
+                and the other is an scircle or an spoly, the non-MOC argument
+                is converted to a MOC of the order of the maximum order of
+                the MOC.  When comparing against a MOC-valued column, it
+                is usually much faster to explicitly convert the geometry
+                using the smoc constructor, as the conversion will then
+                only happen once.
             </para>
             <example>
               <title>Is the left circle contained by the right circle?</title>
@@ -255,6 +264,40 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
+
+            <example>
+              <title>Overlaps between a circle and a moc</title>
+              <programlisting>
+<![CDATA[sql> SELECT scircle '<(37d, 5d), 0.25d>' <@ smoc('4/1117') AS test ;]]>
+<![CDATA[ test]]>
+<![CDATA[------]]>
+<![CDATA[ f]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
+            <example>
+              <title>Overlaps between a circle and a moc with explicit order</title>
+              <programlisting>
+<![CDATA[sql> SELECT scircle '<(37d, 5d), 0.25d>' <@ smoc('4/1117 5/') AS test ;]]>
+<![CDATA[ test]]>
+<![CDATA[------]]>
+<![CDATA[ t]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
+            <example>
+              <title>Overlaps between a circle and a moc with explicit cast (normally faster)</title>
+              <programlisting>
+<![CDATA[sql> SELECT smoc(5, scircle '<(37d, 5d), 0.25d>') <@ smoc('4/1117 5/') AS test ;]]>
+<![CDATA[ test]]>
+<![CDATA[------]]>
+<![CDATA[ t]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
         </sect2>
 
         <sect2 id="op.cross">

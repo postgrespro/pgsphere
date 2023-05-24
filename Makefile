@@ -1,4 +1,4 @@
-PGSPHERE_VERSION = 1.2.0
+PGSPHERE_VERSION = 1.2.1
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR = $(shell basename $(shell pwd))
@@ -17,18 +17,19 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.0_gavo--1.1.5beta0gavo.sql \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
 			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql \
-			  pg_sphere--1.1.5beta4gavo--1.2.0.sql
+			  pg_sphere--1.1.5beta4gavo--1.2.0.sql \
+			  pg_sphere--1.2.0--1.2.1.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc
+			  moc mocautocast
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
 TESTS       = init_test tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc
+			  moc mocautocast
 
 ifndef CXXFLAGS
 # no support for CXXFLAGS in PGXS before v11
@@ -45,7 +46,8 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
    pgs_gist.sql gnomo.sql \
-   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql
+   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
+   pgs_moc_geo_casts.sql
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
 USE_PGXS = 1
@@ -155,7 +157,7 @@ ifeq ($(pg_version_9_5_plus),y)
 else
 endif
 
-# local stuff follows here, next will be "beta2"
+# local stuff follows here
 
 AUGMENT_GAVO_111 = $(AUGMENT_UNP_111) healpix.sql # for vanilla 1.1.1 users
 UPGRADE_GAVO_111 = $(UPGRADE_UNP_COMMON)
@@ -192,6 +194,12 @@ pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql: pgs_moc_compat.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
+	cat $^ > $@
+ifeq ($(has_parallel), n)
+	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
+endif
+
+pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in
 	cat $^ > $@
 ifeq ($(has_parallel), n)
 	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL

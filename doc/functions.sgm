@@ -638,6 +638,34 @@
             </programlisting>
           </example>
 
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><function>max_order</function></funcdef>
+                <paramdef>smoc</paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            Returns the maximal order of an smoc.
+          </para>
+          <para>
+          	The maximal order of a MOC can be higher than than the highest
+          	order appearing in the serialisation.  For instance, in the example
+          	below the full-sky coverage given at order 6 means that no patch
+          	larger than about 1 degree is not covered.  In the ASCII
+          	serialisation, give the maximum order with an with an empty cell
+          	list.
+          </para>
+
+          <example>
+            <title>Obtaining a MOC order</title>
+            <programlisting>
+<![CDATA[SELECT max_order(smoc('0/0-11 6/')) as order;]]>
+<![CDATA[    order]]>
+<![CDATA[-----------]]>
+<![CDATA[ 6 ]]>
+            </programlisting>
+          </example>
+
         </sect2>
         
     </sect1>

@@ -1,0 +1,50 @@
+SQL definitions
+===============
+
+Long version:
+<https://www.postgresql.org/docs/current/extend-extensions.html>.
+
+If you're writing new features that require SQL support, pick some
+descriptive name; let's say my_new_op.  
+
+Put your new code into a file called pgs_my_new_op.sql.in.  The .in
+extension here usually indicates "it's for copying stuff together";
+usally, not much processing is done on such files.
+
+Then edit the Makefile.  The PGS_SQL variable contains a list of the
+SQL files eventually copied together, without the .in.  Add your new
+file there.
+
+You will also need to create an upgrade file.  In order to tell postgres
+to execute it, increase PGSPHERE_VERSION as appropriate.  As a
+consequence, you will have to::
+
+	git mv pg_sphere--<old version>.sql.in pg_sphere--<new version>.sql.in
+
+and also to update the version in pg_sphere.control.
+
+Then create a make rule:: 
+
+	pg_sphere--<old version>--<new version>.sql: pgs_my_new_op.sql.in
+		cat $^ > $@
+
+(of course, this will extend to having multiple sql.in files).
+
+Finally, add the target of that rule to the DATA_built variable.
+
+
+Regression tests
+================
+
+Regressions tests are as per
+<https://www.postgresql.org/docs/current/extend-pgxs.html>.
+
+In short, write queries executing your new features into a file
+sql/my_new_op.sql, and add "my_new_op" (without the extension or the
+directory name) to both REGRESS and TESTS in the Makefile.
+
+Then touch expected/my_new_op.out, run make test.  This will of course
+fail, because your tests hopefully will output something.  But then you
+can pick out the diff from
+/var/lib/postgresql/pgsphere/regression.diffs, have another critical
+look at it and generatoe your .out file from it.
