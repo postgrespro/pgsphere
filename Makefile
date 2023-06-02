@@ -1,13 +1,16 @@
 PGSPHERE_VERSION = 1.2.1
 
 # the base dir name may be changed depending on git clone command
-SRC_DIR = $(shell basename $(shell pwd))
+SRC_DIR     = $(shell basename $(shell pwd))
 
-MODULE_big = pg_sphere
-OBJS       = sscan.o sparse.o sbuffer.o vector3d.o point.o \
-             euler.o circle.o line.o ellipse.o polygon.o \
-             path.o box.o output.o gq_cache.o gist.o key.o \
-             gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o
+MODULE_big  = pg_sphere
+
+OBJS        = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
+              src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
+              src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o src/key.o \
+              src/gnomo.o \
+              src/healpix.o src/moc.o src/process_moc.o \
+              healpix_bare/healpix_bare.o
 
 EXTENSION   = pg_sphere
 RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
@@ -24,6 +27,9 @@ DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
 			  moc mocautocast
+
+PG_CFLAGS	+= -Isrc
+PG_CXXFLAGS	+= -Isrc
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
@@ -45,9 +51,10 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-   pgs_gist.sql gnomo.sql \
+   pgs_gist.sql pgs_gnomo.sql \
    healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
    pgs_moc_geo_casts.sql
+
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
 USE_PGXS = 1
@@ -123,39 +130,41 @@ UPGRADE_UNP_COMMON =  pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
 	pgs_gist_contains_ops.sql contains-ops-fixes-1.sql
 
 AUGMENT_UNP_COMMON = upgrade_scripts/pgs_pre111.sql pgs_contains_ops.sql \
-	gnomo.sql
+	pgs_gnomo.sql
+
 # for vanilla 1.1.1 users
 AUGMENT_UNP_111 = $(AUGMENT_UNP_COMMON) pgs_gist_pointkey.sql
 
+# TODO: Clean up the commented code below.
 # for 1.1.2+ users: 'from unpacked_1.1.2plus'
-AUGMENT_UNP_FOR_112plus = $(AUGMENT_UNP_COMMON)
-UPGRADE_UNP_FOR_112plus = pgs_gist_pointkey.sql pgs_gist_drop_spoint2.sql.in
-
+#AUGMENT_UNP_FOR_112plus = $(AUGMENT_UNP_COMMON)
+#UPGRADE_UNP_FOR_112plus = pgs_gist_pointkey.sql pgs_gist_drop_spoint2.sql.in
+#
 # for "alter extension":
-
+#
 # TODO: add dynamic pl/pgsql to do perform an additional
 #    "ALTER EXTENSION pg_sphere UPDATE TO '1.1.5_from_before_2016-02-07';"
 # if required.
 #
 # default 1.0 (after 2016-02-07) -> 1.1.5
-UPGRADE_1_0_PRE_xxxxxx = contains-ops-fixes-2.sql
+#UPGRADE_1_0_PRE_xxxxxx = contains-ops-fixes-2.sql
 # '1.1.5_from_2015-08-31'
-AUGMENT_1_0_PRE_AAF2D5 = pgs_contains_ops.sql gnomo.sql
-UPGRADE_1_0_PRE_AAF2D5 = contains-ops-fixes-1.sql pgs_gist_drop_spoint2.sql.in \
-						pgs_gist_contains_ops.sql
-
+#AUGMENT_1_0_PRE_AAF2D5 = pgs_contains_ops.sql gnomo.sql
+#UPGRADE_1_0_PRE_AAF2D5 = contains-ops-fixes-1.sql pgs_gist_drop_spoint2.sql.in \#
+#						pgs_gist_contains_ops.sql
+#
 # vanilla 'create from unpackaged' must assume 1.1.1
 # ...
-
+#
 # create "create extension from unpacked*" files
-
+#
 # create "alter extension" files
-
-
-ifeq ($(pg_version_9_5_plus),y)
-# 1.1.1.5 -> 1.1.5.1 for Postgres 9.5+ features
-else
-endif
+#
+#
+#ifeq ($(pg_version_9_5_plus),y)
+## 1.1.1.5 -> 1.1.5.1 for Postgres 9.5+ features
+#else
+#endif
 
 # local stuff follows here
 
@@ -182,6 +191,7 @@ pg_sphere--unpackaged--1.1.5beta0gavo.sql: $(addsuffix .in, \
 # test installation B (generic)
 pg_sphere--1.0--1.0_gavo.sql: # dummy upgrade to allow for descriptive names
 	cat upgrade_scripts/$@.in > $@
+
 pg_sphere--1.0_gavo--1.1.5beta0gavo.sql: $(addsuffix .in, \
 		$(AUGMENT_1_0_115B0G) \
 		$(addprefix upgrade_scripts/, $(UPGRADE_1_0_115B0G)))
