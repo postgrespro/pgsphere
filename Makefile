@@ -1,4 +1,8 @@
-PGSPHERE_VERSION = 1.2.1
+PGSPHERE_VERSION	= 1.2.1
+EXTENSION			= pg_sphere
+RELEASE_SQL 		= $(EXTENSION)--$(PGSPHERE_VERSION).sql
+USE_PGXS			= 1
+#USE_HEALPIX			= 1
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR     = $(shell basename $(shell pwd))
@@ -8,12 +12,16 @@ MODULE_big  = pg_sphere
 OBJS        = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
               src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
               src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o src/key.o \
-              src/gnomo.o \
-              src/healpix.o src/moc.o src/process_moc.o \
-              healpix_bare/healpix_bare.o
+              src/gnomo.o
 
-EXTENSION   = pg_sphere
-RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
+PG_CFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
+PG_CXXFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
+
+ifdef USE_HEALPIX
+OBJS	   += src/healpix.o src/moc.o src/process_moc.o \
+              healpix_bare/healpix_bare.o
+endif
+
 DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--unpackaged--1.1.5beta0gavo.sql \
 			  pg_sphere--1.0--1.0_gavo.sql \
@@ -24,18 +32,23 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.2.0--1.2.1.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
-REGRESS     = init tables points euler circle line ellipse poly path box index \
-			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast
 
-PG_CFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
-PG_CXXFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
+REGRESS     = init tables points euler circle line ellipse poly path box index \
+			  contains_ops contains_ops_compat bounding_box_gist gnomo 
+
+ifdef USE_HEALPIX
+REGRESS     += healpix moc mocautocast
+endif
+
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
 TESTS       = init_test tables points euler circle line ellipse poly path box index \
-			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast
+			  contains_ops contains_ops_compat bounding_box_gist gnomo
+
+ifdef USE_HEALPIX
+TESTS		+= healpix moc mocautocast
+endif
 
 ifndef CXXFLAGS
 # no support for CXXFLAGS in PGXS before v11
@@ -51,13 +64,15 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
    pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
    pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-   pgs_gist.sql pgs_gnomo.sql \
-   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
-   pgs_moc_geo_casts.sql
+   pgs_gist.sql pgs_gnomo.sql pgs_gist_spoint3.sql
+
+ifdef USE_HEALPIX
+PGS_SQL		+= healpix.sql pgs_moc_type.sql \
+			   pgs_moc_compat.sql pgs_moc_ops.sql pgs_moc_geo_casts.sql
+endif
 
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
-USE_PGXS = 1
 ifdef USE_PGXS
   ifndef PG_CONFIG
     PG_CONFIG := pg_config
@@ -72,11 +87,13 @@ else
   include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
+ifdef USE_HEALPIX
 # compiler settings
 PKG_CONFIG = pkg-config
 override CPPFLAGS += $(shell $(PKG_CONFIG) --cflags healpix_cxx)
 SHLIB_LINK += $(shell $(PKG_CONFIG) --libs healpix_cxx)
 LINK.shared = g++ -shared
+endif
 
 # healpix_bare.c isn't ours so we refrain from fixing the warnings in there
 healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
@@ -99,8 +116,10 @@ has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
 
+ifdef USE_HEALPIX
 ifeq ($(has_explain_summary),y)
         REGRESS += moc1 moc100
+endif
 endif
 
 ifeq ($(pg_version_9_5_plus),y)
