@@ -1,7 +1,17 @@
+pgSphere is a PostgreSQL extension for spherical geometry.
+
+It provides:
+
+* New data types (points, spherical polygons, paths, circles, ellipses, coordinate ranges)
+* Input and output of data in various formats
+* Membership, overlap, and other operators
+* Circumference and area of objects
+* Object rotation by Euler angles
+* Indexing of spherical data types
+
 This is an R-Tree implementation using GiST for spherical objects
 like spherical points and spherical circles with 
 useful functions and operators.
-
 
 NOTICE:
      This version will work only with postgresql version 9.1 and above.
