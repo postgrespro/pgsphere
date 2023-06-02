@@ -1,5 +1,12 @@
 #include "types.h"
 
+#if !defined(PGSPHERE_VERSION)
+#error "PGSPHERE_VERSION macro is not set"
+#endif
+
+#define PGSPHERE_STRINGIFY_INTERNAL(x) #x
+#define PGSPHERE_STRINGIFY(x) PGSPHERE_STRINGIFY_INTERNAL(x)
+
 /* Output functions */
 
 
@@ -528,6 +535,6 @@ Datum
 pg_sphere_version(PG_FUNCTION_ARGS)
 {
 	char	   *buffer = (char *) palloc(20);
-	sprintf(buffer, "1.1.5");
+	sprintf(buffer, PGSPHERE_STRINGIFY(PGSPHERE_VERSION));
 	PG_RETURN_CSTRING(buffer);
 }

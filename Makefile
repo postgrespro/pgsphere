@@ -28,8 +28,8 @@ REGRESS     = init tables points euler circle line ellipse poly path box index \
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
 			  moc mocautocast
 
-PG_CFLAGS	+= -Isrc
-PG_CXXFLAGS	+= -Isrc
+PG_CFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
+PG_CXXFLAGS	+= -Isrc -DPGSPHERE_VERSION=${PGSPHERE_VERSION}
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 

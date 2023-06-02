@@ -3,3 +3,9 @@
 -- does not depend on contents of pg_sphere.sql.
 --
 CREATE EXTENSION pg_sphere;
+select pg_sphere_version();
+ pg_sphere_version 
+-------------------
+ 1.2.1
+(1 row)
+
