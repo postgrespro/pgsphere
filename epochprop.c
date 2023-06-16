@@ -25,7 +25,7 @@ PG_FUNCTION_INFO_V1(epoch_prop);
 /* A_nu as per ESA/SP-1200 */
 #define A_NU (AU/(J_YEAR))
 
-/* Following SOFA, we use 1e-7 arcsec as minimal parallax 
+/* Following SOFA, we use 1e-7 arcsec as minimal parallax
 	("celestial sphere"); parallax=0 exactly means "infinite distance", which
 	leads to all sorts for problems; our parallaxes come in in mas, so: */
 #define PX_MIN 1e-7*1000
@@ -59,11 +59,11 @@ static void propagate_phasevec(
 	spoint_vector3d(&r0, &(pv->pos));
 
 	p0.x = -sin(pv->pos.lng);
-	p0.y = cos(pv->pos.lng); 
+	p0.y = cos(pv->pos.lng);
 	p0.z = 0;
 
 	q0.x = -sin(pv->pos.lat) * cos(pv->pos.lng);
-	q0.y = -sin(pv->pos.lat) * sin(pv->pos.lng); 
+	q0.y = -sin(pv->pos.lat) * sin(pv->pos.lng);
 	q0.z = cos(pv->pos.lat);
 
 	/* the original proper motion vector */
@@ -117,17 +117,17 @@ static void propagate_phasevec(
 }
 
 
-/* 
+/*
 	Propagate a position with proper motions and optionally parallax
 	and radial velocity.
 
 	Arguments: pos0 (spoint), pm_long, pm_lat (in rad/yr)
-	par (parallax, mas), rv (in km/s), delta_t (in years) 
+	par (parallax, mas), rv (in km/s), delta_t (in years)
 
 	This returns a 6-array of lat, long (in rad), parallax (in mas)
 	pmlat, pmlong (in rad/yr), rv (in km/s).
 */
-Datum 
+Datum
 epoch_prop(PG_FUNCTION_ARGS) {
 	double delta_t;
 	phasevec input, output;
@@ -135,7 +135,7 @@ epoch_prop(PG_FUNCTION_ARGS) {
 	Datum retvals[6];
 
 	if (PG_ARGISNULL(0)) {
-		ereport(ERROR, 
+		ereport(ERROR,
 			(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
 				errmsg("NULL position not supported in epoch propagation"))); }
 	memcpy(&(input.pos), (void*)PG_GETARG_POINTER(0), sizeof(SPoint));
@@ -164,6 +164,10 @@ epoch_prop(PG_FUNCTION_ARGS) {
 		input.rv = PG_GETARG_FLOAT8(4);
 	}
 
+	if (PG_ARGISNULL(5)) {
+		ereport(ERROR,
+			(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
+				errmsg("NULL delta t not supported in epoch propagation"))); }
 	delta_t = PG_GETARG_FLOAT8(5);
 
 	propagate_phasevec(&input, delta_t, &output);

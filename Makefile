@@ -19,7 +19,6 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
 			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql \
 			  pg_sphere--1.1.5beta4gavo--1.2.0.sql \
-			  pg_sphere--1.1.5beta4gavo--1.2.0.sql\
 			  pg_sphere--1.2.0--1.2.1.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
