@@ -1,0 +1,41 @@
+-- ***********************************
+--
+-- functions for propagating positions
+--
+-- ***********************************
+
+CREATE FUNCTION epoch_prop(
+	pos spoint,
+	parallax DOUBLE PRECISION,
+	pmlng DOUBLE PRECISION,
+	pmlat DOUBLE PRECISION,
+	rv DOUBLE PRECISION,
+	delta_t DOUBLE PRECISION)
+	RETURNS double precision[6]
+	AS 'MODULE_PATHNAME', 'epoch_prop'
+	LANGUAGE 'c'
+	IMMUTABLE PARALLEL SAFE;
+
+CREATE FUNCTION epoch_prop_pos(
+	pos spoint,
+	parallax DOUBLE PRECISION,
+	pmlng DOUBLE PRECISION,
+	pmlat DOUBLE PRECISION,
+	rv DOUBLE PRECISION,
+	delta_t DOUBLE PRECISION)
+	RETURNS spoint
+	AS $body$
+		SELECT spoint(pv[1], pv[2])
+		FROM epoch_prop(pos, parallax, pmlng, pmlat, rv, delta_t) as pv
+	$body$ LANGUAGE SQL STABLE PARALLEL SAFE;
+
+CREATE FUNCTION epoch_prop_pos(
+	pos spoint,
+	pmlng DOUBLE PRECISION,
+	pmlat DOUBLE PRECISION,
+	delta_t DOUBLE PRECISION)
+	RETURNS spoint
+	AS $body$
+		SELECT spoint(pv[1], pv[2])
+		FROM epoch_prop(pos, 0, pmlng, pmlat, 0, delta_t) as pv
+	$body$ LANGUAGE SQL STABLE PARALLEL SAFE;

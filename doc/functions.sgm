@@ -667,5 +667,133 @@
           </example>
 
         </sect2>
-        
+
+        <sect2 id="funcs.epochprop">
+          <title>
+            Epoch propagation
+          </title>
+
+          <sect3 id="funcs.epochprop.full">
+            <title>6-Parameter Epoch Propagation</title>
+            <funcsynopsis>
+              <funcprototype>
+                <funcdef><type>double precision[6]</type>
+                    <function>epoch_prop</function></funcdef>
+                  <paramdef>spoint <parameter>pos</parameter></paramdef>
+                  <paramdef>double precision <parameter>parallax</parameter></paramdef>
+                  <paramdef>double precision <parameter>pm_long</parameter></paramdef>
+                  <paramdef>double precision <parameter>pm_lat</parameter></paramdef>
+                  <paramdef>double precision <parameter>radial_velocity</parameter></paramdef>
+                  <paramdef>double precision <parameter>delta_t</parameter></paramdef>
+              </funcprototype>
+            </funcsynopsis>
+            <para>
+              Propagates a spherical phase vector in time (in particular,
+              applies proper motion to positions)
+            </para>
+            <para>
+              Following both pg_sphere and, where missing, astronomical 
+              conventions makes units somewhat eclectic here; pm_long and pm_lat
+              need to be in rad/yr, whereas parallax is in mas, and 
+              radial_velocity in km/s.  The time difference must be in 
+              (Julian) years.
+            </para>
+
+            <para>
+              This function returns a 6-array of [long, lat, parallax, 
+              pm_long, pm_lat, radial_velocity] of the corresponding values
+              delta_t years after the reference epoch for the original position.
+              As in the function arguments, long and lat are in rad, pm_lon and
+              pm_lat are in rad/yr, parallax is in mas, and radial_velocity is
+              in km/s.  If you are only interested in the position, consider
+              the epoch_prop_pos functions below that have a somewhat less
+              contorted signature.
+            </para>
+
+            <para>
+              It is an error to have either pos or delta_t NULL.  For all
+              other arguments, NULLs are turned into 0s, except for parallax,
+              where some very small default is put in.  In that case,
+              both parallax and radial_velocity will be NULL in the output
+              array.
+            </para>
+
+            <para>
+              This uses the rigorous method derived in "The Hipparcos and Tycho
+              Catalogues", ESA Special Publication 1200 (1997), p 94f.  It does
+              not take into account relativistic effects, and it also does not
+              account for secular aberration.
+            </para>
+            <example>
+              <title>Propagating Barnard's star into the past</title>
+              <programlisting><![CDATA[
+SELECT 
+   to_char(DEGREES(tp[1]), '999D9999999999'),
+   to_char(DEGREES(tp[2]), '999D9999999999'),
+   to_char(tp[3], '999D999'),
+   to_char(DEGREES(tp[4])*3.6e6, '999D999'),
+   to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
+   to_char(tp[6], '999D999')
+FROM (
+  SELECT epoch_prop(
+    spoint(radians(269.45207695), radians(4.693364966)), 546.9759,
+    RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
+               -100) AS tp) AS q;
+     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
+-----------------+-----------------+----------+----------+------------+----------
+  269.4742714391 |    4.4072939987 |  543.624 | -791.442 |  10235.412 | -110.450
+       ]]></programlisting>
+            </example>
+
+        </sect3>
+        <sect3>
+          <title>Epoch Propagation of Positions Only</title>
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><type>spoint</type>
+                  <function>epoch_prop_pos</function></funcdef>
+                <paramdef>spoint <parameter>pos</parameter></paramdef>
+                <paramdef>double precision <parameter>parallax</parameter></paramdef>
+                <paramdef>double precision <parameter>pm_long</parameter></paramdef>
+                <paramdef>double precision <parameter>pm_lat</parameter></paramdef>
+                <paramdef>double precision <parameter>radial_velocity</parameter></paramdef>
+                <paramdef>double precision <parameter>delta_t</parameter></paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <funcsynopsis>
+            <funcprototype>
+              <funcdef><type>spoint</type>
+                  <function>epoch_prop_pos</function></funcdef>
+                <paramdef>spoint <parameter>pos</parameter></paramdef>
+                <paramdef>double precision <parameter>pm_long</parameter></paramdef>
+                <paramdef>double precision <parameter>pm_lat</parameter></paramdef>
+                <paramdef>double precision <parameter>delta_t</parameter></paramdef>
+            </funcprototype>
+          </funcsynopsis>
+          <para>
+            These are simplified versions of epoch_prop returning only spoints;
+            the propagated values for the other coordinates are discarded
+            (but still internallay computed; these functions do not
+            run any faster than epoch_prop itself).
+          </para>
+
+          <para>
+            As with epoch_prop itself, missing values (except for pos and 
+            delta_t) are substituted by 0 (or a very small value in the
+            case of parallax).
+          </para>
+          <example>
+            <title>Barnard's star, position and proper motion</title>
+            <programlisting><![CDATA[
+SELECT epoch_prop_pos(
+  spoint(radians(269.45207695), radians(4.693364966)), 
+  RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6),
+  20) AS tp;
+                   tp                    
+-----------------------------------------
+ (4.70274793061952 , 0.0829193989380876)
+       ]]></programlisting>
+          </example>
+        </sect3>
+      </sect2>
     </sect1>
