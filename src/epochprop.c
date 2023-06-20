@@ -8,7 +8,7 @@ Transformation: Rigorous Treatment'; cf.
 */
 
 #include <math.h>
-#include <pgs_util.h>
+#include "pgs_util.h"
 
 #include "point.h"
 #include "epochprop.h"

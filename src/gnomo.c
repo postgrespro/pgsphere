@@ -1,8 +1,8 @@
 #include <postgres.h>
 #include <fmgr.h>
 
-#include <gnomo.h>
-#include <point.h> /* SPoint from pgsphere */
+#include "gnomo.h"
+#include "point.h" /* SPoint from pgsphere */
 
 #include <math.h>
 
