@@ -6,9 +6,9 @@ SRC_DIR = $(shell basename $(shell pwd))
 MODULE_big = pg_sphere
 OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
              src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
-             src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o src/key.o \
-             src/gnomo.o src/healpix.o src/moc.o src/process_moc.o healpix_bare/healpix_bare.o \
-             src/epochprop.o
+             src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
+             src/key.o src/gnomo.o src/healpix.o src/moc.o src/process_moc.o \
+             healpix_bare/healpix_bare.o src/epochprop.o
 
 EXTENSION   = pg_sphere
 RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
