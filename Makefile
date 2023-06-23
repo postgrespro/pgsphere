@@ -4,11 +4,11 @@ PGSPHERE_VERSION = 1.2.1
 SRC_DIR = $(shell basename $(shell pwd))
 
 MODULE_big = pg_sphere
-OBJS       = sscan.o sparse.o sbuffer.o vector3d.o point.o \
-             euler.o circle.o line.o ellipse.o polygon.o \
-             path.o box.o output.o gq_cache.o gist.o key.o \
-             gnomo.o healpix.o moc.o process_moc.o healpix_bare/healpix_bare.o \
-             epochprop.o
+OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
+             src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
+             src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
+             src/key.o src/gnomo.o src/healpix.o src/moc.o src/process_moc.o \
+             healpix_bare/healpix_bare.o src/epochprop.o
 
 EXTENSION   = pg_sphere
 RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
@@ -208,16 +208,16 @@ endif
 
 # end of local stuff
 
-sscan.o : sparse.c
+src/sscan.o : src/sparse.c
 
-sparse.c: sparse.y
+src/sparse.c: src/sparse.y
 ifdef YACC
-	$(YACC) -d $(YFLAGS) -p sphere_yy -o sparse.c $<
+	$(YACC) -d $(YFLAGS) -p sphere_yy -o $@ $<
 else
 	@$(missing) bison $< $@
 endif
 
-sscan.c : sscan.l
+src/sscan.c : src/sscan.l
 ifdef FLEX
 	$(FLEX) $(FLEXFLAGS) -Psphere -o$@ $<
 else
