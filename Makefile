@@ -32,6 +32,9 @@ TESTS       = init_test tables points euler circle line ellipse poly path box in
 			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
 			  moc mocautocast epochprop
 
+PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
+PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
+
 ifndef CXXFLAGS
 # no support for CXXFLAGS in PGXS before v11
 CXXFLAGS = -Wall -Wpointer-arith -Wendif-labels \
