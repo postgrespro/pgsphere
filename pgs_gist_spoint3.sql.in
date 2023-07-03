@@ -9,7 +9,7 @@ CREATE FUNCTION g_spoint3_penalty (internal, internal, internal)
 	RETURNS internal
 	AS 'MODULE_PATHNAME', 'g_spoint3_penalty'
 	LANGUAGE 'c'
-	STRICT;
+	STRICT PARALLEL SAFE;
 
 CREATE FUNCTION g_spoint3_picksplit(internal, internal)
 	RETURNS internal
@@ -40,7 +40,7 @@ CREATE FUNCTION g_spoint3_fetch(internal)
 	RETURNS internal
 	AS 'MODULE_PATHNAME', 'g_spoint3_fetch'
 	LANGUAGE 'c'
-	STRICT;
+	STRICT PARALLEL SAFE;
 
 CREATE OPERATOR CLASS spoint3
 	FOR TYPE spoint USING gist AS

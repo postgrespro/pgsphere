@@ -29,10 +29,11 @@ reset client_min_messages;
 
 -- #################################
 --  smoc/geo OVERLAPS
+
 CREATE OR REPLACE FUNCTION scircle_subset_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) <@ a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR <@ (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -46,7 +47,7 @@ CREATE OPERATOR <@ (
 CREATE OR REPLACE FUNCTION smoc_subset_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc <@ smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR <@ (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -60,7 +61,7 @@ CREATE OPERATOR <@ (
 CREATE OR REPLACE FUNCTION spoly_subset_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) <@ a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR <@ (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -74,7 +75,7 @@ CREATE OPERATOR <@ (
 CREATE OR REPLACE FUNCTION smoc_subset_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc <@ smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR <@ (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -89,7 +90,7 @@ CREATE OPERATOR <@ (
 CREATE OR REPLACE FUNCTION scircle_not_subset_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !<@ a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !<@ (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -103,7 +104,7 @@ CREATE OPERATOR !<@ (
 CREATE OR REPLACE FUNCTION smoc_not_subset_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc !<@ smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !<@ (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -117,7 +118,7 @@ CREATE OPERATOR !<@ (
 CREATE OR REPLACE FUNCTION spoly_not_subset_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !<@ a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !<@ (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -131,7 +132,7 @@ CREATE OPERATOR !<@ (
 CREATE OR REPLACE FUNCTION smoc_not_subset_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc !<@ smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !<@ (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -146,7 +147,7 @@ CREATE OPERATOR !<@ (
 CREATE OR REPLACE FUNCTION scircle_superset_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) @> a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR @> (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -160,7 +161,7 @@ CREATE OPERATOR @> (
 CREATE OR REPLACE FUNCTION smoc_superset_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc @> smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR @> (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -174,7 +175,7 @@ CREATE OPERATOR @> (
 CREATE OR REPLACE FUNCTION spoly_superset_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) @> a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR @> (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -188,7 +189,7 @@ CREATE OPERATOR @> (
 CREATE OR REPLACE FUNCTION smoc_superset_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc @> smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR @> (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -203,7 +204,7 @@ CREATE OPERATOR @> (
 CREATE OR REPLACE FUNCTION scircle_not_superset_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !@> a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !@> (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -217,7 +218,7 @@ CREATE OPERATOR !@> (
 CREATE OR REPLACE FUNCTION smoc_not_superset_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc !@> smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !@> (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -231,7 +232,7 @@ CREATE OPERATOR !@> (
 CREATE OR REPLACE FUNCTION spoly_not_superset_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !@> a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !@> (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -245,7 +246,7 @@ CREATE OPERATOR !@> (
 CREATE OR REPLACE FUNCTION smoc_not_superset_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc !@> smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !@> (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -263,7 +264,7 @@ CREATE OPERATOR !@> (
 CREATE OR REPLACE FUNCTION scircle_intersect_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) && a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR && (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -277,7 +278,7 @@ CREATE OPERATOR && (
 CREATE OR REPLACE FUNCTION smoc_intersect_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc && smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR && (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -291,7 +292,7 @@ CREATE OPERATOR && (
 CREATE OR REPLACE FUNCTION spoly_intersect_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) && a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR && (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -305,7 +306,7 @@ CREATE OPERATOR && (
 CREATE OR REPLACE FUNCTION smoc_intersect_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc && smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR && (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -320,7 +321,7 @@ CREATE OPERATOR && (
 CREATE OR REPLACE FUNCTION scircle_not_intersect_smoc(
   geo_arg scircle, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !&& a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !&& (
   LEFTARG    = scircle,
   RIGHTARG   = smoc,
@@ -334,7 +335,7 @@ CREATE OPERATOR !&& (
 CREATE OR REPLACE FUNCTION smoc_not_intersect_scircle(
   a_moc smoc, geo_arg scircle) RETURNS BOOL AS $body$
     SELECT a_moc !&& smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !&& (
   LEFTARG    = smoc,
   RIGHTARG   = scircle,
@@ -348,7 +349,7 @@ CREATE OPERATOR !&& (
 CREATE OR REPLACE FUNCTION spoly_not_intersect_smoc(
   geo_arg spoly, a_moc smoc) RETURNS BOOL AS $body$
     SELECT smoc(max_order(a_moc), geo_arg) !&& a_moc
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !&& (
   LEFTARG    = spoly,
   RIGHTARG   = smoc,
@@ -362,7 +363,7 @@ CREATE OPERATOR !&& (
 CREATE OR REPLACE FUNCTION smoc_not_intersect_spoly(
   a_moc smoc, geo_arg spoly) RETURNS BOOL AS $body$
     SELECT a_moc !&& smoc(max_order(a_moc), geo_arg)
-  $body$ LANGUAGE SQL STABLE;
+  $body$ LANGUAGE SQL STABLE PARALLEL SAFE;
 CREATE OPERATOR !&& (
   LEFTARG    = smoc,
   RIGHTARG   = spoly,
@@ -372,6 +373,3 @@ CREATE OPERATOR !&& (
   RESTRICT   = contsel,
   JOIN       = contjoinsel
 );
-
-
-

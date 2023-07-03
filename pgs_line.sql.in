@@ -8,7 +8,7 @@ CREATE FUNCTION sline(spoint, spoint)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_from_points'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline(spoint, spoint) IS
   'returns a spherical line using begin (arg1) and end (arg2)';
@@ -17,7 +17,7 @@ CREATE FUNCTION sline(strans, float8)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_from_trans'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline(strans, float8) IS
   'returns a spherical line using Euler transformation (arg1) and length (arg2)';
@@ -26,7 +26,7 @@ CREATE FUNCTION meridian(float8)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_meridian'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION meridian(float8) IS
   'returns a spherical line as a meridian along longitude arg';
@@ -36,7 +36,7 @@ CREATE FUNCTION sl_beg(sline)
    RETURNS spoint
    AS 'MODULE_PATHNAME', 'sphereline_begin'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sl_beg(sline) IS
   'returns the begin of a spherical line';
@@ -45,7 +45,7 @@ CREATE FUNCTION sl_end(sline)
    RETURNS spoint
    AS 'MODULE_PATHNAME', 'sphereline_end'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sl_end(sline) IS
   'returns the end of a spherical line';
@@ -59,7 +59,7 @@ CREATE FUNCTION strans(sline)
    RETURNS strans
    AS 'MODULE_PATHNAME', 'spheretrans_from_line'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans(sline) IS
   'converts line to a transformation (ZXZ)';
@@ -77,7 +77,7 @@ CREATE FUNCTION sline(spoint)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_from_point'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline(spoint) IS
   'casts a spherical point to a spherical line';
@@ -105,7 +105,7 @@ CREATE FUNCTION sline_equal(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_equal'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_equal(sline, sline) IS
   'returns true, if spherical lines are equal';
@@ -132,7 +132,7 @@ CREATE FUNCTION sline_equal_neg(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_equal_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_equal_neg(sline, sline) IS
   'returns true, if spherical lines are not equal';
@@ -159,7 +159,7 @@ CREATE FUNCTION length(sline)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'sphereline_length'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION length(sline) IS
   'returns the length of a spherical line (in radians)';
@@ -181,7 +181,7 @@ CREATE FUNCTION swap(sline)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_swap_beg_end'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION swap(sline) IS
   'returns a spherical line with swapped begin and end';
@@ -202,7 +202,7 @@ CREATE FUNCTION turn(sline)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'sphereline_turn'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION turn(sline) IS
   'returns a turned spherical line but keeps begin and end';
@@ -225,7 +225,7 @@ CREATE FUNCTION sline_crosses(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_crosses'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_crosses(sline, sline) IS
   'returns true if spherical lines cross';
@@ -253,7 +253,7 @@ CREATE FUNCTION sline_crosses_neg(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_crosses_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_crosses_neg(sline, sline) IS
   'returns true if spherical lines do not cross';
@@ -281,7 +281,7 @@ CREATE FUNCTION sline_overlap(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap(sline, sline) IS
   'returns true if spherical lines overlap or cross';
@@ -308,7 +308,7 @@ CREATE FUNCTION sline_overlap_neg(sline, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap_neg(sline, sline) IS
   'returns true if spherical lines do not overlap or cross';
@@ -337,7 +337,7 @@ CREATE FUNCTION sline_contains_point (sline, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_cont_point'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_contains_point (sline, spoint) IS
   'returns true if spherical line contains spherical point';
@@ -352,7 +352,7 @@ CREATE FUNCTION sline_contains_point_com (spoint, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_cont_point_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_contains_point_com (spoint, sline) IS
   'returns true if spherical line contains spherical point';
@@ -366,7 +366,7 @@ CREATE FUNCTION sline_contains_point_neg (sline, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_cont_point_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_contains_point_neg (sline, spoint) IS
   'returns true if spherical line does not contain spherical point';
@@ -380,7 +380,7 @@ CREATE FUNCTION sline_contains_point_com_neg (spoint, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_cont_point_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_contains_point_com_neg (spoint, sline) IS
   'returns true if spherical line does not contain spherical point';
@@ -393,7 +393,7 @@ CREATE FUNCTION strans_line(sline, strans)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'spheretrans_line'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_line (sline, strans) IS
   'returns a transformated spherical line';
@@ -412,7 +412,7 @@ CREATE FUNCTION strans_line_inverse(sline, strans)
    RETURNS sline
    AS 'MODULE_PATHNAME', 'spheretrans_line_inverse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_line_inverse (sline, strans) IS
   'returns a inverse transformated spherical line';
@@ -435,7 +435,7 @@ CREATE FUNCTION sline_overlap_circle(sline, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap_circle(sline, scircle) IS
   'returns true if spherical line overlaps spherical circle';
@@ -462,7 +462,7 @@ CREATE FUNCTION sline_overlap_circle_com(scircle, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap_circle_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap_circle_com(scircle, sline) IS
   'returns true if spherical line overlaps spherical circle';
@@ -489,7 +489,7 @@ CREATE FUNCTION sline_overlap_circle_neg(sline, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap_circle_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap_circle_neg(sline, scircle) IS
   'returns true if spherical line does not overlap spherical circle';
@@ -516,7 +516,7 @@ CREATE FUNCTION sline_overlap_circle_com_neg(scircle, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereline_overlap_circle_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sline_overlap_circle_com_neg(scircle, sline) IS
   'returns true if spherical line overlaps spherical circle';
@@ -545,7 +545,7 @@ CREATE FUNCTION scircle_contains_line(scircle, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_line'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_line(scircle, sline) IS
   'returns true if spherical circle contains spherical line';
@@ -560,7 +560,7 @@ CREATE FUNCTION scircle_contains_line_com(sline, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_line_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_line_com(sline, scircle) IS
   'returns true if spherical circle contains spherical line';
@@ -573,7 +573,7 @@ CREATE FUNCTION scircle_contains_line_neg(scircle, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_line_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_line_neg(scircle, sline) IS
   'returns true if spherical circle does not contain spherical line';
@@ -587,7 +587,7 @@ CREATE FUNCTION scircle_contains_line_com_neg(sline, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_line_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_line_com_neg(sline, scircle) IS
   'returns true if spherical circle does not contain spherical line';
