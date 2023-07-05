@@ -1,4 +1,4 @@
-PGSPHERE_VERSION = 1.2.1
+PGSPHERE_VERSION = 1.2.2
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR = $(shell basename $(shell pwd))
@@ -19,7 +19,8 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
 			  pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql \
 			  pg_sphere--1.1.5beta4gavo--1.2.0.sql \
-			  pg_sphere--1.2.0--1.2.1.sql
+			  pg_sphere--1.2.0--1.2.1.sql \
+			  pg_sphere--1.2.1--1.2.2.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
@@ -82,7 +83,6 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 # experimental for spoint3
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 pg_version_9_5_plus = $(if $(filter-out 9.1% 9.2% 9.3% 9.4%,$(pg_version)),y,n)
-has_parallel = $(if $(filter-out 9.1% 9.2% 9.3% 9.4% 9.5%,$(pg_version)),y,n)
 has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 #
 
@@ -115,9 +115,6 @@ pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 
 $(RELEASE_SQL): $(addsuffix .in, $(RELEASE_SQL) $(PGS_SQL))
 	cat $^ > $@
-ifeq ($(has_parallel), n)
-	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
-endif
 
 # for "create extension from unpacked*":
 
@@ -199,15 +196,12 @@ pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql: pgs_moc_compat.sql.in
 
 pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
 	cat $^ > $@
-ifeq ($(has_parallel), n)
-	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
-endif
 
 pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in pgs_epochprop.sql.in
 	cat $^ > $@
-ifeq ($(has_parallel), n)
-	sed -i -e '/PARALLEL/d' $@ # version $(pg_version) does not have support for PARALLEL
-endif
+
+pg_sphere--1.2.1--1.2.2.sql: upgrade_scripts/pg_sphere--1.2.1--1.2.2.sql.in
+	cat $^ > $@
 
 # end of local stuff
 

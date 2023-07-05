@@ -3,97 +3,97 @@
 CREATE OR REPLACE FUNCTION nest2ring(integer, bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME', 'pg_nest2ring'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION nest2ring(integer, bigint) IS
 'converts nested Healpix index to a ring Healpix index for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION ring2nest(integer, bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME', 'pg_ring2nest'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION ring2nest(integer, bigint) IS
 'converts ringe Healpix index to a nested Healpix index for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION healpix_convert_nest(integer, integer, bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION healpix_convert_nest(integer, integer, bigint) IS
 'converts nested Healpix index (last argument) from level of second argument to level of first argument';
 
 CREATE OR REPLACE FUNCTION healpix_convert_ring(integer, integer, bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION healpix_convert_ring(integer, integer, bigint) IS
 'converts ring Healpix index (last argument) from level of second argument to level of first argument';
 
 CREATE OR REPLACE FUNCTION nside2order(bigint)
 RETURNS integer
 AS 'MODULE_PATHNAME', 'pg_nside2order'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION nside2order(bigint) IS
 'returns integer part of base-two logarithm of argument for powers of two up to 29';
 
 CREATE OR REPLACE FUNCTION order2nside(integer)
 RETURNS bigint
 AS 'MODULE_PATHNAME', 'pg_order2nside'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION order2nside(integer) IS
 'returns power of two for non-negative values up to 29';
 
 CREATE OR REPLACE FUNCTION nside2npix(bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME', 'pg_nside2npix'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION nside2npix(bigint) IS
 'returns 12 * nside ^ 2, the number of Healpix elements for the nside parameter';
 
 CREATE OR REPLACE FUNCTION npix2nside(bigint)
 RETURNS bigint
 AS 'MODULE_PATHNAME', 'pg_npix2nside'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION npix2nside(bigint) IS
 'returns the nside parameter correspondig to the number of Healpix elements';
 
 CREATE OR REPLACE FUNCTION healpix_nest(integer, spoint)
 RETURNS bigint
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION healpix_nest(integer, spoint) IS
 'nested Healpix index of a spherical point for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION healpix_ring(integer, spoint)
 RETURNS bigint
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION healpix_ring(integer, spoint) IS
 'Healpix ring index of a spherical point for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION centre_of_healpix_nest(integer, bigint)
 RETURNS spoint
 AS 'MODULE_PATHNAME', 'inv_healpix_nest'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION centre_of_healpix_nest(integer, bigint) IS
 'spherical point designating the centre of a nested Healpix element for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION centre_of_healpix_ring(integer, bigint)
 RETURNS spoint
 AS 'MODULE_PATHNAME', 'inv_healpix_ring'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION centre_of_healpix_ring(integer, bigint) IS
 'spherical point designating the centre of a ring Healpix element for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION center_of_healpix_nest(integer, bigint)
 RETURNS spoint
 AS 'MODULE_PATHNAME', 'inv_healpix_nest'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION center_of_healpix_nest(integer, bigint) IS
 'spherical point designating the center of a nested Healpix element for the specified integer level (first argument)';
 
 CREATE OR REPLACE FUNCTION center_of_healpix_ring(integer, bigint)
 RETURNS spoint
 AS 'MODULE_PATHNAME', 'inv_healpix_ring'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 COMMENT ON FUNCTION center_of_healpix_ring(integer, bigint) IS
 'spherical point designating the center of a ring Healpix element for the specified integer level (first argument)';

@@ -9,7 +9,7 @@ CREATE FUNCTION sellipse(spoint, float8, float8, float8)
    RETURNS sellipse
    AS 'MODULE_PATHNAME', 'sphereellipse_infunc'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse(spoint, float8, float8, float8) IS
   'returns spherical ellipse from center, radius1, radius2 and inclination';
@@ -18,7 +18,7 @@ CREATE FUNCTION inc(sellipse)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'sphereellipse_incl'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION inc(sellipse) IS
   'inclination of spherical ellipse';
@@ -27,7 +27,7 @@ CREATE FUNCTION lrad(sellipse)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'sphereellipse_rad1'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION lrad(sellipse) IS
   'large radius of spherical ellipse';
@@ -36,7 +36,7 @@ CREATE FUNCTION srad(sellipse)
    RETURNS float8
    AS 'MODULE_PATHNAME', 'sphereellipse_rad2'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION srad(sellipse) IS
   'small radius of spherical ellipse';
@@ -51,7 +51,7 @@ CREATE FUNCTION sellipse(spoint)
    RETURNS sellipse
    AS 'MODULE_PATHNAME', 'spherepoint_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse(spoint) IS
   'returns spherical point as spherical ellipse';
@@ -69,7 +69,7 @@ CREATE FUNCTION scircle(sellipse)
    RETURNS scircle
    AS 'MODULE_PATHNAME', 'sphereellipse_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle(sellipse) IS
   'spherical bounding circle of spherical ellipse';
@@ -86,7 +86,7 @@ CREATE FUNCTION sellipse(scircle)
    RETURNS sellipse
    AS 'MODULE_PATHNAME', 'spherecircle_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse(scircle) IS
   'returns spherical circle as spherical ellipse';
@@ -103,7 +103,7 @@ CREATE FUNCTION strans(sellipse)
    RETURNS strans
    AS 'MODULE_PATHNAME', 'sphereellipse_trans'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans(sellipse) IS
   'returns Euler transformation of spherical ellipse';
@@ -127,7 +127,7 @@ CREATE FUNCTION center(sellipse)
    RETURNS spoint
    AS 'MODULE_PATHNAME', 'sphereellipse_center'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION center(sellipse) IS
   'center of spherical ellipse';
@@ -149,7 +149,7 @@ CREATE FUNCTION sellipse_equal(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_equal'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_equal(sellipse, sellipse) IS
   'returns true, if spherical ellipses are equal';
@@ -177,7 +177,7 @@ CREATE FUNCTION sellipse_equal_neg(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_equal_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_equal_neg(sellipse, sellipse) IS
   'returns true, if spherical ellipses are not equal';
@@ -204,7 +204,7 @@ CREATE FUNCTION sellipse_contains_ellipse(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_ellipse(sellipse, sellipse) IS
   'true if spherical ellipse contains spherical ellipse';
@@ -218,7 +218,7 @@ CREATE FUNCTION sellipse_contains_ellipse_com(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_ellipse_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_ellipse_com(sellipse, sellipse) IS
   'true if spherical ellipse is contained by spherical ellipse';
@@ -232,7 +232,7 @@ CREATE FUNCTION sellipse_contains_ellipse_neg(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_ellipse_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_ellipse_neg(sellipse, sellipse) IS
   'true if spherical ellipse does not contain spherical ellipse';
@@ -246,7 +246,7 @@ CREATE FUNCTION sellipse_contains_ellipse_com_neg(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_ellipse_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_ellipse_com_neg(sellipse, sellipse) IS
   'true if spherical ellipse is not contained by spherical ellipse';
@@ -260,7 +260,7 @@ CREATE FUNCTION sellipse_overlap_ellipse(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION  sellipse_overlap_ellipse(sellipse, sellipse) IS
   'true if spherical ellipse overlaps spherical ellipse';
@@ -287,7 +287,7 @@ CREATE FUNCTION sellipse_overlap_ellipse_neg(sellipse, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_ellipse_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION  sellipse_overlap_ellipse_neg(sellipse, sellipse) IS
   'true if spherical ellipse does not overlap spherical ellipse';
@@ -315,7 +315,7 @@ CREATE FUNCTION sellipse_contains_point(sellipse, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_point'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_point(sellipse, spoint) IS
   'true if spherical ellipse contains spherical point';
@@ -328,7 +328,7 @@ CREATE FUNCTION sellipse_contains_point_com(spoint, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_point_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_point_com(spoint, sellipse) IS
   'true if spherical ellipse contains spherical point';
@@ -342,7 +342,7 @@ CREATE FUNCTION sellipse_contains_point_neg(sellipse, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_point_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_point_neg(sellipse, spoint) IS
   'true if spherical ellipse contains spherical point';
@@ -355,7 +355,7 @@ CREATE FUNCTION sellipse_contains_point_com_neg(spoint, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_point_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_point_com_neg(spoint, sellipse) IS
   'true if spherical ellipse contains spherical point';
@@ -370,7 +370,7 @@ CREATE FUNCTION strans_ellipse(sellipse, strans)
    RETURNS sellipse
    AS 'MODULE_PATHNAME', 'spheretrans_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_ellipse (sellipse, strans) IS
   'returns a transformated spherical ellipse';
@@ -388,7 +388,7 @@ CREATE FUNCTION strans_ellipse_inverse (sellipse, strans)
    RETURNS sellipse
    AS 'MODULE_PATHNAME', 'spheretrans_ellipse_inv'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION strans_ellipse_inverse (sellipse, strans) IS
   'returns a inverse transformated spherical ellipse';
@@ -411,7 +411,7 @@ CREATE FUNCTION sellipse_contains_circle(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_circle(sellipse, scircle) IS
   'true if spherical ellipse contains spherical circle';
@@ -425,7 +425,7 @@ CREATE FUNCTION sellipse_contains_circle_com(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_circle_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_circle_com(scircle, sellipse) IS
   'true if spherical ellipse contains spherical circle';
@@ -439,7 +439,7 @@ CREATE FUNCTION sellipse_contains_circle_neg(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_circle_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_circle_neg(sellipse, scircle) IS
   'true if spherical ellipse does not contain spherical circle';
@@ -453,7 +453,7 @@ CREATE FUNCTION sellipse_contains_circle_com_neg(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_circle_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_circle_com_neg(scircle, sellipse) IS
   'true if spherical ellipse does not contain spherical circle';
@@ -467,7 +467,7 @@ CREATE FUNCTION scircle_contains_ellipse(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_ellipse'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_ellipse(scircle, sellipse) IS
   'true if spherical circle contains spherical ellipse';
@@ -481,7 +481,7 @@ CREATE FUNCTION scircle_contains_ellipse_com(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_ellipse_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_ellipse_com(sellipse, scircle) IS
   'true if spherical circle contains spherical ellipse';
@@ -495,7 +495,7 @@ CREATE FUNCTION scircle_contains_ellipse_neg(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_ellipse_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_ellipse_neg(scircle, sellipse) IS
   'true if spherical circle does not contain spherical ellipse';
@@ -509,7 +509,7 @@ CREATE FUNCTION scircle_contains_ellipse_com_neg(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherecircle_cont_ellipse_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION scircle_contains_ellipse_com_neg(sellipse, scircle) IS
   'true if spherical circle does not contain spherical ellipse';
@@ -523,7 +523,7 @@ CREATE FUNCTION sellipse_overlap_circle(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_circle'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_overlap_circle(sellipse, scircle) IS
   'true if spherical circle overlap spherical ellipse';
@@ -551,7 +551,7 @@ CREATE FUNCTION sellipse_overlap_circle_com(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_circle_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION  sellipse_overlap_circle_com(scircle, sellipse) IS
   'true if spherical circle overlap spherical ellipse';
@@ -578,7 +578,7 @@ CREATE FUNCTION sellipse_overlap_circle_neg(sellipse, scircle)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_circle_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION  sellipse_overlap_circle_neg(sellipse, scircle) IS
   'true if spherical circle does not overlap spherical ellipse';
@@ -606,7 +606,7 @@ CREATE FUNCTION sellipse_overlap_circle_com_neg(scircle, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_circle_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION  sellipse_overlap_circle_com_neg(scircle, sellipse) IS
   'true if spherical circle does not overlap spherical ellipse';
@@ -636,7 +636,7 @@ CREATE FUNCTION sellipse_overlap_line (sellipse, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_line'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_overlap_line (sellipse, sline) IS
   'returns true if spherical line overlaps spherical ellipse';
@@ -663,7 +663,7 @@ CREATE FUNCTION sellipse_overlap_line_com(sline, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_line_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_overlap_line_com(sline, sellipse) IS
   'returns true if spherical line overlaps spherical ellipse';
@@ -691,7 +691,7 @@ CREATE FUNCTION sellipse_overlap_line_neg (sellipse, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_line_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_overlap_line_neg (sellipse, sline) IS
   'returns true if spherical line overlaps spherical ellipse';
@@ -718,7 +718,7 @@ CREATE FUNCTION sellipse_overlap_line_com_neg(sline, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_overlap_line_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_overlap_line_com_neg(sline, sellipse) IS
   'returns true if spherical line does not overlap spherical ellipse';
@@ -747,7 +747,7 @@ CREATE FUNCTION sellipse_contains_line(sellipse, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_line'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_line(sellipse, sline) IS
   'returns true if spherical ellipse contains spherical line';
@@ -762,7 +762,7 @@ CREATE FUNCTION sellipse_contains_line_com(sline, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_line_com'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_line_com(sline, sellipse) IS
   'returns true if spherical ellipse contains spherical line';
@@ -775,7 +775,7 @@ CREATE FUNCTION sellipse_contains_line_neg(sellipse, sline)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_line_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_line_neg(sellipse, sline) IS
   'returns true if spherical ellipse does not contain spherical line';
@@ -790,7 +790,7 @@ CREATE FUNCTION sellipse_contains_line_com_neg(sline, sellipse)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'sphereellipse_cont_line_com_neg'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION sellipse_contains_line_com_neg(sline, sellipse) IS
   'returns true if spherical ellipse does not contain spherical line';

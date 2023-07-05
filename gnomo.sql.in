@@ -3,7 +3,7 @@
 CREATE OR REPLACE FUNCTION gnomonic_proj(spoint, spoint)
 RETURNS point
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION gnomonic_proj(spoint, spoint) IS
 'gnomonic projection, the second argument is the tangential point';
@@ -11,7 +11,7 @@ COMMENT ON FUNCTION gnomonic_proj(spoint, spoint) IS
 CREATE OR REPLACE FUNCTION gnomonic_inv(point, spoint)
 RETURNS spoint
 AS 'MODULE_PATHNAME'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION gnomonic_inv(point, spoint) IS
 'inverse of gnomonic projection, the second argument is the tangential point';

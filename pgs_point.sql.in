@@ -13,7 +13,7 @@ CREATE FUNCTION spoint(FLOAT8, FLOAT8)
    RETURNS spoint
    AS 'MODULE_PATHNAME', 'spherepoint_from_long_lat'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION set_sphere_output_precision(INT4)
    RETURNS CSTRING
@@ -32,7 +32,7 @@ CREATE FUNCTION long(spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_long'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION long(spoint) IS
   'longitude of spherical point';
@@ -41,7 +41,7 @@ CREATE FUNCTION lat(spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_lat'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION lat(spoint) IS
   'latitude of spherical point';
@@ -50,7 +50,7 @@ CREATE FUNCTION x(spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_x'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION x(spoint) IS
   'cartesian x value of spherical point';
@@ -60,7 +60,7 @@ CREATE FUNCTION y(spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_y'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION y(spoint) IS
   'cartesian y value of spherical point';
@@ -69,7 +69,7 @@ CREATE FUNCTION xyz(spoint)
    RETURNS FLOAT8[]
    AS 'MODULE_PATHNAME', 'spherepoint_xyz'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION xyz(spoint) IS
   'cartesian values of spherical point';
@@ -79,7 +79,7 @@ CREATE FUNCTION z(spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_z'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION z(spoint) IS
   'cartesian z value of spherical point';
@@ -99,7 +99,7 @@ CREATE FUNCTION spoint_equal(spoint, spoint)
    RETURNS BOOL
    AS 'MODULE_PATHNAME', 'spherepoint_equal'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_equal(spoint, spoint) IS
   'returns true, if spherical points are equal';
@@ -125,7 +125,7 @@ CREATE FUNCTION spoint_equal_neg (spoint, spoint)
    RETURNS BOOL
    AS 'SELECT NOT spoint_equal($1,$2);'
    LANGUAGE 'sql'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION spoint_equal_neg (spoint, spoint) IS
   'returns true, if spherical points are not equal';
@@ -152,7 +152,7 @@ CREATE FUNCTION dist(spoint, spoint)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoint_distance'
    LANGUAGE 'c'
-   IMMUTABLE STRICT;
+   IMMUTABLE STRICT PARALLEL SAFE;
 
 COMMENT ON FUNCTION dist(spoint, spoint) IS
   'distance between spherical points';

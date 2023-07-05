@@ -190,4 +190,3 @@ CREATE TYPE sbox (
    input   = sbox_in,
    output  = sbox_out
 );
-
