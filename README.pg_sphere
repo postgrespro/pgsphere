@@ -49,10 +49,9 @@ UPDATING AN EXISTING INSTALLATION:
   psql -c "select pg_sphere_version();" <database>
   psql -c "SELECT * FROM pg_available_extension_versions WHERE name = 'pg_sphere';"
 
-REGRESSION TESTS (as the same user as the currently running PostgreSQL server):
+REGRESSION TEST (as the same user as the currently running PostgreSQL server):
 
   make installcheck
-  make test
 
 LONG REGRESSION TEST:
 
@@ -62,5 +61,7 @@ The 'make' program must be compatible with GNU make.
 
 For more information or to report issues or to help with development, please
 refer to https://github.com/postgrespro/pgsphere/
+
+Original repository for pgSphere: https://github.com/akorotkov/pgsphere
 
 Have a lot of fun!
