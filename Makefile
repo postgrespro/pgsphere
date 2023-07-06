@@ -1,4 +1,8 @@
 PGSPHERE_VERSION = 1.2.2
+EXTENSION        = pg_sphere
+RELEASE_SQL      = $(EXTENSION)--$(PGSPHERE_VERSION).sql
+USE_PGXS         = 1
+USE_HEALPIX      =? 1
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR = $(shell basename $(shell pwd))
@@ -7,11 +11,13 @@ MODULE_big = pg_sphere
 OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
              src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
              src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
-             src/key.o src/gnomo.o src/healpix.o src/moc.o src/process_moc.o \
-             healpix_bare/healpix_bare.o src/epochprop.o
+             src/key.o src/gnomo.o src/epochprop.o
 
-EXTENSION   = pg_sphere
-RELEASE_SQL = $(EXTENSION)--$(PGSPHERE_VERSION).sql
+ifneq ($(USE_HEALPIX),0)
+OBJS      += src/healpix.o src/moc.o src/process_moc.o \
+             healpix_bare/healpix_bare.o
+endif
+
 DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--unpackaged--1.1.5beta0gavo.sql \
 			  pg_sphere--1.0--1.0_gavo.sql \
@@ -24,14 +30,24 @@ DATA_built  = $(RELEASE_SQL) \
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
-			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast epochprop
+              contains_ops contains_ops_compat bounding_box_gist gnomo
+
+ifneq ($(USE_HEALPIX),0)
+REGRESS    += healpix moc mocautocast
+endif
+
+REGRESS    += epochprop
 
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
-TESTS       = init_test tables points euler circle line ellipse poly path box index \
-			  contains_ops contains_ops_compat bounding_box_gist gnomo healpix \
-			  moc mocautocast epochprop
+TESTS       = init_test tables points euler circle line ellipse poly path box \
+              index contains_ops contains_ops_compat bounding_box_gist gnomo
+
+ifneq ($(USE_HEALPIX),0)
+TESTS      += healpix moc mocautocast
+endif
+
+TESTS      += epochprop
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -48,14 +64,25 @@ CRUSH_TESTS = init_extended circle_extended
 
 # order of sql files is important
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
-   pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
-   pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-   pgs_gist.sql gnomo.sql \
-   healpix.sql pgs_gist_spoint3.sql pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
-   pgs_moc_geo_casts.sql pgs_epochprop.sql
+              pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
+              pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
+              pgs_gist.sql gnomo.sql
+
+ifneq ($(USE_HEALPIX),0)
+PGS_SQL    += healpix.sql
+endif
+
+PGS_SQL    += pgs_gist_spoint3.sql
+
+ifneq ($(USE_HEALPIX),0)
+PGS_SQL    += pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
+              pgs_moc_geo_casts.sql
+endif
+
+PGS_SQL    += pgs_epochprop.sql
+
 PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
-USE_PGXS = 1
 ifdef USE_PGXS
   ifndef PG_CONFIG
     PG_CONFIG := pg_config
@@ -70,11 +97,13 @@ else
   include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
+ifneq ($(USE_HEALPIX),0)
 # compiler settings
 PKG_CONFIG = pkg-config
 override CPPFLAGS += $(shell $(PKG_CONFIG) --cflags healpix_cxx)
 SHLIB_LINK += $(shell $(PKG_CONFIG) --libs healpix_cxx)
 LINK.shared = g++ -shared
+endif
 
 # healpix_bare.c isn't ours so we refrain from fixing the warnings in there
 healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
@@ -96,8 +125,10 @@ has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
 
+ifneq ($(USE_HEALPIX),0)
 ifeq ($(has_explain_summary),y)
         REGRESS += moc1 moc100
+endif
 endif
 
 ifeq ($(pg_version_9_5_plus),y)
@@ -159,12 +190,17 @@ else
 endif
 
 # local stuff follows here
-
-AUGMENT_GAVO_111 = $(AUGMENT_UNP_111) healpix.sql # for vanilla 1.1.1 users
+AUGMENT_GAVO_111 = $(AUGMENT_UNP_111) # for vanilla 1.1.1 users
+ifneq ($(USE_HEALPIX),0)
+AUGMENT_GAVO_111 += healpix.sql
+endif
 UPGRADE_GAVO_111 = $(UPGRADE_UNP_COMMON)
 
-# add new Healpix functions and experimental spoint3
-AUGMENT_FROM_GAVO = healpix.sql pgs_gist_spoint3.sql
+# add new HEALPix functions and experimental spoint3
+ifneq ($(USE_HEALPIX),0)
+AUGMENT_FROM_GAVO = healpix.sql
+endif
+AUGMENT_FROM_GAVO += pgs_gist_spoint3.sql
 
 AUGMENT_UNP_115B0G = $(AUGMENT_UNP_111) $(AUGMENT_FROM_GAVO)
 UPGRADE_UNP_115B0G = $(UPGRADE_UNP_COMMON)
@@ -188,6 +224,7 @@ pg_sphere--1.0_gavo--1.1.5beta0gavo.sql: $(addsuffix .in, \
 		$(addprefix upgrade_scripts/, $(UPGRADE_1_0_115B0G)))
 	cat upgrade_scripts/$@.in $^ > $@
 
+ifneq ($(USE_HEALPIX),0)
 pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql: pgs_moc_type.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
@@ -195,13 +232,29 @@ pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql: pgs_moc_compat.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
-	cat $^ > $@
+	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in pgs_epochprop.sql.in
 	cat $^ > $@
 
-pg_sphere--1.2.1--1.2.2.sql: upgrade_scripts/pg_sphere--1.2.1--1.2.2.sql.in
-	cat $^ > $@
+pg_sphere--1.2.1--1.2.2.sql: upgrade_scripts/pg_sphere--1.2.1--1.2.2-healpix.sql.in
+	cat upgrade_scripts/$@.in $^ > $@
+else
+pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql:
+	cat upgrade_scripts/$@.in > $@
+
+pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql:
+	cat upgrade_scripts/$@.in > $@
+
+pg_sphere--1.1.5beta4gavo--1.2.0.sql:
+	cat upgrade_scripts/$@.in > $@
+
+pg_sphere--1.2.0--1.2.1.sql: pgs_epochprop.sql.in
+	cat upgrade_scripts/$@.in $^ > $@
+
+pg_sphere--1.2.1--1.2.2.sql:
+	cat upgrade_scripts/$@.in > $@
+endif
 
 # end of local stuff
 
