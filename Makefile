@@ -235,7 +235,7 @@ pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.2.0--1.2.1.sql: pgs_moc_geo_casts.sql.in pgs_epochprop.sql.in
-	cat $^ > $@
+	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.2.1--1.2.2.sql: upgrade_scripts/pg_sphere--1.2.1--1.2.2-healpix.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
