@@ -30,24 +30,21 @@ DATA_built  = $(RELEASE_SQL) \
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
-              contains_ops contains_ops_compat bounding_box_gist gnomo
+              contains_ops contains_ops_compat bounding_box_gist gnomo epochprop
 
 ifneq ($(USE_HEALPIX),0)
 REGRESS    += healpix moc mocautocast
 endif
 
-REGRESS    += epochprop
-
 REGRESS_9_5 = index_9.5 # experimental for spoint3
 
 TESTS       = init_test tables points euler circle line ellipse poly path box \
-              index contains_ops contains_ops_compat bounding_box_gist gnomo
+              index contains_ops contains_ops_compat bounding_box_gist gnomo \
+              epochprop
 
 ifneq ($(USE_HEALPIX),0)
 TESTS      += healpix moc mocautocast
 endif
-
-TESTS      += epochprop
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -85,7 +82,7 @@ PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
 
 ifdef USE_PGXS
   ifndef PG_CONFIG
-    PG_CONFIG := pg_config
+    PG_CONFIG = pg_config
   endif
   PGXS := $(shell $(PG_CONFIG) --pgxs)
   include $(PGXS)
@@ -98,8 +95,8 @@ else
 endif
 
 ifneq ($(USE_HEALPIX),0)
-# compiler settings
-PKG_CONFIG = pkg-config
+# compiler settings for linking with libhealpix_cxx
+PKG_CONFIG ?= pkg-config
 override CPPFLAGS += $(shell $(PKG_CONFIG) --cflags healpix_cxx)
 SHLIB_LINK += $(shell $(PKG_CONFIG) --libs healpix_cxx)
 LINK.shared = g++ -shared
@@ -113,7 +110,6 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 pg_version_9_5_plus = $(if $(filter-out 9.1% 9.2% 9.3% 9.4%,$(pg_version)),y,n)
 has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
-#
 
 ## the use of spoint 3 is too experimental and preliminary:
 #ifeq ($(pg_version_9_5_plus),y)
@@ -149,14 +145,14 @@ $(RELEASE_SQL): $(addsuffix .in, $(RELEASE_SQL) $(PGS_SQL))
 
 # for "create extension from unpacked*":
 
-UPGRADE_UNP_COMMON =  pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
+UPGRADE_UNP_COMMON = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
 	pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
 	pgs_box.sql pgs_contains_ops_compat.sql pgs_gist.sql \
 	pgs_gist_contains_ops.sql contains-ops-fixes-1.sql
 
 AUGMENT_UNP_COMMON = upgrade_scripts/pgs_pre111.sql pgs_contains_ops.sql \
 	gnomo.sql
-# for vanilla 1.1.1 users
+# for vanilla 1.1.1 users:
 AUGMENT_UNP_111 = $(AUGMENT_UNP_COMMON) pgs_gist_pointkey.sql
 
 # for 1.1.2+ users: 'from unpacked_1.1.2plus'
