@@ -134,6 +134,10 @@ else
 endif
 
 test: pg_sphere.test.sql sql/init_test.sql
+	cp expected/init_test.out.in expected/init_test.out
+ifneq ($(USE_HEALPIX),0)
+	cat expected/init_test_healpix.out.in >> expected/init_test.out
+endif
 	$(pg_regress_installcheck) $(PGS_TMP_DIR) $(REGRESS_OPTS) $(TESTS)
 
 pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
