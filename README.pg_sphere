@@ -46,7 +46,7 @@ UPDATING AN EXISTING INSTALLATION:
   -- You also may want to check what version of pgSphere is installed using
      either of following commands:
 
-  psql -c "select pg_sphere_version();" <database>
+  psql -c "SELECT pg_sphere_version();" <database>
   psql -c "SELECT * FROM pg_available_extension_versions WHERE name = 'pg_sphere';"
 
 REGRESSION TEST (as the same user as the currently running PostgreSQL server):
