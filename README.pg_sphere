@@ -9,26 +9,25 @@ It provides:
 * Object rotation by Euler angles
 * Indexing of spherical data types
 
-This is an R-Tree implementation using GiST for spherical objects
-like spherical points and spherical circles with 
-useful functions and operators.
+This is an R-Tree implementation using GiST for spherical objects like
+spherical points and spherical circles with useful functions and operators.
 
 NOTICE:
-     This version will work only with PostgreSQL version 9.5 and above.
+     This version will work only with PostgreSQL version 9.6 and above.
 
 INSTALLATION:
 
   -- Build and install
 
-  gmake
-  gmake install
+  make
+  make install
 
   -- HEALPix/MOC support is included by default. If your platform does not
   -- have the required libhealpix_cxx dependency, you can optionally build
-  -- pgSphere without HEALPix/MOC support, like so:
+  -- pgSphere without HEALPix/MOC support, like this:
 
-  gmake USE_HEALPIX=0
-  gmake USE_HEALPIX=0 install
+  make USE_HEALPIX=0
+  make USE_HEALPIX=0 install
 
   -- Load extension
 
@@ -44,7 +43,7 @@ UPDATING AN EXISTING INSTALLATION:
 
   -- where A.B.C is a placeholder for the current version.
   -- You also may want to check what version of pgSphere is installed using
-     either of following commands:
+     either or both of the following commands:
 
   psql -c "SELECT pg_sphere_version();" <database>
   psql -c "SELECT * FROM pg_available_extension_versions WHERE name = 'pg_sphere';"
@@ -53,11 +52,20 @@ REGRESSION TEST (as the same user as the currently running PostgreSQL server):
 
   make installcheck
 
+  -- or --
+
+  make USE_HEALPIX=0 installcheck
+
 LONG REGRESSION TEST:
 
   make crushtest
 
-The 'make' program must be compatible with GNU make.
+  -- or --
+
+  make USE_HEALPIX=0 crushtest
+
+The 'make' program used in all of the above commands must be compatible with
+GNU make.
 
 For more information or to report issues or to help with development, please
 refer to https://github.com/postgrespro/pgsphere/
