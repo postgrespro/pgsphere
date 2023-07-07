@@ -24,6 +24,10 @@ script:
   - make PROFILE="-Werror"
   - sudo make install
   - pg_virtualenv make installcheck
-  - if test -s regression.diffs; then cat regression.diffs; fi
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
+  - pg_virtualenv make test
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
+  - pg_virtualenv make crushtest
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
   - make -C doc
   - sudo make -C doc install
