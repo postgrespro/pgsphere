@@ -29,5 +29,14 @@ script:
   - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
   - pg_virtualenv make crushtest
   - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
+  - make clean
+  - make PROFILE="-Werror" USE_HEALPIX=0
+  - sudo make USE_HEALPIX=0 install
+  - pg_virtualenv make USE_HEALPIX=0 installcheck
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
+  - pg_virtualenv make USE_HEALPIX=0 test
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
+  - pg_virtualenv make USE_HEALPIX=0 crushtest
+  - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
   - make -C doc
   - sudo make -C doc install
