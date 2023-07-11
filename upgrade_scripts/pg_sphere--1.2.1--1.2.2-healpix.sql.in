@@ -1,0 +1,30 @@
+-- healpix
+ALTER FUNCTION nest2ring(integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION ring2nest(integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION healpix_convert_nest(integer, integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION healpix_convert_ring(integer, integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION nside2order(bigint) PARALLEL SAFE;
+ALTER FUNCTION order2nside(integer) PARALLEL SAFE;
+ALTER FUNCTION nside2npix(bigint) PARALLEL SAFE;
+ALTER FUNCTION npix2nside(bigint) PARALLEL SAFE;
+ALTER FUNCTION healpix_nest(integer, spoint) PARALLEL SAFE;
+ALTER FUNCTION healpix_ring(integer, spoint) PARALLEL SAFE;
+ALTER FUNCTION centre_of_healpix_nest(integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION centre_of_healpix_ring(integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION center_of_healpix_nest(integer, bigint) PARALLEL SAFE;
+ALTER FUNCTION center_of_healpix_ring(integer, bigint) PARALLEL SAFE;
+
+-- moc_type
+ALTER FUNCTION smoc_in(cstring) PARALLEL SAFE;
+ALTER FUNCTION smoc_out(smoc) PARALLEL SAFE;
+ALTER FUNCTION moc_debug() PARALLEL SAFE;
+ALTER FUNCTION set_smoc_output_type(integer) PARALLEL SAFE;
+ALTER FUNCTION max_order(smoc) PARALLEL SAFE;
+ALTER FUNCTION healpix_subset_smoc(bigint, smoc) PARALLEL SAFE;
+ALTER FUNCTION healpix_not_subset_smoc(bigint, smoc) PARALLEL SAFE;
+ALTER FUNCTION smoc_superset_healpix(smoc, bigint) PARALLEL SAFE;
+ALTER FUNCTION smoc_not_superset_healpix(smoc, bigint) PARALLEL SAFE;
+ALTER FUNCTION spoint_subset_smoc(spoint, smoc) PARALLEL SAFE;
+ALTER FUNCTION spoint_not_subset_smoc(spoint, smoc) PARALLEL SAFE;
+ALTER FUNCTION smoc_superset_spoint(smoc, spoint) PARALLEL SAFE;
+ALTER FUNCTION smoc_not_superset_spoint(smoc, spoint) PARALLEL SAFE;
