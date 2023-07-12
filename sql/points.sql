@@ -234,3 +234,5 @@ SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<->'( 12h 2m 30s , 90d 0m 0s)'::spoint;
 
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<->'( 12h 2m 30s , -90d 0m 0s)'::spoint;
 
+-- Center operator -------------------
+select @@ spoint(0,0) AS spoint;

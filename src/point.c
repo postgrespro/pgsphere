@@ -5,6 +5,7 @@
 PG_FUNCTION_INFO_V1(spherepoint_in);
 PG_FUNCTION_INFO_V1(spherepoint_from_long_lat);
 PG_FUNCTION_INFO_V1(spherepoint_distance);
+PG_FUNCTION_INFO_V1(spherepoint_center);
 PG_FUNCTION_INFO_V1(spherepoint_long);
 PG_FUNCTION_INFO_V1(spherepoint_lat);
 PG_FUNCTION_INFO_V1(spherepoint_x);
@@ -12,6 +13,9 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
+PG_FUNCTION_INFO_V1(spoint_from_xyz);
+PG_FUNCTION_INFO_V1(center);
+
 
 bool
 spoint_eq(const SPoint *p1, const SPoint *p2)
@@ -180,6 +184,13 @@ spoint_dist(const SPoint *p1, const SPoint *p2)
 }
 
 Datum
+spherepoint_center(PG_FUNCTION_ARGS)
+{
+	SPoint	   *p = (SPoint *) PG_GETARG_POINTER(0);
+	PG_RETURN_POINTER(p);
+}
+
+Datum
 spherepoint_distance(PG_FUNCTION_ARGS)
 {
 	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
@@ -262,4 +273,60 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 	SPoint	   *p2 = (SPoint *) PG_GETARG_POINTER(1);
 
 	PG_RETURN_BOOL(spoint_eq(p1, p2));
+}
+
+Datum spoint_from_xyz(PG_FUNCTION_ARGS)
+{
+	Vector3D	point_coords;
+	SPoint *p = (SPoint *) palloc(sizeof(SPoint));
+
+	point_coords.x = PG_GETARG_FLOAT8(0);
+	point_coords.y = PG_GETARG_FLOAT8(1);
+	point_coords.z = PG_GETARG_FLOAT8(2);
+	vector3d_spoint(p, &point_coords);
+
+	if (p == NULL)
+	{
+		PG_RETURN_NULL();
+	}
+
+	spoint_check(p);
+	PG_RETURN_POINTER(p);
+}
+
+Datum center(PG_FUNCTION_ARGS)
+{
+	int num_elements, i;
+	SPoint * p = (SPoint *) palloc(sizeof(SPoint));
+	SPoint * array_data;
+	Vector3D	v;
+	Vector3D	point_coords = {0,0,0};
+	ArrayType *dots_vector;
+
+	dots_vector = PG_GETARG_ARRAYTYPE_P(0);
+	num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
+	if (num_elements <= 0)
+	{
+		PG_RETURN_NULL();
+	}
+
+	array_data = (SPoint *) ARR_DATA_PTR(dots_vector);
+
+	for (i = 0; i < num_elements; i++)
+	{
+		spoint_vector3d(&v, &array_data[i]);
+		point_coords.x += v.x;
+		point_coords.y += v.y;
+		point_coords.z += v.z;
+	}
+
+	point_coords.x /= num_elements;
+	point_coords.y /= num_elements;
+	point_coords.z /= num_elements;
+
+	vector3d_spoint(p, &point_coords);
+
+	spoint_check(p);
+
+	PG_RETURN_POINTER(p);
 }

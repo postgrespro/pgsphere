@@ -167,3 +167,33 @@ CREATE OPERATOR  <-> (
 COMMENT ON OPERATOR <-> (spoint, spoint) IS
   'distance between spherical points';
 
+CREATE FUNCTION center(dots_vector SPoint[])
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'center'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+CREATE OPERATOR @@ (
+   RIGHTARG   = SPoint[],
+   PROCEDURE  = center
+);
+
+COMMENT ON OPERATOR @@ (NONE , SPoint[]) IS
+  'Return gravity center from array of spherical points';
+
+CREATE FUNCTION center(spoint)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spherepoint_center'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION center(spoint) IS
+  'For the correctness of the interface, the function returns the spoint itself';
+
+CREATE OPERATOR @@ (
+   RIGHTARG   = SPoint,
+   PROCEDURE  = center
+);
+
+COMMENT ON OPERATOR @@ (NONE , SPoint) IS
+  'For the correctness of the interface, the function returns the spoint itself';

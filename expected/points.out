@@ -648,3 +648,10 @@ SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<->'( 12h 2m 30s , -90d 0m 0s)'::spoin
         0
 (1 row)
 
+-- Center operator -------------------
+select @@ spoint(0,0) AS spoint;
+ spoint  
+---------
+ (0 , 0)
+(1 row)
+

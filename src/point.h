@@ -16,6 +16,11 @@ typedef struct
 } SPoint;
 
 /*
+ * For the correctness of the interface, the function returns the spoint itself
+ */
+Datum	spherepoint_center(PG_FUNCTION_ARGS);
+
+/*
  * Calculate the distance between two spherical points in radians.
  */
 float8	spoint_dist(const SPoint *p1, const SPoint *p2);
@@ -89,5 +94,10 @@ Datum	spherepoint_xyz(PG_FUNCTION_ARGS);
  * Check whether two points are equal.
  */
 Datum	spherepoint_equal(PG_FUNCTION_ARGS);
+
+/*
+ * Return gravity center from array of spherical points
+ */
+Datum	center(PG_FUNCTION_ARGS);
 
 #endif

@@ -393,14 +393,83 @@
                 The center operator <literal>@@</literal> is a non-boolean
                 unary operator returning the center of an object.  In the
                 current implementation of <application>pgSphere</application>,
-                only centers of circles and ellipses are supported. Instead
-                of using the operator, you can use the function
+                only centers of circles, ellipses, points, arrays of points are
+            </para>
+            <para>
+                supported. Instead of using the operator, you can use the function
                 <literal>center(object)</literal>.
             </para>
             <example>
               <title>Center of a circle</title>
               <programlisting>
 <![CDATA[sql> SELECT @@ scircle '<(0d,20d),30d>';]]>
+              </programlisting>
+            </example>
+             <example>
+              <title>Center array of points</title>
+              <programlisting>
+<![CDATA[sql> SELECT @@ ARRAY[
+    spoint(40.7128, -74.0060),
+    spoint(34.0522, -118.2437),
+    spoint(37.7749, -122.4194)
+] AS center;]]>
+<![CDATA[                 center                 ]]>
+<![CDATA[----------------------------------------]]>
+<![CDATA[ (3.04366980631979 , 0.858938068921891)]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
+            <example>
+              <title>Center of a spoint</title>
+              <para>
+                For the completeness of the interface, the function returns the point itself
+              </para>
+              <programlisting>
+<![CDATA[sql> select @@ spoint(0,0) AS spoint;]]>
+<![CDATA[ spoint  ]]>
+<![CDATA[---------]]>
+<![CDATA[  (0 , 0) ]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
+            <example>
+<title>Basic example array of points</title>
+              <programlisting>
+<![CDATA[sql> SELECT center(ARRAY[
+    spoint(40.7128, -74.0060),
+    spoint(34.0522, -118.2437),
+    spoint(37.7749, -122.4194)
+]);]]>
+<![CDATA[                   center              ]]>
+<![CDATA[----------------------------------------]]>
+<![CDATA[ (3.04366980631979 , 0.858938068921891)]]>
+<![CDATA[ (1 row) ]]>
+              </programlisting>
+            </example>
+
+            <example>
+              <title>Behavior with empty array of points</title>
+              <programlisting>
+<![CDATA[sql> SELECT center('{}');]]>
+<![CDATA[           center       ]]>
+<![CDATA[ ----------------------------- ]]>
+
+<![CDATA[ (1 row) ]]>
+              </programlisting>
+            </example>
+              <example>
+              <title>Example with opposite array points(poles)</title>
+              <programlisting>
+<![CDATA[sql> SELECT center(ARRAY[
+    spoint(0, 10),
+    spoint(0, -10),
+]);]]>
+<![CDATA[                 center               ]]>
+<![CDATA[----------------------------------------]]>
+<![CDATA[                 (0, 0)               ]]>
+<![CDATA[ (1 row) ]]>
               </programlisting>
             </example>
         </sect2>
