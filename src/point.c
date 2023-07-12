@@ -12,6 +12,7 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
+PG_FUNCTION_INFO_V1(get_gravity_center);
 
 bool
 spoint_eq(const SPoint *p1, const SPoint *p2)
@@ -262,4 +263,41 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 	SPoint	   *p2 = (SPoint *) PG_GETARG_POINTER(1);
 
 	PG_RETURN_BOOL(spoint_eq(p1, p2));
+}
+
+static SPoint * spherepoint_from_vector3d(Vector3D v){
+	SPoint* p = (SPoint *) palloc(sizeof(SPoint));
+	p->lat = asin(v.z / sqrt(pow(v.x, 2) + pow(v.y, 2)  + pow(v.z, 2)));
+	p->lng = atan2(v.y, v.x);
+	return p;
+}
+
+Datum get_gravity_center(PG_FUNCTION_ARGS) {
+	SPoint * p;
+	SPoint current_point;
+	Vector3D	v;
+	Vector3D	res;
+	ArrayType *dots_vector = PG_GETARG_ARRAYTYPE_P(0);
+	int num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
+	SPoint *array_data = (SPoint *) ARR_DATA_PTR(dots_vector);
+
+	for (int i = 0; i < num_elements; i++) {
+		current_point = array_data[i];
+		//elog(LOG, "%lf\n", current_point.lat);
+		spoint_vector3d(&v, &current_point);
+		elog(LOG, "%lf\n", v.x);
+		res.x+=v.x;
+		res.y+=v.y;
+		res.z+=v.z;
+	}
+
+	res.x /= num_elements;
+	res.y /= num_elements;
+	res.z /= num_elements;
+
+	p = spherepoint_from_vector3d(res);
+
+	spoint_check(p);
+
+	PG_RETURN_POINTER(p);
 }

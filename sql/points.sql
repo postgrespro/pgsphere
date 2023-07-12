@@ -138,6 +138,14 @@ SELECT long('(24h 2m 30s ,90d 0m 0s)'::spoint);
 
 SELECT long('(24h 2m 30s ,-90d 0m 0s)'::spoint);
 
+-- get_gravity_center(array(spoint))
+SELECT get_gravity_center(ARRAY[
+    spoint(40.7128, -74.0060),
+    spoint(34.0522, -118.2437),
+    spoint(37.7749, -122.4194)
+]);
+
+
 -- lat(spoint)
 
 SELECT lat('( 0h 2m 30s , 0d 0m 0s)'::spoint);

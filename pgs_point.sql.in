@@ -167,3 +167,8 @@ CREATE OPERATOR  <-> (
 COMMENT ON OPERATOR <-> (spoint, spoint) IS
   'distance between spherical points';
 
+CREATE FUNCTION get_gravity_center(dots_vector SPoint[])
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'get_gravity_center'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
