@@ -1,240 +1,172 @@
 SET enable_seqscan=true;
 CREATE TABLE bbox_ellipse (e sellipse not null);
+ERROR:  type "sellipse" does not exist
+LINE 1: CREATE TABLE bbox_ellipse (e sellipse not null);
+                                     ^
 INSERT INTO bbox_ellipse VALUES ('<{10d, 0.1d}, (0d,0d), 0d>');
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: INSERT INTO bbox_ellipse VALUES ('<{10d, 0.1d}, (0d,0d), 0d>...
+                    ^
 SELECT spoint '(5d, 0d)' @ sellipse '<{10d, 0.1d}, (0d,0d), 0d>' AS inside;
- inside 
---------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(5d, 0d)' @ sellipse '<{10d, 0.1d}, (0d,0d), ...
+               ^
 SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ ...
+                             ^
 SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@...
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
-                        QUERY PLAN                        
-----------------------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_ellipse
-         Filter: ('(0.0872664625997165 , 0)'::spoint @ e)
-(3 rows)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE ...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
-                        QUERY PLAN                         
------------------------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_ellipse
-         Filter: ('(0.0872664625997165 , 0)'::spoint <@ e)
-(3 rows)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE ...
+                                                 ^
 -- The ellipse has semi-major axis length of 10 degrees along the equator,
 -- so (lon,lat) = (5,0) should be inside.
 CREATE INDEX idx_bbox_ellipse ON bbox_ellipse USING gist (e);
+ERROR:  relation "bbox_ellipse" does not exist
 ANALYZE bbox_ellipse;
+ERROR:  relation "bbox_ellipse" does not exist
 SET enable_seqscan=false;
 SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ ...
+                             ^
 SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@...
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
-                          QUERY PLAN                          
---------------------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_ellipse on bbox_ellipse
-         Index Cond: ('(0.0872664625997165 , 0)'::spoint @ e)
-(3 rows)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE ...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
-                          QUERY PLAN                           
----------------------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_ellipse on bbox_ellipse
-         Index Cond: ('(0.0872664625997165 , 0)'::spoint <@ e)
-(3 rows)
-
+ERROR:  relation "bbox_ellipse" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE ...
+                                                 ^
 SET enable_seqscan=true;
 CREATE TABLE bbox_poly (p spoly not null);
+ERROR:  type "spoly" does not exist
+LINE 1: CREATE TABLE bbox_poly (p spoly not null);
+                                  ^
 INSERT INTO bbox_poly VALUES ('{(40d,-40d), (0d,80d), (-40d,-40d)}');
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: INSERT INTO bbox_poly VALUES ('{(40d,-40d), (0d,80d), (-40d,...
+                    ^
 SELECT spoint '(0d, 0d)' @ spoly '{(40d,-40d), (0d,80d), (-40d,-40d)}' AS inside;
- inside 
---------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0d, 0d)' @ spoly '{(40d,-40d), (0d,80d), (-4...
+               ^
 SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
+                             ^
 SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
-               QUERY PLAN                
------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_poly
-         Filter: ('(0 , 0)'::spoint @ p)
-(3 rows)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spo...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
-                QUERY PLAN                
-------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_poly
-         Filter: ('(0 , 0)'::spoint <@ p)
-(3 rows)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spo...
+                                                 ^
 CREATE INDEX idx_bbox_poly ON bbox_poly USING gist (p);
+ERROR:  relation "bbox_poly" does not exist
 ANALYZE bbox_poly;
+ERROR:  relation "bbox_poly" does not exist
 SET enable_seqscan=false;
 SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
+                             ^
 SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' @ p;
-                    QUERY PLAN                     
----------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_poly on bbox_poly
-         Index Cond: ('(0 , 0)'::spoint @ p)
-(3 rows)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spo...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spoint '(0d, 0d)' <@ p;
-                    QUERY PLAN                     
----------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_poly on bbox_poly
-         Index Cond: ('(0 , 0)'::spoint <@ p)
-(3 rows)
-
+ERROR:  relation "bbox_poly" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_poly WHERE spo...
+                                                 ^
 SET enable_seqscan=true;
 CREATE TABLE bbox_path (p spath not null);
+ERROR:  type "spath" does not exist
+LINE 1: CREATE TABLE bbox_path (p spath not null);
+                                  ^
 INSERT INTO bbox_path VALUES ('{(-46d,0d), (-45d,80d), (-45d,0d), (80d,0d)}');
+ERROR:  relation "bbox_path" does not exist
+LINE 1: INSERT INTO bbox_path VALUES ('{(-46d,0d), (-45d,80d), (-45d...
+                    ^
 SELECT sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && spath '{(-46d,0d), (-45d,80d), (-45d,0d), (80d,0d)}' AS crossing;
- crossing 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && spa...
+                     ^
 SELECT spoint '(0d, 0d)' @ spath '{(-46d,0d), (-45d,80d), (-45d,0d), (80d,0d)}' AS inside;
- inside 
---------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0d, 0d)' @ spath '{(-46d,0d), (-45d,80d), (-...
+               ^
 SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d...
+                             ^
 SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
+                             ^
 SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
-                                            QUERY PLAN                                            
---------------------------------------------------------------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_path
-         Filter: ('( 6.10865238198015, 1.5707963267949, 0, ZXZ ), 0.349065850398866'::sline && p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sli...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
-               QUERY PLAN                
------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_path
-         Filter: ('(0 , 0)'::spoint @ p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spo...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
-                QUERY PLAN                
-------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_path
-         Filter: ('(0 , 0)'::spoint <@ p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spo...
+                                                 ^
 CREATE INDEX idx_bbox_path ON bbox_path USING gist (p);
+ERROR:  relation "bbox_path" does not exist
 ANALYZE bbox_path;
+ERROR:  relation "bbox_path" does not exist
 SET enable_seqscan=false;
 SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d...
+                             ^
 SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
+                             ^
 SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
- count 
--------
-     1
-(1 row)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
+                             ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
-                                              QUERY PLAN                                              
-------------------------------------------------------------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_path on bbox_path
-         Index Cond: ('( 6.10865238198015, 1.5707963267949, 0, ZXZ ), 0.349065850398866'::sline && p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sli...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
-                    QUERY PLAN                     
----------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_path on bbox_path
-         Index Cond: ('(0 , 0)'::spoint @ p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spo...
+                                                 ^
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
-                    QUERY PLAN                     
----------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_path on bbox_path
-         Index Cond: ('(0 , 0)'::spoint <@ p)
-(3 rows)
-
+ERROR:  relation "bbox_path" does not exist
+LINE 1: EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spo...
+                                                 ^

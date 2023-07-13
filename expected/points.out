@@ -1,661 +1,458 @@
 \set ECHO none
- set_sphere_output_precision 
------------------------------
- SET 8
-(1 row)
-
+ERROR:  function set_sphere_output_precision(integer) does not exist
+LINE 1: SELECT set_sphere_output_precision(8);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- operators
 SELECT spoint '(0, 90d)'   = spoint '(0, 90d)';
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0, 90d)'   = spoint '(0, 90d)';
+               ^
 SELECT spoint '(0, 90d)'   = spoint '(0,-90d)';
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0, 90d)'   = spoint '(0,-90d)';
+               ^
 SELECT spoint '(0,-90d)'   = spoint '(0,-90d)';
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0,-90d)'   = spoint '(0,-90d)';
+               ^
 SELECT spoint '(0, 90d)'  != spoint '(0, 90d)';
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0, 90d)'  != spoint '(0, 90d)';
+               ^
 SELECT spoint '(0, 90d)'  != spoint '(0,-90d)';
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0, 90d)'  != spoint '(0,-90d)';
+               ^
 SELECT spoint '(0,-90d)'  != spoint '(0,-90d)';
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0,-90d)'  != spoint '(0,-90d)';
+               ^
 SELECT spoint '(0d,  0)'   = spoint '(360d,0)';
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT spoint '(0d,  0)'   = spoint '(360d,0)';
+               ^
 -- I/O test --
 -- Output ---
 SELECT set_sphere_output( 'DEG' );
- set_sphere_output 
--------------------
- SET DEG
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DEG' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
-         spoint         
-------------------------
- (15.625d , 1.0416667d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
-         spoint          
--------------------------
- (0.625d , 0.041666667d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 1h 3m 30s , -1d 3m 3.6s)'::spoint;
-       spoint        
----------------------
- (15.875d , -1.051d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 3m 30s , -1d 3m 3.6s)'::spoint;
+                                             ^
 SELECT '( 0h 3m 30s , -0d 3m 3.6s)'::spoint;
-       spoint       
---------------------
- (0.875d , -0.051d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 3m 30s , -0d 3m 3.6s)'::spoint;
+                                             ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
-     spoint     
-----------------
- (0.625d , 90d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
+                                           ^
 SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
-     spoint      
------------------
- (0.625d , -90d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
+                                           ^
 SELECT set_sphere_output( 'DMS' );
- set_sphere_output 
--------------------
- SET DMS
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DMS' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- ( 15d 37m 30s , + 1d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  0d 37m 30s , + 0d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 1h 2m 30s , -1d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- ( 15d 37m 30s , - 1d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 2m 30s , -1d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , -0d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  0d 37m 30s , - 0d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -0d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
-            spoint            
-------------------------------
- (  0d 37m 30s , +90d  0m 0s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
+                                           ^
 SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
-            spoint            
-------------------------------
- (  0d 37m 30s , -90d  0m 0s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
+                                           ^
 SELECT set_sphere_output( 'HMS' );
- set_sphere_output 
--------------------
- SET HMS
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'HMS' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  1h  2m 30s , + 1d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  0h  2m 30s , + 0d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , +0d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 1h 2m 30s , -1d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  1h  2m 30s , - 1d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 1h 2m 30s , -1d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , -0d 2m 30s)'::spoint;
-            spoint             
--------------------------------
- (  0h  2m 30s , - 0d  2m 30s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -0d 2m 30s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
-            spoint            
-------------------------------
- (  0h  2m 30s , +90d  0m 0s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint;
+                                           ^
 SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
-            spoint            
-------------------------------
- (  0h  2m 30s , -90d  0m 0s)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s ,-90d 0m 0s)'::spoint;
+                                           ^
 SELECT set_sphere_output( 'RAD' );
- set_sphere_output 
--------------------
- SET RAD
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'RAD' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '( 0h 0m 0s , 0d 0m 0s)'::spoint;
- spoint  
----------
- (0 , 0)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 0m 0s , 0d 0m 0s)'::spoint;
+                                         ^
 -- "incorrect dec. values"
 SELECT set_sphere_output( 'DEG' );
- set_sphere_output 
--------------------
- SET DEG
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DEG' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint;
-      spoint      
-------------------
- (180.625d , 85d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint;
+                                           ^
 SELECT '( 24h 2m 30s , 5d 0m 0s)'::spoint;
-    spoint     
----------------
- (0.625d , 5d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 24h 2m 30s , 5d 0m 0s)'::spoint;
+                                           ^
 SELECT '( -0h 2m 30s , -5d 0m 0s)'::spoint;
-      spoint      
-------------------
- (359.375d , -5d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( -0h 2m 30s , -5d 0m 0s)'::spoint;
+                                            ^
 SELECT '( 0h 2m 30s , -95d 0m 0s)'::spoint;
-      spoint       
--------------------
- (180.625d , -85d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -95d 0m 0s)'::spoint;
+                                            ^
 -- Input --
 SELECT '( 0.625d , -0.04166666667d)'::spoint;
-          spoint          
---------------------------
- (0.625d , -0.041666667d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0.625d , -0.04166666667d)'::spoint;
+                                              ^
 SELECT '(0.0109083078249646 , -0.000727220521664407)'::spoint;
-          spoint          
---------------------------
- (0.625d , -0.041666667d)
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: ...LECT '(0.0109083078249646 , -0.000727220521664407)'::spoint;
+                                                                ^
 -- functions for point --------------
 -- spoint(float8, float8)
 SELECT spoint(0.0109083078249646 , -0.000727220521664407);
-          spoint          
---------------------------
- (0.625d , -0.041666667d)
-(1 row)
-
+ERROR:  function spoint(numeric, numeric) does not exist
+LINE 1: SELECT spoint(0.0109083078249646 , -0.000727220521664407);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT set_sphere_output( 'RAD' );
- set_sphere_output 
--------------------
- SET RAD
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'RAD' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT spoint(7.28318530717958623 , 0.00);
- spoint  
----------
- (1 , 0)
-(1 row)
-
+ERROR:  function spoint(numeric, numeric) does not exist
+LINE 1: SELECT spoint(7.28318530717958623 , 0.00);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT spoint(0.0 , 2.141592653589793116);
-     spoint      
------------------
- (3.1415927 , 1)
-(1 row)
-
+ERROR:  function spoint(numeric, numeric) does not exist
+LINE 1: SELECT spoint(0.0 , 2.141592653589793116);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- dist(spoint,spoint)
 SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 0m 30s , 0d 0m 0s)'::spoint);
-       dist        
--------------------
- 0.008726646259972
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 0m 30s ,...
+                                               ^
 SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 2m 30s , 10d 0m 0s)'::spoint);
-      dist       
------------------
- 0.1745329251994
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 2m 30s ,...
+                                               ^
 SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 2m 30s , -10d 0m 0s)'::spoint);
-      dist       
------------------
- 0.1745329251994
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , 0d 0m 0s)'::spoint,'( 0h 2m 30s ,...
+                                               ^
 SELECT dist('( 0h 2m 30s , 95d 0m 0s)'::spoint,'( 12h 2m 30s , 85d 0m 0s)'::spoint);
- dist 
-------
-    0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , 95d 0m 0s)'::spoint,'( 12h 2m 30s...
+                                                ^
 SELECT dist('( 24h 2m 30s , 10d 0m 0s)'::spoint,'( 0h 2m 30s , -10d 0m 0s)'::spoint);
-      dist       
------------------
- 0.3490658503989
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 24h 2m 30s , 10d 0m 0s)'::spoint,'( 0h 2m 30s...
+                                                 ^
 SELECT dist('( 0h 2m 30s , 90d 0m 0s)'::spoint,'( 12h 2m 30s , 90d 0m 0s)'::spoint);
- dist 
-------
-    0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , 90d 0m 0s)'::spoint,'( 12h 2m 30s...
+                                                ^
 SELECT dist('( 0h 2m 30s , -90d 0m 0s)'::spoint,'( 12h 2m 30s , -90d 0m 0s)'::spoint);
- dist 
-------
-    0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT dist('( 0h 2m 30s , -90d 0m 0s)'::spoint,'( 12h 2m 30...
+                                                 ^
 -- long(spoint)
 SELECT long('( 0h 2m 30s , 0d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s , 0d 0m 0s)'::spoint);
+                                               ^
 SELECT long('( 0h 2m 30s ,95d 0m 0s)'::spoint);
-      long      
-----------------
- 3.152500961415
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,95d 0m 0s)'::spoint);
+                                               ^
 SELECT long('( 0h 2m 30s ,85d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,85d 0m 0s)'::spoint);
+                                               ^
 SELECT long('( 0h 2m 30s ,-95d 0m 0s)'::spoint);
-      long      
-----------------
- 3.152500961415
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,-95d 0m 0s)'::spoint);
+                                                ^
 SELECT long('( 0h 2m 30s ,-85d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,-85d 0m 0s)'::spoint);
+                                                ^
 SELECT long('( 0h 2m 30s ,90d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,90d 0m 0s)'::spoint);
+                                               ^
 SELECT long('( 0h 2m 30s ,-90d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('( 0h 2m 30s ,-90d 0m 0s)'::spoint);
+                                                ^
 SELECT long('(24h 2m 30s , 0d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s , 0d 0m 0s)'::spoint);
+                                               ^
 SELECT long('(24h 2m 30s ,95d 0m 0s)'::spoint);
-      long      
-----------------
- 3.152500961415
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,95d 0m 0s)'::spoint);
+                                               ^
 SELECT long('(24h 2m 30s ,85d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,85d 0m 0s)'::spoint);
+                                               ^
 SELECT long('(24h 2m 30s ,-95d 0m 0s)'::spoint);
-      long      
-----------------
- 3.152500961415
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,-95d 0m 0s)'::spoint);
+                                                ^
 SELECT long('(24h 2m 30s ,-85d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,-85d 0m 0s)'::spoint);
+                                                ^
 SELECT long('(24h 2m 30s ,90d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,90d 0m 0s)'::spoint);
+                                               ^
 SELECT long('(24h 2m 30s ,-90d 0m 0s)'::spoint);
-       long       
-------------------
- 0.01090830782496
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT long('(24h 2m 30s ,-90d 0m 0s)'::spoint);
+                                                ^
 -- get_gravity_center(array(spoint))
-SELECT get_gravity_center(ARRAY[
+SELECT centroid(ARRAY[
     spoint(40.7128, -74.0060),
     spoint(34.0522, -118.2437),
     spoint(37.7749, -122.4194)
 ]);
-    get_gravity_center    
---------------------------
- (3.0436698 , 0.85893807)
-(1 row)
-
+ERROR:  function spoint(numeric, numeric) does not exist
+LINE 2:     spoint(40.7128, -74.0060),
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- lat(spoint)
 SELECT lat('( 0h 2m 30s , 0d 0m 0s)'::spoint);
- lat 
------
-   0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s , 0d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('( 0h 2m 30s ,95d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,95d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('( 0h 2m 30s ,85d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,85d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('( 0h 2m 30s ,-95d 0m 0s)'::spoint);
-       lat       
------------------
- -1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,-95d 0m 0s)'::spoint);
+                                               ^
 SELECT lat('( 0h 2m 30s ,-85d 0m 0s)'::spoint);
-       lat       
------------------
- -1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,-85d 0m 0s)'::spoint);
+                                               ^
 SELECT lat('( 0h 2m 30s ,90d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.570796326795
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,90d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('( 0h 2m 30s ,-90d 0m 0s)'::spoint);
-       lat       
------------------
- -1.570796326795
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('( 0h 2m 30s ,-90d 0m 0s)'::spoint);
+                                               ^
 SELECT lat('(24h 2m 30s , 0d 0m 0s)'::spoint);
- lat 
------
-   0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s , 0d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('(24h 2m 30s ,95d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,95d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('(24h 2m 30s ,85d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,85d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('(24h 2m 30s ,-95d 0m 0s)'::spoint);
-       lat       
------------------
- -1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,-95d 0m 0s)'::spoint);
+                                               ^
 SELECT lat('(24h 2m 30s ,-85d 0m 0s)'::spoint);
-       lat       
------------------
- -1.483529864195
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,-85d 0m 0s)'::spoint);
+                                               ^
 SELECT lat('(24h 2m 30s ,90d 0m 0s)'::spoint);
-      lat       
-----------------
- 1.570796326795
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,90d 0m 0s)'::spoint);
+                                              ^
 SELECT lat('(24h 2m 30s ,-90d 0m 0s)'::spoint);
-       lat       
------------------
- -1.570796326795
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT lat('(24h 2m 30s ,-90d 0m 0s)'::spoint);
+                                               ^
 -- operators for points -------------
 -- = operator -----------------------
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , 90...
+                                           ^
 SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , 9...
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 24h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 24h 2m 30s , 90...
+                                           ^
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint='( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint='( 12h 2m 30s , -...
+                                            ^
 SELECT '( 12h 2m 30s , -90d 0m 0s)'::spoint='( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , -90d 0m 0s)'::spoint='( 12h 2m 30s , ...
+                                             ^
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint='( 24h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint='( 24h 2m 30s , -...
+                                            ^
 SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint='( 12h 2m 30s , 85d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint='( 12h 2m 30s , 85...
+                                           ^
 SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint='( 0h 2m 30s , 10d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint='( 0h 2m 30s , 10...
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , -9...
+                                           ^
 SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint='( 12h 2m 30s , -...
+                                            ^
 SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint='( 12h 2m 30s , 45d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint='( 12h 2m 30s , 45d...
+                                          ^
 -- <> operator -----------------------
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , 9...
+                                           ^
 SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , ...
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 24h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 24h 2m 30s , 9...
+                                           ^
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<>'( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<>'( 12h 2m 30s , ...
+                                            ^
 SELECT '( 12h 2m 30s , -90d 0m 0s)'::spoint<>'( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , -90d 0m 0s)'::spoint<>'( 12h 2m 30s ,...
+                                             ^
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<>'( 24h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<>'( 24h 2m 30s , ...
+                                            ^
 SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint<>'( 12h 2m 30s , 85d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint<>'( 12h 2m 30s , 8...
+                                           ^
 SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint<>'( 0h 2m 30s , 10d 0m 0s)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint<>'( 0h 2m 30s , 1...
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , -...
+                                           ^
 SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 12h 2m 30s , 90d 0m 0s)'::spoint<>'( 12h 2m 30s , ...
+                                            ^
 SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<>'( 12h 2m 30s , 45d 0m 0s)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<>'( 12h 2m 30s , 45...
+                                          ^
 -- <-> operator ---------------------
 SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 0m 30s , 0d 0m 0s)'::spoint;
-     ?column?      
--------------------
- 0.008726646259972
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 0m 30s , 0d...
+                                          ^
 SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 2m 30s , 10d 0m 0s)'::spoint;
-    ?column?     
------------------
- 0.1745329251994
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 2m 30s , 10...
+                                          ^
 SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 2m 30s , -10d 0m 0s)'::spoint;
-    ?column?     
------------------
- 0.1745329251994
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 0d 0m 0s)'::spoint<->'( 0h 2m 30s , -1...
+                                          ^
 SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint<->'( 12h 2m 30s , 85d 0m 0s)'::spoint;
- ?column? 
-----------
-        0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 95d 0m 0s)'::spoint<->'( 12h 2m 30s , ...
+                                           ^
 SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint<->'( 0h 2m 30s , -10d 0m 0s)'::spoint;
-    ?column?     
------------------
- 0.3490658503989
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 24h 2m 30s , 10d 0m 0s)'::spoint<->'( 0h 2m 30s , ...
+                                            ^
 SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<->'( 12h 2m 30s , 90d 0m 0s)'::spoint;
- ?column? 
-----------
-        0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<->'( 12h 2m 30s , ...
+                                           ^
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<->'( 12h 2m 30s , -90d 0m 0s)'::spoint;
- ?column? 
-----------
-        0
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<->'( 12h 2m 30s ,...
+                                            ^

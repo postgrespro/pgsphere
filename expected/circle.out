@@ -1,660 +1,456 @@
 \set ECHO none
- set_sphere_output_precision 
------------------------------
- SET 8
-(1 row)
-
+ERROR:  function set_sphere_output_precision(integer) does not exist
+LINE 1: SELECT set_sphere_output_precision(8);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- Input/Output ---
 SELECT set_sphere_output( 'RAD' );
- set_sphere_output 
--------------------
- SET RAD
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'RAD' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
-                  scircle                  
--------------------------------------------
- <(0.2727077 , 0.018180513) , 0.017453293>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
+                                                     ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
-                  scircle                  
--------------------------------------------
- <(0.2727077 , 0.018180513) , 0.026179939>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
+                                                       ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
-              scircle              
------------------------------------
- <(0.2727077 , 0.018180513) , 0.1>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
+                                                    ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
-                 scircle                 
------------------------------------------
- <(0.2727077 , 0.018180513) , 1.5707963>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
+                                                    ^
 SELECT set_sphere_output( 'DEG' );
- set_sphere_output 
--------------------
- SET DEG
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DEG' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
-            scircle            
--------------------------------
- <(15.625d , 1.0416667d) , 1d>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
+                                                     ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
-             scircle             
----------------------------------
- <(15.625d , 1.0416667d) , 1.5d>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
+                                                       ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
-               scircle                
---------------------------------------
- <(15.625d , 1.0416667d) , 5.729578d>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
+                                                    ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
-            scircle             
---------------------------------
- <(15.625d , 1.0416667d) , 90d>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
+                                                    ^
 SELECT set_sphere_output( 'DMS' );
- set_sphere_output 
--------------------
- SET DMS
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DMS' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
-                   scircle                    
-----------------------------------------------
- <( 15d 37m 30s , + 1d  2m 30s) ,  1d  0m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
+                                                     ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
-                   scircle                    
-----------------------------------------------
- <( 15d 37m 30s , + 1d  2m 30s) ,  1d 30m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
+                                                       ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
-                       scircle                        
-------------------------------------------------------
- <( 15d 37m 30s , + 1d  2m 30s) ,  5d 43m 46.480625s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
+                                                    ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
-                   scircle                    
-----------------------------------------------
- <( 15d 37m 30s , + 1d  2m 30s) , 90d  0m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
+                                                    ^
 SELECT set_sphere_output( 'HMS' );
- set_sphere_output 
--------------------
- SET HMS
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'HMS' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
-                   scircle                    
-----------------------------------------------
- <(  1h  2m 30s , + 1d  2m 30s) ,  1d  0m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;
+                                                     ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
-                   scircle                    
-----------------------------------------------
- <(  1h  2m 30s , + 1d  2m 30s) ,  1d 30m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 1d 30m >'::scircle;
+                                                       ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
-                       scircle                        
-------------------------------------------------------
- <(  1h  2m 30s , + 1d  2m 30s) ,  5d 43m 46.480625s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 0.1 >'::scircle;
+                                                    ^
 SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
-                   scircle                    
-----------------------------------------------
- <(  1h  2m 30s , + 1d  2m 30s) , 90d  0m 0s>
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 2m 30s , +1d 2m 30s), 90d >'::scircle;
+                                                    ^
 SELECT set_sphere_output( 'DMS' );
- set_sphere_output 
--------------------
- SET DMS
-(1 row)
-
+ERROR:  function set_sphere_output(unknown) does not exist
+LINE 1: SELECT set_sphere_output( 'DMS' );
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- Functions
 -- checking spherical circle operators
 SELECT scircle '<(0, 90d),1>'   = '<(0, 90d),1>' ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT scircle '<(0, 90d),1>'   = '<(0, 90d),1>' ;
+               ^
 SELECT scircle '<(0,-90d),1>'  <> '<(0, 90d),1>' ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT scircle '<(0,-90d),1>'  <> '<(0, 90d),1>' ;
+               ^
 -- float8 dist(scircle,scircle)
 SELECT 180.0*dist('<( 0h 2m 30s , 10d 0m 0s), 0.1d>'::scircle,'<( 0h 2m 30s , -10d 0m 0s),0.1d>'::scircle)/pi();
- ?column? 
-----------
-     19.8
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...CT 180.0*dist('<( 0h 2m 30s , 10d 0m 0s), 0.1d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 0h 0m 00s , 0d 0m 0s), 1.0d>'::scircle,'<( 1h 0m 00s , 0d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-       13
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ECT 180.0*dist('<( 0h 0m 00s , 0d 0m 0s), 1.0d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 23h 30m 00s , 0d 0m 0s), 1.0d>'::scircle,'<( 1h 0m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-       20
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...T 180.0*dist('<( 23h 30m 00s , 0d 0m 0s), 1.0d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 0h 40m 00s , 0d 0m 0s), 1.0d>'::scircle,'<( 0h 50m 00s , 0d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-      0.5
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...CT 180.0*dist('<( 0h 40m 00s , 0d 0m 0s), 1.0d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 0h 40m 00s , 0d 0m 0s), 1.5d>'::scircle,'<( 0h 50m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-        0
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...CT 180.0*dist('<( 0h 40m 00s , 0d 0m 0s), 1.5d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 0h 40m 00s , 90d 0m 0s), 1.5d>'::scircle,'<( 0h 50m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-       87
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...T 180.0*dist('<( 0h 40m 00s , 90d 0m 0s), 1.5d>'::scircle,'<...
+                                                             ^
 SELECT 180.0*dist('<( 0h 40m 00s , 90d 0m 0s), 1.0d>'::scircle,'<( 0h 50m 00s , -90d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-      178
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...T 180.0*dist('<( 0h 40m 00s , 90d 0m 0s), 1.0d>'::scircle,'<...
+                                                             ^
 -- spoint center(scircle)
 SELECT center('< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle);
-            center             
--------------------------------
- ( 15d 37m 30s , + 1d  2m 30s)
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ELECT center('< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle);
+                                                              ^
 SELECT center('< (1h 2m 30s , +90d 0m 0s), 1.0d >'::scircle);
-            center            
-------------------------------
- ( 15d 37m 30s , +90d  0m 0s)
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ELECT center('< (1h 2m 30s , +90d 0m 0s), 1.0d >'::scircle);
+                                                              ^
 -- scircle scircle(spoint)
 SELECT scircle('(0d,0d)'::spoint);
-                  scircle                   
---------------------------------------------
- <(  0d  0m 0s , + 0d  0m 0s) ,  0d  0m 0s>
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT scircle('(0d,0d)'::spoint);
+                                  ^
 SELECT scircle('(0d,90d)'::spoint);
-                  scircle                   
---------------------------------------------
- <(  0d  0m 0s , +90d  0m 0s) ,  0d  0m 0s>
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT scircle('(0d,90d)'::spoint);
+                                   ^
 SELECT scircle('(0d,-90d)'::spoint);
-                  scircle                   
---------------------------------------------
- <(  0d  0m 0s , -90d  0m 0s) ,  0d  0m 0s>
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT scircle('(0d,-90d)'::spoint);
+                                    ^
 -- Operators
 -- = operator
 -- should be "true"
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,+1d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,+1d)...
+                                           ^
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (25h 0m 0s,+1d), 1d 30m >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (25h 0m 0s,+1d...
+                                           ^
 SELECT '< (1h 0m 0s,+95d), 1.5d >'::scircle='< (13h 0m 0s,+85d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+95d), 1.5d >'::scircle='< (13h 0m 0s,+8...
+                                            ^
 SELECT '< (1h 0m 0s,-95d), 1.5d >'::scircle='< (13h 0m 0s,-85d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-95d), 1.5d >'::scircle='< (13h 0m 0s,-8...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle='< (2h 0m 0s,+90d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle='< (2h 0m 0s,+90...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle='< (2h 0m 0s,-90d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle='< (2h 0m 0s,-90...
+                                            ^
 -- should be "false"
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,-1d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,-1d)...
+                                           ^
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,+1d), 2.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle='< (1h 0m 0s,+1d)...
+                                           ^
 -- <> operator
 -- should be "false"
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,+1d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,+...
+                                           ^
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (25h 0m 0s,+1d), 1d 30m >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (25h 0m 0s,...
+                                           ^
 SELECT '< (1h 0m 0s,+95d), 1.5d >'::scircle <> '< (13h 0m 0s,+85d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+95d), 1.5d >'::scircle <> '< (13h 0m 0s...
+                                            ^
 SELECT '< (1h 0m 0s,-95d), 1.5d >'::scircle <> '< (13h 0m 0s,-85d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-95d), 1.5d >'::scircle <> '< (13h 0m 0s...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle <> '< (2h 0m 0s,+90d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle <> '< (2h 0m 0s,...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle <> '< (2h 0m 0s,-90d), 1.5d >'::scircle ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle <> '< (2h 0m 0s,...
+                                            ^
 -- should be "true"
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,-1d), 1.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,-...
+                                           ^
 SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,+1d), 2.5d >'::scircle ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d), 1.5d >'::scircle <> '< (1h 0m 0s,+...
+                                           ^
 -- && operator
 -- should be "true"
 SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,+1d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,...
+                                            ^
 SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,+1d), 0.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,...
+                                            ^
 SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,-1d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d), 1.5d >'::scircle && '< (1h 0m 0s,...
+                                            ^
 SELECT  '< (1h 0m 0s,0d), 15d >'::scircle && '< (0h 0m 0s,0d), 15d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,0d), 15d >'::scircle && '< (0h 0m 0s,0d...
+                                          ^
 SELECT  '< (2h 0m 0s,0d), 15d >'::scircle && '< (0h 0m 0.1s,0d), 15d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (2h 0m 0s,0d), 15d >'::scircle && '< (0h 0m 0.1s,...
+                                          ^
 SELECT  '< (1h 0m 0s,0d), 15d >'::scircle && '< (23h 0m 0.1s,0d), 15d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,0d), 15d >'::scircle && '< (23h 0m 0.1s...
+                                          ^
 -- should be "false"
 SELECT  '< (1h 0m 0s,+1d), 0.5d >'::scircle && '< (1h 0m 0s,-1d), 0.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d), 0.5d >'::scircle && '< (1h 0m 0s,...
+                                            ^
 SELECT  '< (1d 0m 0s,+1d), 1.0d >'::scircle && '< (0d 0m 0s,0d), 0.1d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1d 0m 0s,+1d), 1.0d >'::scircle && '< (0d 0m 0s,...
+                                            ^
 -- @@ operator
 SELECT @@ '< (1h 2m 3s , +1d 2m 3s), 1.0d >'::scircle;
-           ?column?           
-------------------------------
- ( 15d 30m 45s , + 1d  2m 3s)
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT @@ '< (1h 2m 3s , +1d 2m 3s), 1.0d >'::scircle;
+                                                      ^
 SELECT @@ '< (1h 2m 3s , +90d 0m 0s), 1.0d >'::scircle;
-           ?column?           
-------------------------------
- ( 15d 30m 45s , +90d  0m 0s)
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT @@ '< (1h 2m 3s , +90d 0m 0s), 1.0d >'::scircle;
+                                                       ^
 -- <-> operator
 SELECT 180.0*('<( 0h 2m 30s , 10d 0m 0s), 0.1d>'::scircle<->'<( 0h 2m 30s , -10d 0m 0s),0.1d>'::scircle)/pi();
- ?column? 
-----------
-     19.8
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT 180.0*('<( 0h 2m 30s , 10d 0m 0s), 0.1d>'::scircle<->...
+                                                          ^
 SELECT 180.0*('<( 0h 0m 00s , 0d 0m 0s), 1.0d>'::scircle<->'<( 1h 0m 00s , 0d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-       13
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT 180.0*('<( 0h 0m 00s , 0d 0m 0s), 1.0d>'::scircle<->'...
+                                                         ^
 SELECT 180.0*('<( 23h 30m 00s , 0d 0m 0s), 1.0d>'::scircle<->'<( 1h 0m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-       20
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ELECT 180.0*('<( 23h 30m 00s , 0d 0m 0s), 1.0d>'::scircle<->...
+                                                             ^
 SELECT 180.0*('<( 0h 40m 00s , 0d 0m 0s), 1.0d>'::scircle<->'<( 0h 50m 00s , 0d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-      0.5
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT 180.0*('<( 0h 40m 00s , 0d 0m 0s), 1.0d>'::scircle<->...
+                                                          ^
 SELECT 180.0*('<( 0h 40m 00s , 0d 0m 0s), 1.5d>'::scircle<->'<( 0h 50m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-        0
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT 180.0*('<( 0h 40m 00s , 0d 0m 0s), 1.5d>'::scircle<->...
+                                                          ^
 SELECT 180.0*('<( 0h 40m 00s , 90d 0m 0s), 1.5d>'::scircle<->'<( 0h 50m 00s , 0d 0m 0s),1.5d>'::scircle)/pi();
- ?column? 
-----------
-       87
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ELECT 180.0*('<( 0h 40m 00s , 90d 0m 0s), 1.5d>'::scircle<->...
+                                                             ^
 SELECT 180.0*('<( 0h 40m 00s , 90d 0m 0s), 1.0d>'::scircle<->'<( 0h 50m 00s , -90d 0m 0s),1.0d>'::scircle)/pi();
- ?column? 
-----------
-      178
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: ...ELECT 180.0*('<( 0h 40m 00s , 90d 0m 0s), 1.0d>'::scircle<->...
+                                                             ^
 -- scircle @ scircle operator
 -- should be "true"
 SELECT  '< (1h 0m 0s,+1d),  0.5d >'::scircle @ '< (1h 0m 0s,+1d),  1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d),  0.5d >'::scircle @ '< (1h 0m 0s,...
+                                             ^
 SELECT  '< (2d 0m 0s,+1d),  0.5d >'::scircle @ '< (1d 0m 0s,0d),   3.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (2d 0m 0s,+1d),  0.5d >'::scircle @ '< (1d 0m 0s,...
+                                             ^
 SELECT  '< (1h 0m 0s,+89d), 0.5d >'::scircle @ '< (1h 0m 0s,+90d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+89d), 0.5d >'::scircle @ '< (1h 0m 0s,...
+                                             ^
 SELECT  '< (1h 0m 0s,-89d), 0.5d >'::scircle @ '< (1h 0m 0s,-90d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,-89d), 0.5d >'::scircle @ '< (1h 0m 0s,...
+                                             ^
 -- should be "false"
 SELECT  '< (1h 0m 0s,+1d),  0.5d >'::scircle @ '< (2h 0m 0s,+1d),  1.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+1d),  0.5d >'::scircle @ '< (2h 0m 0s,...
+                                             ^
 SELECT  '< (2d 0m 0s,+1d),  1.5d >'::scircle @ '< (0d 0m 0s, 0d),  3.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (2d 0m 0s,+1d),  1.5d >'::scircle @ '< (0d 0m 0s,...
+                                             ^
 SELECT  '< (1h 0m 0s,+89d), 0.5d >'::scircle @ '< (1h 0m 0s,+90d), 1.0d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,+89d), 0.5d >'::scircle @ '< (1h 0m 0s,...
+                                             ^
 SELECT  '< (1h 0m 0s,-89d), 0.5d >'::scircle @ '< (1h 0m 0s,-90d), 1.0d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT  '< (1h 0m 0s,-89d), 0.5d >'::scircle @ '< (1h 0m 0s,...
+                                             ^
 -- scircle ~ scircle operator
 -- should be "true"
 SELECT '< (1h 0m 0s,+1d),  1.5d >'::scircle  ~ '< (1h 0m 0s,+1d),  0.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d),  1.5d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 SELECT '< (1d 0m 0s,0d),   3.5d >'::scircle  ~ '< (2d 0m 0s,+1d),  0.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1d 0m 0s,0d),   3.5d >'::scircle  ~ '< (2d 0m 0s,...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle  ~ '< (1h 0m 0s,+89d), 0.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle  ~ '< (1h 0m 0s,-89d), 0.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 -- should be "false"
 SELECT '< (2h 0m 0s,+1d),  1.5d >'::scircle  ~ '< (1h 0m 0s,+1d),  0.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (2h 0m 0s,+1d),  1.5d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 SELECT '< (0d 0m 0s, 0d),  3.5d >'::scircle  ~ '< (2d 0m 0s,+1d),  1.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (0d 0m 0s, 0d),  3.5d >'::scircle  ~ '< (2d 0m 0s,...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle  ~ '< (1h 0m 0s,+89d), 0.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle  ~ '< (1h 0m 0s,-89d), 0.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle  ~ '< (1h 0m 0s,...
+                                            ^
 -- spoint @ scircle operator
 -- should be "true"
 SELECT  '(1h 0m 0s,+1d) '::spoint @ '< (1h 0m 0s,+1d),  1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m 0s,+1d) '::spoint @ '< (1h 0m 0s,+1d),  1.5d...
+                                   ^
 SELECT  '(2d 0m 0s,+1d) '::spoint @ '< (1d 0m 0s, 0d),  3.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(2d 0m 0s,+1d) '::spoint @ '< (1d 0m 0s, 0d),  3.5d...
+                                   ^
 SELECT  '(1h 0m 0s,+89d)'::spoint @ '< (1h 0m 0s,+90d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m 0s,+89d)'::spoint @ '< (1h 0m 0s,+90d), 1.5d...
+                                   ^
 SELECT  '(1h 0m 0s,-89d)'::spoint @ '< (1h 0m 0s,-90d), 1.5d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m 0s,-89d)'::spoint @ '< (1h 0m 0s,-90d), 1.5d...
+                                   ^
 SELECT  '(1h 0m 0s,+89d)'::spoint @ '< (1h 0m 0s,+90d), 1.0d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m 0s,+89d)'::spoint @ '< (1h 0m 0s,+90d), 1.0d...
+                                   ^
 SELECT  '(1h 0m 0s,-89d)'::spoint @ '< (1h 0m 0s,-90d), 1.0d >'::scircle;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m 0s,-89d)'::spoint @ '< (1h 0m 0s,-90d), 1.0d...
+                                   ^
 -- should be "false"
 SELECT  '(1h 0m  0s,+1d    )'::spoint @ '< (2h 0m 0s,-1d),  1.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m  0s,+1d    )'::spoint @ '< (2h 0m 0s,-1d),  ...
+                                       ^
 SELECT  '(3d 30m 0s,+1d    )'::spoint @ '< (0d 0m 0s, 0d),  3.5d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(3d 30m 0s,+1d    )'::spoint @ '< (0d 0m 0s, 0d),  ...
+                                       ^
 SELECT  '(1h 0m  0s,+88.99d)'::spoint @ '< (1h 0m 0s,+90d), 1.0d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m  0s,+88.99d)'::spoint @ '< (1h 0m 0s,+90d), ...
+                                       ^
 SELECT  '(1h 0m  0s,-88.99d)'::spoint @ '< (1h 0m 0s,-90d), 1.0d >'::scircle;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "spoint" does not exist
+LINE 1: SELECT  '(1h 0m  0s,-88.99d)'::spoint @ '< (1h 0m 0s,-90d), ...
+                                       ^
 -- spoint ~ scircle operator
 -- should be "true"
 SELECT '< (1h 0m 0s,+1d),  1.5d >'::scircle ~ '(1h 0m 0s,+1d) '::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+1d),  1.5d >'::scircle ~ '(1h 0m 0s,+1d...
+                                            ^
 SELECT '< (1d 0m 0s, 0d),  3.5d >'::scircle ~ '(2d 0m 0s,+1d) '::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1d 0m 0s, 0d),  3.5d >'::scircle ~ '(2d 0m 0s,+1d...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle ~ '(1h 0m 0s,+89d)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.5d >'::scircle ~ '(1h 0m 0s,+89...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle ~ '(1h 0m 0s,-89d)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.5d >'::scircle ~ '(1h 0m 0s,-89...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle ~ '(1h 0m 0s,+89d)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle ~ '(1h 0m 0s,+89...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle ~ '(1h 0m 0s,-89d)'::spoint;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle ~ '(1h 0m 0s,-89...
+                                            ^
 -- should be "false"
 SELECT '< (2h 0m 0s,-1d),  1.5d >'::scircle ~ '(1h 0m  0s,+1d    )'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (2h 0m 0s,-1d),  1.5d >'::scircle ~ '(1h 0m  0s,+1...
+                                            ^
 SELECT '< (0d 0m 0s, 0d),  3.5d >'::scircle ~ '(3d 30m 0s,+1d    )'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (0d 0m 0s, 0d),  3.5d >'::scircle ~ '(3d 30m 0s,+1...
+                                            ^
 SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle ~ '(1h 0m  0s,+88.99d)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,+90d), 1.0d >'::scircle ~ '(1h 0m  0s,+8...
+                                            ^
 SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle ~ '(1h 0m  0s,-88.99d)'::spoint;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "scircle" does not exist
+LINE 1: SELECT '< (1h 0m 0s,-90d), 1.0d >'::scircle ~ '(1h 0m  0s,-8...
+                                            ^

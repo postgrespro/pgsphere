@@ -1,19 +1,14 @@
 \set ECHO none
- set_sphere_output_precision 
------------------------------
- SET 8
-(1 row)
-
+ERROR:  function set_sphere_output_precision(integer) does not exist
+LINE 1: SELECT set_sphere_output_precision(8);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 -- checking Euler transformation operators
 SELECT strans '-10d,0d,10d,ZZZ'  = '-10d,0d,10d,XXX' ;
- ?column? 
-----------
- t
-(1 row)
-
+ERROR:  type "strans" does not exist
+LINE 1: SELECT strans '-10d,0d,10d,ZZZ'  = '-10d,0d,10d,XXX' ;
+               ^
 SELECT strans '-40d,0d,40d,ZZZ' <> '-40d,0d,40d,XXX' ;
- ?column? 
-----------
- f
-(1 row)
-
+ERROR:  type "strans" does not exist
+LINE 1: SELECT strans '-40d,0d,40d,ZZZ' <> '-40d,0d,40d,XXX' ;
+               ^

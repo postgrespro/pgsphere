@@ -10,11 +10,10 @@ FROM (
                546.9759,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
-     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
------------------+-----------------+----------+----------+------------+----------
-  269.4742714391 |    4.4072939987 |  543.624 | -791.442 |  10235.412 | -110.450
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 9:        SELECT epoch_prop(spoint(radians(269.45207695), radia...
+                                 ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT 
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
@@ -27,11 +26,10 @@ FROM (
                0,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
-     to_char     |     to_char     | to_char | to_char  |  to_char   | to_char 
------------------+-----------------+---------+----------+------------+---------
-  269.4744079540 |    4.4055337210 |         | -801.210 |  10361.762 | 
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 9:        SELECT epoch_prop(spoint(radians(269.45207695), radia...
+                                 ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT 
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
@@ -44,11 +42,10 @@ FROM (
                NULL,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
-     to_char     |     to_char     | to_char | to_char  |  to_char   | to_char 
------------------+-----------------+---------+----------+------------+---------
-  269.4744079540 |    4.4055337210 |         | -801.210 |  10361.762 | 
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 9:        SELECT epoch_prop(spoint(radians(269.45207695), radia...
+                                 ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT 
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
@@ -61,11 +58,10 @@ FROM (
                23,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), NULL,
                20) AS tp) AS q;
-     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
------------------+-----------------+----------+----------+------------+----------
-  269.4476085384 |    4.7509315989 |   23.000 | -801.617 |  10361.984 |    2.159
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 9:        SELECT epoch_prop(spoint(radians(269.45207695), radia...
+                                 ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT 
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
@@ -78,30 +74,30 @@ FROM (
                23,
                NULL, RADIANS(10362/3.6e6), -110,
                120) AS tp) AS q;
-     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
------------------+-----------------+----------+----------+------------+----------
-  269.4520769500 |    5.0388680565 |   23.007 |    -.000 |  10368.061 |  -97.120
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 9:        SELECT epoch_prop(spoint(radians(269.45207695), radia...
+                                 ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT epoch_prop(NULL,
                23,
                0.01 , RADIANS(10362/3.6e6), -110,
                120);
-ERROR:  NULL position not supported in epoch propagation
+ERROR:  function epoch_prop(unknown, integer, numeric, double precision, integer, integer) does not exist
+LINE 1: SELECT epoch_prop(NULL,
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)), 
                23,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                20) AS tp;
-                   tp                    
------------------------------------------
- (4.70274792658313 , 0.0829194509345993)
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 1: SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)), 
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6),
                20) AS tp;
-                   tp                    
------------------------------------------
- (4.70274793061952 , 0.0829193989380876)
-(1 row)
-
+ERROR:  function spoint(double precision, double precision) does not exist
+LINE 1: SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
