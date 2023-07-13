@@ -271,7 +271,7 @@ static SPoint * spherepoint_from_vector3d(Vector3D v){
 	return p;
 }
 
-Datum get_gravity_center(PG_FUNCTION_ARGS) {
+Datum centroid(PG_FUNCTION_ARGS) {
 	int i;
 	SPoint * p;
 	SPoint current_point;
