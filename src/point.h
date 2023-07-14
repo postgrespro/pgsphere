@@ -90,4 +90,6 @@ Datum	spherepoint_xyz(PG_FUNCTION_ARGS);
  */
 Datum	spherepoint_equal(PG_FUNCTION_ARGS);
 
+Datum	centroid(PG_FUNCTION_ARGS);
+
 #endif
