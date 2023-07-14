@@ -272,13 +272,6 @@ static SPoint * spherepoint_from_vector3d(Vector3D v){
 	return p;
 }
 
-static SPoint * spherepoint_from_vector3d(Vector3D v){
-	SPoint* p = (SPoint *) palloc(sizeof(SPoint));
-	p->lat = asin(v.z / sqrt(pow(v.x, 2) + pow(v.y, 2)  + pow(v.z, 2)));
-	p->lng = atan2(v.y, v.x);
-	return p;
-}
-
 Datum centroid(PG_FUNCTION_ARGS) {
 	int i;
 	SPoint * p;
