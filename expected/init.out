@@ -3,9 +3,9 @@
 -- does not depend on contents of pg_sphere.sql.
 --
 CREATE EXTENSION pg_sphere;
-ERROR:  could not find function "get_gravity_center" in file "/app/postgres/install/lib/pg_sphere.so"
 select pg_sphere_version();
-ERROR:  function pg_sphere_version() does not exist
-LINE 1: select pg_sphere_version();
-               ^
-HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+ pg_sphere_version 
+-------------------
+ 1.2.2
+(1 row)
+

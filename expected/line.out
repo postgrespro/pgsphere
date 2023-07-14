@@ -1,100 +1,137 @@
 \set ECHO none
-ERROR:  function set_sphere_output_precision(integer) does not exist
-LINE 1: SELECT set_sphere_output_precision(8);
-               ^
-HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+ set_sphere_output_precision 
+-----------------------------
+ SET 8
+(1 row)
+
 -- checking spherical line operators
 SELECT sline ( spoint '(0, 90d)', spoint '(0, -89d)' )   =
        sline ( spoint '(0, 90d)', spoint '(0, -89d)' )  ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0, 90d)', spoint '(0, -89d)' )   =
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,  90d)', spoint '(0, -89d)' )   <>
        sline ( spoint '(0, -89d)', spoint '(0,  90d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,  90d)', spoint '(0, -89d)' )   <>
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(5d,  5d)', spoint '(5d, -5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(10d,  5d)', spoint '(10d, -5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(15d,  5d)', spoint '(15d, -5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(10d,  0d)', spoint '(10d, -5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(5d,  -5d)', spoint '(5d, 5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(10d, -5d)', spoint '(10d, 5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(15d, -5d)', spoint '(15d, 5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
        sline ( spoint '(10d,  0d)', spoint '(10d, 5d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(10d, 0d)' )   #
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
        
        
 -- check small lines
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.0000005d,  0.0000005d)', spoint '(0.0000005d, -0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.000001d,  0.0000005d)', spoint '(0.000001d, -0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.0000015d,  0.0000005d)', spoint '(0.0000015d, -0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.000001d,  0d)', spoint '(0.000001d, -0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.0000005d,  -0.0000005d)', spoint '(0.0000005d, 0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.000001d, -0.0000005d)', spoint '(0.000001d, 0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ t
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.0000015d, -0.0000005d)', spoint '(0.0000015d, 0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
 SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
        sline ( spoint '(0.000001d,  0d)', spoint '(0.000001d, 0.0000005d)' ) ;
-ERROR:  type "spoint" does not exist
-LINE 1: SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' ...
-                       ^
+ ?column? 
+----------
+ f
+(1 row)
+
        
