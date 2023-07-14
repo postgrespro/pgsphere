@@ -167,8 +167,3 @@ CREATE OPERATOR  <-> (
 COMMENT ON OPERATOR <-> (spoint, spoint) IS
   'distance between spherical points';
 
-CREATE FUNCTION centroid(dots_vector SPoint[])
-   RETURNS spoint
-   AS 'MODULE_PATHNAME', 'centroid'
-   LANGUAGE 'c'
-   IMMUTABLE STRICT PARALLEL SAFE;
