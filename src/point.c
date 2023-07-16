@@ -277,17 +277,20 @@ Datum centroid(PG_FUNCTION_ARGS) {
 	SPoint * p;
 	SPoint current_point;
 	Vector3D	v;
-	Vector3D	point_coords;
+	Vector3D	point_coords = {0,0,0};
 	ArrayType *dots_vector = PG_GETARG_ARRAYTYPE_P(0);
 	int num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
+	if(num_elements == 0){
+		PG_RETURN_POINTER(NULL);
+	}
 	SPoint *array_data = (SPoint *) ARR_DATA_PTR(dots_vector);
 
 	for (i = 0; i < num_elements; i++) {
 		current_point = array_data[i];
 		spoint_vector3d(&v, &current_point);
-		point_coords.x+=v.x;
-		point_coords.y+=v.y;
-		point_coords.z+=v.z;
+		point_coords.x += v.x;
+		point_coords.y += v.y;
+		point_coords.z += v.z;
 	}
 
 	point_coords.x /= num_elements;
