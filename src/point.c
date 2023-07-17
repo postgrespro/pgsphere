@@ -314,7 +314,7 @@ Datum centroid(PG_FUNCTION_ARGS)
 	for (i = 0; i < num_elements; i++) {
 		current_point = array_data[i];
 		spoint_vector3d(&v, &current_point);
-		elog(LOG, "POINT COORDS !!!!!!!!! %lf %lf %lf", v.x, v.y, v.z)
+		elog(LOG, "POINT COORDS !!!!!!!!! %lf %lf %lf", v.x, v.y, v.z);
 		point_coords.x += v.x;
 		point_coords.y += v.y;
 		point_coords.z += v.z;
