@@ -86,7 +86,7 @@
               the <literal>y</literal>-axis.
             </simpara>
             <programlisting>
-<![CDATA[sql> SELECT strans ( 20.0*pi()/180.0, -270.0*pi()/180.0, 70.5*pi()/180.0, 'XZY');]]>
+<![CDATA[sql> SELECT strans ( 20.0*pi()/180.0, -270.0*pi()/180.0, 70.5*/180.0, 'XZY');]]>
             </programlisting>
           </example>
 

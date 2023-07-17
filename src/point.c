@@ -265,14 +265,29 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 	PG_RETURN_BOOL(spoint_eq(p1, p2));
 }
 
-static SPoint * spherepoint_from_vector3d(Vector3D v){
+static SPoint * spherepoint_from_vector3d(Vector3D v)
+{
 	SPoint* p = (SPoint *) palloc(sizeof(SPoint));
 	p->lat = asin(v.z / sqrt(pow(v.x, 2) + pow(v.y, 2)  + pow(v.z, 2)));
 	p->lng = atan2(v.y, v.x);
 	return p;
 }
 
-Datum centroid(PG_FUNCTION_ARGS) {
+Datum spoint_from_xyz(PG_FUNCTION_ARGS)
+{
+	Vector3D	point_coords;
+	SPoint *p = (SPoint *) palloc(sizeof(SPoint));
+
+	point_coords->x = PG_GETARG_FLOAT8(0);
+	point_coords->y = PG_GETARG_FLOAT8(1);
+	point_coords->z = PG_GETARG_FLOAT8(2);
+	p = spherepoint_from_vector3d(point_coords);
+	spoint_check(p);
+	PG_RETURN_POINTER(p);
+}
+
+Datum centroid(PG_FUNCTION_ARGS)
+{
 	int i;
 	SPoint * p;
 	SPoint current_point;

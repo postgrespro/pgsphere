@@ -5,3 +5,11 @@ SELECT centroid(ARRAY[
 ]);
 
 SELECT centroid('{}');
+
+CREATE FUNCTION spoint_from_xyz(FLOAT8, FLOAT8, FLOAT8)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spoint_from_xyz'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+SELECT spoint_from_xyz(1, 0, 0);
