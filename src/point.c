@@ -278,10 +278,12 @@ Datum centroid(PG_FUNCTION_ARGS) {
 	SPoint current_point;
 	Vector3D	v;
 	Vector3D	point_coords = {0,0,0};
+
 	Vector3D	tmp = {-1, 0, 0};
-	SPoint		*tmp_point;
+	SPoint		*tmp_point = (SPoint *) palloc(sizeof(SPoint));
 	vector3d_spoint(tmp_point, &tmp);
 	elog(LOG, "tmp point %lf %lf", tmp_point->lat, tmp_point->lng);
+
 	ArrayType *dots_vector = PG_GETARG_ARRAYTYPE_P(0);
 	int num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
 	elog(LOG, "%s %d", __FUNCTION__, __LINE__);
