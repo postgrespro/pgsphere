@@ -290,7 +290,7 @@ Datum spoint_from_xyz(PG_FUNCTION_ARGS)
 
 Datum centroid(PG_FUNCTION_ARGS)
 {
-	int i;
+	int num_elements, i;
 	SPoint * p;
 	SPoint * array_data;
 	SPoint current_point;
@@ -304,7 +304,7 @@ Datum centroid(PG_FUNCTION_ARGS)
 	elog(LOG, "tmp point %lf %lf", tmp_point->lat, tmp_point->lng);
 
 	dots_vector = PG_GETARG_ARRAYTYPE_P(0);
-	int num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
+	num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
 	elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 	if(num_elements == 0){
 		elog(LOG, "%s %d", __FUNCTION__, __LINE__);
