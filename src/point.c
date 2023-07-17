@@ -12,7 +12,7 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
-PG_FUNCTION_INFO_V1(spoint_from_xyz)
+PG_FUNCTION_INFO_V1(spoint_from_xyz);
 PG_FUNCTION_INFO_V1(centroid);
 
 
