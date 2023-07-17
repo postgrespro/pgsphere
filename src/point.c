@@ -327,6 +327,7 @@ Datum centroid(PG_FUNCTION_ARGS)
 	point_coords.z /= num_elements;
 
 	p = spherepoint_from_vector3d(point_coords);
+	elog(LOG, "SPHERE ===== POINT COORDS !!!!!!!!! %lf %lf", p->lat, p->lng);
 
 	spoint_check(p);
 
