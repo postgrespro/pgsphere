@@ -320,6 +320,7 @@ Datum centroid(PG_FUNCTION_ARGS)
 		point_coords.z += v.z;
 	}
 
+	elog(LOG, "RESULT POINT COORDS !!!!!!!!! %lf %lf %lf", point_coords.x, point_coords.y, point_coords.z);
 	point_coords.x /= num_elements;
 	point_coords.y /= num_elements;
 	point_coords.z /= num_elements;
