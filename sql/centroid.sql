@@ -13,3 +13,8 @@ CREATE FUNCTION spoint_from_xyz(FLOAT8, FLOAT8, FLOAT8)
    IMMUTABLE STRICT PARALLEL SAFE;
 
 SELECT spoint_from_xyz(1, 0, 0);
+
+SELECT centroid(ARRAY[
+    spoint_from_xyz(1, 0, 0),
+    spoint_from_xyz(-1, 0, 0);
+]);
