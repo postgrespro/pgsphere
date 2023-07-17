@@ -283,7 +283,8 @@ Datum centroid(PG_FUNCTION_ARGS) {
 	elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 	if(num_elements == 0){
 		elog(LOG, "%s %d", __FUNCTION__, __LINE__);
-		PG_RETURN_VOID();
+		elog(NOTICE, "array empty");
+		PG_RETURN_NULL();
 	}
 
 	elog(LOG, "%s %d", __FUNCTION__, __LINE__);
