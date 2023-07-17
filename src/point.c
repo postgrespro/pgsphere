@@ -12,7 +12,9 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
+PG_FUNCTION_INFO_V1(spoint_from_xyz)
 PG_FUNCTION_INFO_V1(centroid);
+
 
 bool
 spoint_eq(const SPoint *p1, const SPoint *p2)
@@ -278,9 +280,9 @@ Datum spoint_from_xyz(PG_FUNCTION_ARGS)
 	Vector3D	point_coords;
 	SPoint *p = (SPoint *) palloc(sizeof(SPoint));
 
-	point_coords->x = PG_GETARG_FLOAT8(0);
-	point_coords->y = PG_GETARG_FLOAT8(1);
-	point_coords->z = PG_GETARG_FLOAT8(2);
+	point_coords.x = PG_GETARG_FLOAT8(0);
+	point_coords.y = PG_GETARG_FLOAT8(1);
+	point_coords.z = PG_GETARG_FLOAT8(2);
 	p = spherepoint_from_vector3d(point_coords);
 	spoint_check(p);
 	PG_RETURN_POINTER(p);
