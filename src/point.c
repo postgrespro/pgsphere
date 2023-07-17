@@ -279,7 +279,7 @@ Datum centroid(PG_FUNCTION_ARGS) {
 	Vector3D	v;
 	Vector3D	point_coords = {0,0,0};
 
-	Vector3D	tmp = {-1, 0, 0};
+	Vector3D	tmp = {1, 1, 1};
 	SPoint		*tmp_point = (SPoint *) palloc(sizeof(SPoint));
 	vector3d_spoint(tmp_point, &tmp);
 	elog(LOG, "tmp point %lf %lf", tmp_point->lat, tmp_point->lng);
