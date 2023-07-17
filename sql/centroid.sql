@@ -16,5 +16,5 @@ SELECT spoint_from_xyz(1, 0, 0);
 
 SELECT centroid(ARRAY[
     spoint_from_xyz(1, 0, 0),
-    spoint_from_xyz(-1, 0, 0);
+    spoint_from_xyz(-1, 0, 0)
 ]);
