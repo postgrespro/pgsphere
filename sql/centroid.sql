@@ -8,7 +8,7 @@ SELECT centroid('{}');
 
 CREATE FUNCTION spoint_from_xyz(FLOAT8, FLOAT8, FLOAT8)
    RETURNS spoint
-   AS 'MODULE_PATHNAME', 'spoint_from_xyz'
+   AS 'pg_sphere', 'spoint_fropom_xyz'
    LANGUAGE 'c'
    IMMUTABLE STRICT PARALLEL SAFE;
 
