@@ -153,9 +153,6 @@ spherepoint_from_long_lat(PG_FUNCTION_ARGS)
 	p->lng = PG_GETARG_FLOAT8(0);
 	p->lat = PG_GETARG_FLOAT8(1);
 	spoint_check(p);
-	if(p == NULL){
-		PG_RETURN_NULL();
-	}
 	PG_RETURN_POINTER(p);
 }
 
@@ -292,6 +289,9 @@ Datum spoint_from_xyz(PG_FUNCTION_ARGS)
 	point_coords.y = PG_GETARG_FLOAT8(1);
 	point_coords.z = PG_GETARG_FLOAT8(2);
 	p = spherepoint_from_vector3d(point_coords);
+	if(p == NULL){
+		PG_RETURN_NULL();
+	}
 	spoint_check(p);
 	PG_RETURN_POINTER(p);
 }
