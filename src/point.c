@@ -302,7 +302,6 @@ Datum centroid(PG_FUNCTION_ARGS)
 
 	dots_vector = PG_GETARG_ARRAYTYPE_P(0);
 	num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
-	//elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 	if(num_elements == 0){
 		elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 		elog(NOTICE, "array empty");
@@ -315,20 +314,16 @@ Datum centroid(PG_FUNCTION_ARGS)
 	for (i = 0; i < num_elements; i++) {
 		current_point = array_data[i];
 		spoint_vector3d(&v, &current_point);
-		elog(LOG, "POINT COORDS !!!!!!!!! %d %lf %lf %lf", i, v.x, v.y, v.z);
 		point_coords.x += v.x;
 		point_coords.y += v.y;
 		point_coords.z += v.z;
 	}
 
-	//elog(LOG, "RESULT POINT COORDS !!!!!!!!! %lf %lf %lf", point_coords.x, point_coords.y, point_coords.z);
-	//elog(LOG, "NUM ELEMENTS !!!! %d", num_elements);
 	point_coords.x /= num_elements;
 	point_coords.y /= num_elements;
 	point_coords.z /= num_elements;
 
 	p = spherepoint_from_vector3d(point_coords);
-	//elog(LOG, "SPHERE ===== POINT COORDS !!!!!!!!! %lf %lf", p->lat, p->lng);
 
 	spoint_check(p);
 
