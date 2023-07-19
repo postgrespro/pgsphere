@@ -11,7 +11,7 @@ MODULE_big = pg_sphere
 OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
              src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
              src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
-             src/key.o src/gnomo.o src/epochprop.o
+             src/key.o src/gnomo.o src/epochprop.o src/tests.o
 
 ifneq ($(USE_HEALPIX),0)
 OBJS      += src/healpix.o src/moc.o src/process_moc.o \
@@ -30,7 +30,7 @@ DATA_built  = $(RELEASE_SQL) \
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
-              contains_ops contains_ops_compat bounding_box_gist gnomo epochprop centroid
+              contains_ops contains_ops_compat bounding_box_gist gnomo epochprop centroid tests
 
 ifneq ($(USE_HEALPIX),0)
 REGRESS    += healpix moc mocautocast

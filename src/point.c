@@ -267,12 +267,15 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 	PG_RETURN_BOOL(spoint_eq(p1, p2));
 }
 
-static SPoint * spherepoint_from_vector3d(Vector3D v)
+SPoint * spherepoint_from_vector3d(Vector3D v)
 {
 	elog(LOG, "INPUT VECTOR %lf %lf %lf", v.x, v.y, v.z);
 	SPoint* p = (SPoint *) palloc(sizeof(SPoint));
 	p->lat = asin(v.z / sqrt(pow(v.x, 2) + pow(v.y, 2)  + pow(v.z, 2)));
 	p->lng = atan2(v.y, v.x);
+	if(isnan(p->lat) || isnan(p->lng)){
+		return NULL;
+	}
 	return p;
 }
 
@@ -302,14 +305,12 @@ Datum centroid(PG_FUNCTION_ARGS)
 
 	dots_vector = PG_GETARG_ARRAYTYPE_P(0);
 	num_elements = ArrayGetNItems(ARR_NDIM(dots_vector), ARR_DIMS(dots_vector));
-	//elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 	if(num_elements == 0){
 		elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 		elog(NOTICE, "array empty");
 		PG_RETURN_NULL();
 	}
 
-	elog(LOG, "%s %d", __FUNCTION__, __LINE__);
 	array_data = (SPoint *) ARR_DATA_PTR(dots_vector);
 
 	for (i = 0; i < num_elements; i++) {
@@ -321,16 +322,13 @@ Datum centroid(PG_FUNCTION_ARGS)
 		point_coords.z += v.z;
 	}
 
-	//elog(LOG, "RESULT POINT COORDS !!!!!!!!! %lf %lf %lf", point_coords.x, point_coords.y, point_coords.z);
-	//elog(LOG, "NUM ELEMENTS !!!! %d", num_elements);
 	point_coords.x /= num_elements;
 	point_coords.y /= num_elements;
 	point_coords.z /= num_elements;
 
 	p = spherepoint_from_vector3d(point_coords);
-	//elog(LOG, "SPHERE ===== POINT COORDS !!!!!!!!! %lf %lf", p->lat, p->lng);
-
 	spoint_check(p);
 
 	PG_RETURN_POINTER(p);
 }
+
