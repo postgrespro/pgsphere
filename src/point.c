@@ -290,6 +290,7 @@ Datum spoint_from_xyz(PG_FUNCTION_ARGS)
 	point_coords.z = PG_GETARG_FLOAT8(2);
 	p = spherepoint_from_vector3d(point_coords);
 	if(p == NULL){
+		elog(NOTICE, "can`t transform coords to spoint");
 		PG_RETURN_NULL();
 	}
 	spoint_check(p);
