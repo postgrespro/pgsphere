@@ -90,9 +90,6 @@ Datum	spherepoint_xyz(PG_FUNCTION_ARGS);
  */
 Datum	spherepoint_equal(PG_FUNCTION_ARGS);
 
-/*
- * Return gravity center from array of spherical points
- */
-Datum get_gravity_center(PG_FUNCTION_ARGS);
+Datum	centroid(PG_FUNCTION_ARGS);
 
 #endif
