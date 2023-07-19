@@ -90,10 +90,6 @@ Datum	spherepoint_xyz(PG_FUNCTION_ARGS);
  */
 Datum	spherepoint_equal(PG_FUNCTION_ARGS);
 
-/*
-	Return gravity centre as spoint, input array of spoint
-*/
 Datum	centroid(PG_FUNCTION_ARGS);
 
-SPoint * spherepoint_from_vector3d(Vector3D v);
 #endif
