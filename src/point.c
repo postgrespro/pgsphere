@@ -269,8 +269,9 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 
 static SPoint * spherepoint_from_vector3d(Vector3D v)
 {
+	SPoint *p;
 	elog(LOG, "INPUT VECTOR %lf %lf %lf", v.x, v.y, v.z);
-	SPoint* p = (SPoint *) palloc(sizeof(SPoint));
+	p = (SPoint *) palloc(sizeof(SPoint));
 	p->lat = asin(v.z / sqrt(pow(v.x, 2) + pow(v.y, 2)  + pow(v.z, 2)));
 	p->lng = atan2(v.y, v.x);
 	if(isnan(p->lat) || isnan(p->lng)){

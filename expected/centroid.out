@@ -26,3 +26,19 @@ SELECT spoint_from_xyz(1, 0, 0);
  (0 , 0)
 (1 row)
 
+SELECT spoint_from_xyz(0, 0, 0);
+NOTICE:  can`t transform coords to spoint
+ spoint_from_xyz 
+-----------------
+ 
+(1 row)
+
+SELECT centroid(ARRAY[
+    spoint_from_xyz(1, 0, 0),
+    spoint_from_xyz(-1, 0, 0)
+]);
+       centroid        
+-----------------------
+ (1.5707963267949 , 0)
+(1 row)
+
