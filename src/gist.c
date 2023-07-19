@@ -2361,7 +2361,7 @@ g_spherekey_penalty(PG_FUNCTION_ARGS)
 	}
 	else
 	{
-		
+		PG_RETURN_POINTER(NULL);
 	}
 }
 
