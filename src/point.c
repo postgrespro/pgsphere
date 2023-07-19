@@ -153,7 +153,7 @@ spherepoint_from_long_lat(PG_FUNCTION_ARGS)
 	p->lng = PG_GETARG_FLOAT8(0);
 	p->lat = PG_GETARG_FLOAT8(1);
 	spoint_check(p);
-	PG_RETURN_POINTER(p);
+	p == NULL ? PG_RETURN_NULL() : PG_RETURN_POINTER(p);
 }
 
 static double
