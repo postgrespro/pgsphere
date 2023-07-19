@@ -2359,10 +2359,7 @@ g_spherekey_penalty(PG_FUNCTION_ARGS)
 							* ((uint64) (o->high.coord[2] - o->low.coord[2]) >> 10));
 		PG_RETURN_POINTER(result);
 	}
-	else
-	{
-		PG_RETURN_POINTER(NULL);
-	}
+	PG_RETURN_POINTER(NULL);
 }
 
 /*
