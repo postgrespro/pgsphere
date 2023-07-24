@@ -73,6 +73,11 @@ bool	spoly_segment(SLine *sl, const SPOLY *poly, int32 i);
 bool	spoly_contains_point(const SPOLY *pg, const SPoint *sp);
 
 /*
+ * Returns the n-th point of a spoly.
+*/
+Datum	spoly_get_point(PG_FUNCTION_ARGS);
+
+/*
  * Returns the relationship between a polygon and a line as
  * PGS_LINE_POLY_REL int8 value.
  *
@@ -342,5 +347,10 @@ Datum	spherepoly_add_point(PG_FUNCTION_ARGS);
  * Finalize function for adding spoints to a polygon.
  */
 Datum	spherepoly_add_points_finalize(PG_FUNCTION_ARGS);
+
+/*
+* Returns spoly as array of points
+*/
+Datum	spherepoly_get_array(PG_FUNCTION_ARGS);
 
 #endif

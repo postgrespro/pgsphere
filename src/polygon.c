@@ -1,4 +1,5 @@
 #include "polygon.h"
+#include <catalog/namespace.h>
 
 /* Polygon functions */
 
@@ -9,6 +10,8 @@ PG_FUNCTION_INFO_V1(spherepoly_equal_neg);
 PG_FUNCTION_INFO_V1(spherepoly_circ);
 PG_FUNCTION_INFO_V1(spherepoly_npts);
 PG_FUNCTION_INFO_V1(spherepoly_area);
+PG_FUNCTION_INFO_V1(spherepoly_get_point);
+PG_FUNCTION_INFO_V1(spherepoly_get_array);
 PG_FUNCTION_INFO_V1(spherepoly_cont_point);
 PG_FUNCTION_INFO_V1(spherepoly_cont_point_neg);
 PG_FUNCTION_INFO_V1(spherepoly_cont_point_com);
@@ -552,6 +555,58 @@ spoly_segment(SLine *sl, const SPOLY *poly, int32 i)
 	{
 		return false;
 	}
+}
+
+static bool
+poly_get_point(SPoint *sp, const SPOLY *poly, int32 i)
+{
+	if (i >= 0 && i < poly->npts)
+	{
+		memcpy((void *) sp, (void *) &poly->p[i], sizeof(SPoint));
+		return true;
+	}
+	return false;
+}
+
+Datum
+spherepoly_get_point(PG_FUNCTION_ARGS)
+{
+	int32		i;
+	SPOLY		*poly = PG_GETARG_SPOLY(0);
+	SPoint		*sp = (SPoint *) palloc(sizeof(SPoint));
+
+	i = PG_GETARG_INT32(1);
+	if (poly_get_point(sp, poly, i - 1))
+	{
+		PG_RETURN_POINTER(sp);
+	}
+	pfree(sp);
+	PG_RETURN_NULL();
+}
+
+Datum
+spherepoly_get_array(PG_FUNCTION_ARGS)
+{
+    SPOLY *poly = PG_GETARG_SPOLY(0);
+    Datum *datum_arr = (Datum *) palloc(sizeof(Datum) * poly->npts);
+    ArrayType *res;
+	SPoint *p = (SPoint *) palloc(sizeof(SPoint) * poly->npts);
+    for (size_t i = 0; i < poly->npts; i++)
+    {
+        if (!poly_get_point(&p[i], poly, i))
+        {
+            // Clean up and return NULL
+            for (size_t j = 0; j < i; j++)
+                pfree(DatumGetPointer(datum_arr[j]));
+            pfree(datum_arr);
+            PG_RETURN_NULL();
+        }
+        datum_arr[i] = PointerGetDatum(&p[i]);
+    }
+
+    res = construct_array(datum_arr, poly->npts, TypenameGetTypid("spoint"), sizeof(SPoint), false, 'd');
+
+    PG_RETURN_ARRAYTYPE_P(res);
 }
 
 /*

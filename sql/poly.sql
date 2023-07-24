@@ -593,3 +593,13 @@ SELECT npoints( spoly '{
   (1.5121581120647 , -1.93925472462553e-05),
   (1.51214841579108 , -1.93925472462553e-05)
 }');
+
+SELECT set_sphere_output( 'RAD' );
+
+SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 1 );
+
+SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 2 );
+
+SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 3 );
+
+SELECT  spoly_as_array( spoly '{(0,0),(1,0),(1,1)}' );

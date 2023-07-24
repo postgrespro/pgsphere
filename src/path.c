@@ -1,4 +1,5 @@
 #include "path.h"
+#include <catalog/namespace.h>
 
 /*
  *  Path functions
@@ -50,6 +51,7 @@ PG_FUNCTION_INFO_V1(spheretrans_path);
 PG_FUNCTION_INFO_V1(spheretrans_path_inverse);
 PG_FUNCTION_INFO_V1(spherepath_add_point);
 PG_FUNCTION_INFO_V1(spherepath_add_points_finalize);
+PG_FUNCTION_INFO_V1(spherepath_get_array);
 
 
 /*
@@ -553,6 +555,31 @@ spherepath_get_point(PG_FUNCTION_ARGS)
 	}
 	pfree(sp);
 	PG_RETURN_NULL();
+}
+
+Datum
+spherepath_get_array(PG_FUNCTION_ARGS)
+{
+    SPATH *path = PG_GETARG_SPATH(0);
+    Datum *datum_arr = (Datum *) palloc(sizeof(Datum) * path->npts);
+    ArrayType *res;
+	SPoint *p = (SPoint *) palloc(sizeof(SPoint) * path->npts);
+    for (size_t i = 0; i < path->npts; i++)
+    {
+        if (!spath_get_point(&p[i], path, i))
+        {
+            // Clean up and return NULL
+            for (size_t j = 0; j < i; j++)
+                pfree(DatumGetPointer(datum_arr[j]));
+            pfree(datum_arr);
+            PG_RETURN_NULL();
+        }
+        datum_arr[i] = PointerGetDatum(&p[i]);
+    }
+
+    res = construct_array(datum_arr, path->npts, TypenameGetTypid("spoint"), sizeof(SPoint), false, 'd');
+
+    PG_RETURN_ARRAYTYPE_P(res);
 }
 
 Datum
