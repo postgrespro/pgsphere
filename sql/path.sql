@@ -104,3 +104,9 @@ SELECT set_sphere_output( 'DEG' );
 -- test stored data
 SELECT spoint(p,2) FROM spheretmp6 WHERE id=2;
 
+SELECT set_sphere_output( 'RAD' );
+
+-- get n-th point and array representation path points tests
+SELECT spoint( spath '{(0, 0),(1, 1)}', 1 );
+SELECT spoint( spath '{(0, 0),(1, 1)}', 2 );
+SELECT spath_as_array( spath '{(0, 0),(1, 1)}');

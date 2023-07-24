@@ -1,5 +1,6 @@
 #include "point.h"
 #include "pgs_util.h"
+#include <catalog/namespace.h>
 
 /* This file contains definitions for spherical point functions. */
 
@@ -14,6 +15,17 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
+
+static Oid point_id = InvalidOid;
+
+Oid	get_spoint_type_oid(void)
+{
+	if (point_id == InvalidOid)
+	{
+		point_id = TypenameGetTypid("spoint");
+	}
+	return point_id;
+}
 
 bool
 spoint_eq(const SPoint *p1, const SPoint *p2)

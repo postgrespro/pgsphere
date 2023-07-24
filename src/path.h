@@ -72,6 +72,11 @@ Datum	spherepath_in(PG_FUNCTION_ARGS);
 Datum	spherepath_get_point(PG_FUNCTION_ARGS);
 
 /*
+ * Returns spath as array of points
+ */
+Datum	spherepath_get_array(PG_FUNCTION_ARGS);
+
+/*
  * This function interpolates between points of path. Returns the
  * n-th point of a path where n is a float.
  *

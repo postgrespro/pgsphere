@@ -11,6 +11,24 @@ CREATE FUNCTION npoints(spoly)
 COMMENT ON FUNCTION  npoints(spoly) IS
   'returns number of points of spherical polygon';
 
+CREATE FUNCTION spoint(spoly, int4)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spherepoly_get_point'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spoint(spoly, int4) IS
+  'returns n-th point of spherical polygon';
+
+CREATE FUNCTION spoly_as_array(spoly)
+   RETURNS spoint[]
+   AS 'MODULE_PATHNAME', 'spherepoly_get_array'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spoly_as_array(spoly) IS
+  'returns spoly as array of points';
+
 CREATE FUNCTION area(spoly)
    RETURNS FLOAT8
    AS 'MODULE_PATHNAME', 'spherepoly_area'
