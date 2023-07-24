@@ -1,2 +1,0 @@
--- complain if this script is run via psql
-\echo Use "CREATE EXTENSION pg_sphere" to load this file. \quit
