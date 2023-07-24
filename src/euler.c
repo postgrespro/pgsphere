@@ -203,15 +203,14 @@ spheretrans_phi(PG_FUNCTION_ARGS)
 {
 	SEuler	   *se = (SEuler *) PG_GETARG_POINTER(0);
 
-	PG_RETURN_POINTER(&se->phi);
+	PG_RETURN_FLOAT8(se->phi);
 }
 
 Datum
 spheretrans_theta(PG_FUNCTION_ARGS)
 {
 	SEuler	   *se = (SEuler *) PG_GETARG_POINTER(0);
-
-	PG_RETURN_POINTER(&se->theta);
+	PG_RETURN_FLOAT8(se->theta);
 }
 
 Datum
@@ -219,7 +218,7 @@ spheretrans_psi(PG_FUNCTION_ARGS)
 {
 	SEuler	   *se = (SEuler *) PG_GETARG_POINTER(0);
 
-	PG_RETURN_POINTER(&se->psi);
+	PG_RETURN_FLOAT8(se->psi);
 }
 
 Datum
