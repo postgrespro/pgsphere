@@ -240,3 +240,12 @@ SELECT '( 0h 2m 30s , 90d 0m 0s)'::spoint<->'( 12h 2m 30s , 90d 0m 0s)'::spoint;
 
 SELECT '( 0h 2m 30s , -90d 0m 0s)'::spoint<->'( 12h 2m 30s , -90d 0m 0s)'::spoint;
 
+-- spoint_dwithin function ----------
+
+SELECT a, b, radius, a <-> b AS "<->", spoint_dwithin(a, b, radius)
+FROM (VALUES
+      ('(0, 0)'::spoint, '(0, 0)'::spoint, 0),
+      ('(0, 0)', '(0, 1)', 1),
+      ('(0, 0)', '(0.1, 0.1)', 0.14),
+      ('(0, 0)', '(0.1, 0.1)', 0.15)
+     ) sub (a, b, radius);

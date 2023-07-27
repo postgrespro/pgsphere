@@ -1,0 +1,124 @@
+-- test selectivity estimator functions
+create table spoint10k (star spoint);
+insert into spoint10k select spoint(i, i*i) from generate_series(1, 10000) g(i);
+create index on spoint10k using gist (star);
+analyze spoint10k;
+-- "explain analyze" wrapper that removes 'cost=...' since it varies across architectures
+-- (we can't use "costs off" since that also removes the estimated row count)
+create or replace function explain(query text, do_analyze text default 'true') returns setof text language plpgsql as $$
+declare
+  line text;
+begin
+  for line in execute format('explain (analyze %s, timing off, summary off) %s', do_analyze, query) loop
+    return next regexp_replace(line, 'cost=\S+ ', '');
+  end loop;
+  return;
+end;
+$$;
+-- <@ operator selectivity
+select explain('select * from spoint10k where star <@ scircle(spoint(1,1), 1)');
+                                            explain                                            
+-----------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=2298 width=16) (actual rows=3009 loops=1)
+   Recheck Cond: (star <@ '<(1 , 1) , 1>'::scircle)
+   Rows Removed by Index Recheck: 1560
+   Heap Blocks: exact=55
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=2298 width=0) (actual rows=4569 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where star <@ scircle(spoint(1,1), .1)');
+                                          explain                                          
+-------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=25 width=16) (actual rows=29 loops=1)
+   Recheck Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+   Rows Removed by Index Recheck: 19
+   Heap Blocks: exact=32
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where star <@ scircle(spoint(1,1), .01)');
+                                           explain                                           
+---------------------------------------------------------------------------------------------
+ Index Scan using spoint10k_star_idx on spoint10k  (rows=1 width=16) (actual rows=1 loops=1)
+   Index Cond: (star <@ '<(1 , 1) , 0.01>'::scircle)
+(2 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), 1) @> star');
+                                            explain                                            
+-----------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=2298 width=16) (actual rows=3009 loops=1)
+   Recheck Cond: ('<(1 , 1) , 1>'::scircle @> star)
+   Rows Removed by Index Recheck: 1560
+   Heap Blocks: exact=55
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=2298 width=0) (actual rows=4569 loops=1)
+         Index Cond: ('<(1 , 1) , 1>'::scircle @> star)
+(6 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), .1) @> star');
+                                          explain                                          
+-------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=25 width=16) (actual rows=29 loops=1)
+   Recheck Cond: ('<(1 , 1) , 0.1>'::scircle @> star)
+   Rows Removed by Index Recheck: 19
+   Heap Blocks: exact=32
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+         Index Cond: ('<(1 , 1) , 0.1>'::scircle @> star)
+(6 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), .01) @> star');
+                                           explain                                           
+---------------------------------------------------------------------------------------------
+ Index Scan using spoint10k_star_idx on spoint10k  (rows=1 width=16) (actual rows=1 loops=1)
+   Index Cond: ('<(1 , 1) , 0.01>'::scircle @> star)
+(2 rows)
+
+select explain('select * from spoint10k where star !<@ scircle(spoint(1,1), 1)');
+                                explain                                 
+------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=7702 width=16) (actual rows=6991 loops=1)
+   Filter: (star !<@ '<(1 , 1) , 1>'::scircle)
+   Rows Removed by Filter: 3009
+(3 rows)
+
+select explain('select * from spoint10k where star !<@ scircle(spoint(1,1), .1)');
+                                explain                                 
+------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=9975 width=16) (actual rows=9971 loops=1)
+   Filter: (star !<@ '<(1 , 1) , 0.1>'::scircle)
+   Rows Removed by Filter: 29
+(3 rows)
+
+select explain('select * from spoint10k where star !<@ scircle(spoint(1,1), .01)');
+                                 explain                                 
+-------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=10000 width=16) (actual rows=9999 loops=1)
+   Filter: (star !<@ '<(1 , 1) , 0.01>'::scircle)
+   Rows Removed by Filter: 1
+(3 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), 1) !@> star');
+                                explain                                 
+------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=7702 width=16) (actual rows=6991 loops=1)
+   Filter: ('<(1 , 1) , 1>'::scircle !@> star)
+   Rows Removed by Filter: 3009
+(3 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), .1) !@> star');
+                                explain                                 
+------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=9975 width=16) (actual rows=9971 loops=1)
+   Filter: ('<(1 , 1) , 0.1>'::scircle !@> star)
+   Rows Removed by Filter: 29
+(3 rows)
+
+select explain('select * from spoint10k where scircle(spoint(1,1), .01) !@> star');
+                                 explain                                 
+-------------------------------------------------------------------------
+ Seq Scan on spoint10k  (rows=10000 width=16) (actual rows=9999 loops=1)
+   Filter: ('<(1 , 1) , 0.01>'::scircle !@> star)
+   Rows Removed by Filter: 1
+(3 rows)
+

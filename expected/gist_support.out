@@ -1,0 +1,155 @@
+-- spoint_dwithin function selectivity
+set jit = off; -- suppress extra planning output
+select explain('select * from spoint10k where spoint_dwithin(star, spoint(1,1), 1)');
+                                            explain                                            
+-----------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=2298 width=16) (actual rows=3009 loops=1)
+   Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '1'::double precision)
+   Rows Removed by Filter: 1560
+   Heap Blocks: exact=55
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=2298 width=0) (actual rows=4569 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where spoint_dwithin(star, spoint(1,1), .1)');
+                                          explain                                          
+-------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=25 width=16) (actual rows=29 loops=1)
+   Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '0.1'::double precision)
+   Rows Removed by Filter: 19
+   Heap Blocks: exact=32
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where spoint_dwithin(star, spoint(1,1), .01)');
+                                           explain                                           
+---------------------------------------------------------------------------------------------
+ Index Scan using spoint10k_star_idx on spoint10k  (rows=1 width=16) (actual rows=1 loops=1)
+   Index Cond: (star <@ '<(1 , 1) , 0.01>'::scircle)
+(2 rows)
+
+select explain('select * from spoint10k where spoint_dwithin(spoint(1,1), star, 1)');
+                                            explain                                            
+-----------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=2298 width=16) (actual rows=3009 loops=1)
+   Filter: spoint_dwithin('(1 , 1)'::spoint, star, '1'::double precision)
+   Rows Removed by Filter: 1560
+   Heap Blocks: exact=55
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=2298 width=0) (actual rows=4569 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where spoint_dwithin(spoint(1,1), star, .1)');
+                                          explain                                          
+-------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on spoint10k  (rows=25 width=16) (actual rows=29 loops=1)
+   Filter: spoint_dwithin('(1 , 1)'::spoint, star, '0.1'::double precision)
+   Rows Removed by Filter: 19
+   Heap Blocks: exact=32
+   ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+         Index Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+(6 rows)
+
+select explain('select * from spoint10k where spoint_dwithin(spoint(1,1), star, .01)');
+                                           explain                                           
+---------------------------------------------------------------------------------------------
+ Index Scan using spoint10k_star_idx on spoint10k  (rows=1 width=16) (actual rows=1 loops=1)
+   Index Cond: (star <@ '<(1 , 1) , 0.01>'::scircle)
+(2 rows)
+
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, 1)', do_analyze := 'false');
+                                        explain                                        
+---------------------------------------------------------------------------------------
+ Nested Loop  (rows=22984885 width=32)
+   ->  Seq Scan on spoint10k a  (rows=10000 width=16)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=2298 width=16)
+         Index Cond: (star OPERATOR(public.<@) scircle(a.star, '1'::double precision))
+(4 rows)
+
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, .1)');
+                                                  explain                                                  
+-----------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=249792 width=32) (actual rows=505342 loops=1)
+   ->  Seq Scan on spoint10k a  (rows=10000 width=16) (actual rows=10000 loops=1)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=25 width=16) (actual rows=51 loops=10000)
+         Index Cond: (star OPERATOR(public.<@) scircle(a.star, '0.1'::double precision))
+         Rows Removed by Index Recheck: 31
+(5 rows)
+
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, .01)');
+                                                 explain                                                 
+---------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=2500 width=32) (actual rows=17614 loops=1)
+   ->  Seq Scan on spoint10k a  (rows=10000 width=16) (actual rows=10000 loops=1)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=1 width=16) (actual rows=2 loops=10000)
+         Index Cond: (star OPERATOR(public.<@) scircle(a.star, '0.01'::double precision))
+         Rows Removed by Index Recheck: 1
+(5 rows)
+
+-- spoint_dwithin is symmetric in the first two arguments
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, .01)
+  where spoint_dwithin(a.star, spoint(1,1), .1)');
+                                               explain                                                
+------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=6 width=32) (actual rows=33 loops=1)
+   ->  Bitmap Heap Scan on spoint10k a  (rows=25 width=16) (actual rows=29 loops=1)
+         Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '0.1'::double precision)
+         Rows Removed by Filter: 19
+         Heap Blocks: exact=32
+         ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+               Index Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=1 width=16) (actual rows=1 loops=29)
+         Index Cond: (star OPERATOR(public.<@) scircle(a.star, '0.01'::double precision))
+         Rows Removed by Index Recheck: 0
+(10 rows)
+
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(b.star, a.star, .01)
+  where spoint_dwithin(a.star, spoint(1,1), .1)');
+                                               explain                                                
+------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=6 width=32) (actual rows=33 loops=1)
+   ->  Bitmap Heap Scan on spoint10k a  (rows=25 width=16) (actual rows=29 loops=1)
+         Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '0.1'::double precision)
+         Rows Removed by Filter: 19
+         Heap Blocks: exact=32
+         ->  Bitmap Index Scan on spoint10k_star_idx  (rows=25 width=0) (actual rows=48 loops=1)
+               Index Cond: (star <@ '<(1 , 1) , 0.1>'::scircle)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=1 width=16) (actual rows=1 loops=29)
+         Index Cond: (star OPERATOR(public.<@) scircle(a.star, '0.01'::double precision))
+         Rows Removed by Index Recheck: 0
+(10 rows)
+
+-- both sides indexable, check if the planner figures out the better choice
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, .01)
+  where spoint_dwithin(a.star, spoint(1,1), .1) and spoint_dwithin(b.star, spoint(1,1), .05)');
+                                                               explain                                                               
+-------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=1 width=32) (actual rows=16 loops=1)
+   ->  Bitmap Heap Scan on spoint10k b  (rows=6 width=16) (actual rows=12 loops=1)
+         Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '0.05'::double precision)
+         Rows Removed by Filter: 4
+         Heap Blocks: exact=14
+         ->  Bitmap Index Scan on spoint10k_star_idx  (rows=6 width=0) (actual rows=16 loops=1)
+               Index Cond: (star <@ '<(1 , 1) , 0.05>'::scircle)
+   ->  Index Scan using spoint10k_star_idx on spoint10k a  (rows=1 width=16) (actual rows=1 loops=12)
+         Index Cond: ((star OPERATOR(public.<@) scircle(b.star, '0.01'::double precision)) AND (star <@ '<(1 , 1) , 0.1>'::scircle))
+         Rows Removed by Index Recheck: 0
+(10 rows)
+
+select explain('select * from spoint10k a join spoint10k b on spoint_dwithin(a.star, b.star, .01)
+  where spoint_dwithin(a.star, spoint(1,1), .05) and spoint_dwithin(b.star, spoint(1,1), .1)');
+                                                               explain                                                               
+-------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (rows=1 width=32) (actual rows=16 loops=1)
+   ->  Bitmap Heap Scan on spoint10k a  (rows=6 width=16) (actual rows=12 loops=1)
+         Filter: spoint_dwithin(star, '(1 , 1)'::spoint, '0.05'::double precision)
+         Rows Removed by Filter: 4
+         Heap Blocks: exact=14
+         ->  Bitmap Index Scan on spoint10k_star_idx  (rows=6 width=0) (actual rows=16 loops=1)
+               Index Cond: (star <@ '<(1 , 1) , 0.05>'::scircle)
+   ->  Index Scan using spoint10k_star_idx on spoint10k b  (rows=1 width=16) (actual rows=1 loops=12)
+         Index Cond: ((star OPERATOR(public.<@) scircle(a.star, '0.01'::double precision)) AND (star <@ '<(1 , 1) , 0.1>'::scircle))
+         Rows Removed by Index Recheck: 0
+(10 rows)
+

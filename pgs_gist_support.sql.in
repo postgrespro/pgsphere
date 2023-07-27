@@ -1,0 +1,12 @@
+-- PG12+ has support functions
+
+CREATE FUNCTION spoint_dwithin_supportfn (internal)
+        RETURNS internal
+        AS 'MODULE_PATHNAME', 'spherepoint_dwithin_supportfn'
+        LANGUAGE 'c';
+
+COMMENT ON FUNCTION spoint_dwithin_supportfn(internal) IS
+   'support function for spoint_dwithin';
+
+ALTER FUNCTION spoint_dwithin(spoint, spoint, float8)
+   SUPPORT spoint_dwithin_supportfn;

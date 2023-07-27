@@ -149,6 +149,41 @@
             </example>
           </sect2>
 
+          <sect2 id="func.spoint_dwithin">
+            <title>
+              Point-within-distance function
+            </title>
+            <para>
+              The function
+            </para>
+            <funcsynopsis>
+              <funcprototype>
+                <funcdef><function>spoint_dwithin</function></funcdef>
+                  <paramdef>spoint <parameter>p1</parameter></paramdef>
+                  <paramdef>spoint <parameter>p2</parameter></paramdef>
+                  <paramdef>float8 <parameter>radius</parameter></paramdef>
+              </funcprototype>
+            </funcsynopsis>
+            <para>
+              returns a boolean value that signifies whether the points
+              <parameter>p1</parameter> and <parameter>p2</parameter>
+              lie within distance <parameter>radius</parameter> (in radians) of each other, i.e.
+              it computes the boolean expression <literal>p1 &lt;-> p2 &lt;= radius</literal>.
+              On PostgreSQL 12 and later, the function has <literal>GiST</literal>
+              support and the PostgreSQL optimizer will transform it to either
+              <literal>p1 &lt;@ scircle(p2, radius)</literal> or
+              <literal>p2 &lt;@ scircle(p1, radius)</literal> where appropriate.
+            </para>
+            <example>
+              <title>
+                Efficiently join two tables of points with some fuzziness permitted
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT * FROM stars1 JOIN stars2 WHERE spoint_dwithin(stars1.s, stars2.s, 1e-5);]]>
+              </programlisting>
+            </example>
+          </sect2>
+
         </sect1>
 
         <sect1 id="funcs.strans">
