@@ -358,4 +358,9 @@ Datum	spherepoly_add_points_finalize(PG_FUNCTION_ARGS);
  */
 Datum	spherepoly_get_array(PG_FUNCTION_ARGS);
 
+/*
+ * Checks whether a polygon is convex
+ */
+Datum	spherepoly_is_convex(PG_FUNCTION_ARGS);
+
 #endif

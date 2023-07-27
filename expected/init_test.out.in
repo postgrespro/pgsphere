@@ -24,12 +24,12 @@ psql:pg_sphere.test.sql:158: NOTICE:  argument type spath is only a shell
 psql:pg_sphere.test.sql:177: NOTICE:  type "sbox" is not yet defined
 DETAIL:  Creating a shell type definition.
 psql:pg_sphere.test.sql:184: NOTICE:  argument type sbox is only a shell
-psql:pg_sphere.test.sql:8644: NOTICE:  type "spherekey" is not yet defined
+psql:pg_sphere.test.sql:8658: NOTICE:  type "spherekey" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:8651: NOTICE:  argument type spherekey is only a shell
-psql:pg_sphere.test.sql:8665: NOTICE:  type "pointkey" is not yet defined
+psql:pg_sphere.test.sql:8665: NOTICE:  argument type spherekey is only a shell
+psql:pg_sphere.test.sql:8679: NOTICE:  type "pointkey" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:8672: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8678: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8684: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8690: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8686: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8692: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8698: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8704: NOTICE:  argument type pointkey is only a shell
