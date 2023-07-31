@@ -1,3 +1,14 @@
+\set ECHO none
+SELECT CASE
+  WHEN setting::int/10000 IN (10, 11, 12) THEN '10, 11, 12' -- moc100
+  WHEN setting::int/10000 IN (13, 14, 15) THEN '13, 14, 15' -- moc100_2
+  ELSE '16+'
+END AS outputfile_for_majorversion
+FROM pg_settings WHERE name = 'server_version_num';
+
+SELECT (regexp_matches(version(), '..-bit'))[1] outputfile_for_arch_bits;
+\set ECHO queries
+
 CREATE TABLE moc100 (
 	ivoid text,
 	coverage smoc,

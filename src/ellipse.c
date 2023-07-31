@@ -426,7 +426,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 				}
 				else if (diff[0] <= diff[2] && diff[2] <= diff[1])
 				{
-					if (Abs(sp[0].lng - elng) < Abs(sp[2].lng - elng))
+					if (fabs(sp[0].lng - elng) < fabs(sp[2].lng - elng))
 					{
 						memcpy((void *) &sp[2], (void *) &sp[1], sizeof(SPoint));
 					}
@@ -446,7 +446,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 				}
 				else if (diff[2] <= diff[0] && diff[0] <= diff[1])
 				{
-					if (Abs(sp[0].lng - elng) < Abs(sp[2].lng - elng))
+					if (fabs(sp[0].lng - elng) < fabs(sp[2].lng - elng))
 					{
 						memcpy((void *) &sp[2], (void *) &sp[1], sizeof(SPoint));
 					}
