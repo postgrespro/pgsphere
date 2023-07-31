@@ -5,6 +5,14 @@ SET extra_float_digits = 0;
 
 -- Input/Output ---
 
+SELECT scircle_deg(spoint(10,10), 90);
+
+SELECT scircle_deg(spoint(10,10), 91);
+
+SELECT scircle_deg(spoint(0,0), 0);
+
+SELECT scircle_deg(spoint(10,10), -1);
+
 SELECT set_sphere_output( 'RAD' );
 
 SELECT '< (1h 2m 30s , +1d 2m 30s), 1.0d >'::scircle;

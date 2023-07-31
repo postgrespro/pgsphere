@@ -32,6 +32,14 @@ CREATE FUNCTION scircle(spoint, float8)
 COMMENT ON FUNCTION scircle(spoint, float8) IS
   'spherical circle with spherical point as center and float8 as radius in radians';
 
+CREATE FUNCTION scircle_deg(spoint, float8)
+   RETURNS scircle
+   AS 'MODULE_PATHNAME' , 'spherecircle_by_center_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION scircle_deg(spoint, float8) IS
+  'spherical circle with spherical point as center and float8 as radius in degrees';
 
 --
 -- Casting point as circle

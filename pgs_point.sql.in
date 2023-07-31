@@ -15,6 +15,12 @@ CREATE FUNCTION spoint(FLOAT8, FLOAT8)
    LANGUAGE 'c'
    IMMUTABLE STRICT PARALLEL SAFE;
 
+CREATE FUNCTION spoint_deg(FLOAT8, FLOAT8)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spherepoint_from_long_lat_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
 CREATE FUNCTION set_sphere_output_precision(INT4)
    RETURNS CSTRING
    AS 'MODULE_PATHNAME', 'set_sphere_output_precision'
@@ -27,6 +33,9 @@ CREATE FUNCTION set_sphere_output(CSTRING)
 
 COMMENT ON FUNCTION spoint(FLOAT8, FLOAT8) IS
   'returns a spherical point from longitude (arg1), latitude (arg2)';
+
+COMMENT ON FUNCTION spoint_deg(FLOAT8, FLOAT8) IS
+  'returns a spherical point from longitude (arg1, in degrees), latitude (arg2, in degrees)';
 
 CREATE FUNCTION long(spoint)
    RETURNS FLOAT8

@@ -133,6 +133,11 @@ Datum	spherepoint_to_circle(PG_FUNCTION_ARGS);
 Datum	spherecircle_by_center(PG_FUNCTION_ARGS);
 
 /*
+ * Creates a circle from center and radius(in degrees).
+ */
+Datum	spherecircle_by_center_deg(PG_FUNCTION_ARGS);
+
+/*
  * Calculates the area of a circle in square radians.
  */
 Datum	spherecircle_area(PG_FUNCTION_ARGS);

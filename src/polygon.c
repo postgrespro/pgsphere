@@ -1,9 +1,11 @@
 #include "polygon.h"
+#include "point.h"
 
 /* Polygon functions */
 
 
 PG_FUNCTION_INFO_V1(spherepoly_in);
+PG_FUNCTION_INFO_V1(spherepoly_deg);
 PG_FUNCTION_INFO_V1(spherepoly_equal);
 PG_FUNCTION_INFO_V1(spherepoly_equal_neg);
 PG_FUNCTION_INFO_V1(spherepoly_circ);
@@ -848,6 +850,51 @@ spherepoly_in(PG_FUNCTION_ARGS)
 	reset_buffer();
 
 	PG_RETURN_POINTER(poly);
+}
+
+Datum
+spherepoly_deg(PG_FUNCTION_ARGS)
+{
+	int			i,
+				np;
+	ArrayType  *float_vector = PG_GETARG_ARRAYTYPE_P(0);
+	float8	   *array_data;
+	SPoint	   *points;
+
+	np = ArrayGetNItems(ARR_NDIM(float_vector), ARR_DIMS(float_vector));
+
+	if (np < 6 || np % 2 != 0)
+	{
+		elog(
+			 ERROR,
+			 "spherepoly_deg: invalid number of arguments (must be even and >= 6)"
+			);
+		PG_RETURN_NULL();
+	}
+
+	np /= 2;
+
+	points = (SPoint *) palloc(np * sizeof(SPoint));
+	if (points == NULL)
+	{
+		elog(
+			 ERROR,
+			 "spherepoly_deg: failed for allocate memory for points array"
+			);
+		PG_RETURN_NULL();
+	}
+
+	array_data = (float8 *) ARR_DATA_PTR(float_vector);
+
+	for (i = 0; i < np; i++)
+	{
+		create_spherepoint_from_long_lat(
+										 &points[i],
+										 deg_to_rad(array_data[2 * i]),
+										 deg_to_rad(array_data[2 * i + 1])
+			);
+	}
+	PG_RETURN_POINTER(spherepoly_from_array(points, np));
 }
 
 Datum

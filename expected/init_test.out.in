@@ -18,18 +18,18 @@ psql:pg_sphere.test.sql:108: NOTICE:  argument type sellipse is only a shell
 psql:pg_sphere.test.sql:126: NOTICE:  type "spoly" is not yet defined
 DETAIL:  Creating a shell type definition.
 psql:pg_sphere.test.sql:133: NOTICE:  argument type spoly is only a shell
-psql:pg_sphere.test.sql:152: NOTICE:  type "spath" is not yet defined
+psql:pg_sphere.test.sql:151: NOTICE:  type "spath" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:159: NOTICE:  argument type spath is only a shell
-psql:pg_sphere.test.sql:178: NOTICE:  type "sbox" is not yet defined
+psql:pg_sphere.test.sql:158: NOTICE:  argument type spath is only a shell
+psql:pg_sphere.test.sql:177: NOTICE:  type "sbox" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:185: NOTICE:  argument type sbox is only a shell
-psql:pg_sphere.test.sql:8540: NOTICE:  type "spherekey" is not yet defined
+psql:pg_sphere.test.sql:184: NOTICE:  argument type sbox is only a shell
+psql:pg_sphere.test.sql:8568: NOTICE:  type "spherekey" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:8547: NOTICE:  argument type spherekey is only a shell
-psql:pg_sphere.test.sql:8561: NOTICE:  type "pointkey" is not yet defined
+psql:pg_sphere.test.sql:8575: NOTICE:  argument type spherekey is only a shell
+psql:pg_sphere.test.sql:8589: NOTICE:  type "pointkey" is not yet defined
 DETAIL:  Creating a shell type definition.
-psql:pg_sphere.test.sql:8568: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8574: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8580: NOTICE:  argument type pointkey is only a shell
-psql:pg_sphere.test.sql:8586: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8596: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8602: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8608: NOTICE:  argument type pointkey is only a shell
+psql:pg_sphere.test.sql:8614: NOTICE:  argument type pointkey is only a shell

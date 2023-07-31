@@ -132,7 +132,6 @@ CREATE FUNCTION spoly_out(spoly)
    LANGUAGE 'c'
    IMMUTABLE STRICT;
 
-
 CREATE TYPE spoly (
    internallength = VARIABLE,
    input   = spoly_in,

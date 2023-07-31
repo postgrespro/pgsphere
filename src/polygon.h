@@ -82,6 +82,11 @@ bool	spoly_contains_point(const SPOLY *pg, const SPoint *sp);
 int8	poly_line_pos(const SPOLY *poly, const SLine *line);
 
 /*
+ * Input of a spherical from sequence of pairconsecutive numbers(lng, lat).
+ */
+Datum spherepoly_deg(PG_FUNCTION_ARGS);
+
+/*
  * Input of a spherical polygon.
  */
 Datum	spherepoly_in(PG_FUNCTION_ARGS);

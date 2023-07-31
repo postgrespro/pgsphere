@@ -318,11 +318,33 @@ SELECT spoly '{(10d,0d),(10d,1d),(15d,0d)}';
  {(10d , 0d),(10d , 1d),(15d , 0d)}
 (1 row)
 
+SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+            spoly_deg            
+---------------------------------
+ {(1d , 2d),(3d , 4d),(5d , 6d)}
+(1 row)
+
+SELECT spoly_deg(ARRAY[10.0, 0.0, 10.0, 1.0, 15.0, 0.0]);
+             spoly_deg              
+------------------------------------
+ {(10d , 0d),(10d , 1d),(15d , 0d)}
+(1 row)
+
 -- incorrect input -----
 SELECT spoly '{(10d,0d),(10d,1d)}';
 ERROR:  spherepoly_in: more than two points needed
 LINE 1: SELECT spoly '{(10d,0d),(10d,1d)}';
                      ^
+SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0]);
+ERROR:  spherepoly_deg: invalid number of arguments (must be even and >= 6)
+SELECT spoly_deg(ARRAY[]::float8[]);
+ERROR:  spherepoly_deg: invalid number of arguments (must be even and >= 6)
+SELECT spoly_deg(NULL::float8[]);
+ spoly_deg 
+-----------
+ 
+(1 row)
+
 --- self-crossing input -----
 SELECT spoly '{(0d,0d),(10d,10d),(0d,10d),(10d,0d)}';
 ERROR:  spherepoly_from_array: a line segment overlaps or polygon too large

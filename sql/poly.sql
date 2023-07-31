@@ -78,9 +78,19 @@ SELECT spoly '{(359d,0d),(359d,1d),(4d,0d)}';
 
 SELECT spoly '{(10d,0d),(10d,1d),(15d,0d)}';
 
+SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+
+SELECT spoly_deg(ARRAY[10.0, 0.0, 10.0, 1.0, 15.0, 0.0]);
+
 -- incorrect input -----
 
 SELECT spoly '{(10d,0d),(10d,1d)}';
+
+SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0]);
+
+SELECT spoly_deg(ARRAY[]::float8[]);
+
+SELECT spoly_deg(NULL::float8[]);
 
 --- self-crossing input -----
 

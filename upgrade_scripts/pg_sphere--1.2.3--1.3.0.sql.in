@@ -1,0 +1,29 @@
+CREATE FUNCTION scircle_deg(spoint, float8)
+   RETURNS scircle
+   AS 'MODULE_PATHNAME' , 'spherecircle_by_center_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION scircle_deg(spoint, float8) IS
+  'spherical circle with spherical point as center and float8 as radius in degrees';
+
+CREATE FUNCTION spoint_deg(FLOAT8, FLOAT8)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spherepoint_from_long_lat_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_deg(FLOAT8, FLOAT8) IS
+  'returns a spherical point from longitude (arg1, in degrees), latitude (arg2, in degrees)';
+
+CREATE FUNCTION spoly_deg(float8[])
+   RETURNS spoly
+   AS 'MODULE_PATHNAME', 'spherepoly_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+COMMENT ON FUNCTION spoly_deg(float8[]) IS
+   '   Create spoly from array of points.
+   Two consecutive numbers among those present
+   refer to the same occurrence and cover its
+   latitude and longitude, respectively.';

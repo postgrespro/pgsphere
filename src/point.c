@@ -1,9 +1,11 @@
 #include "point.h"
+#include "pgs_util.h"
 
 /* This file contains definitions for spherical point functions. */
 
 PG_FUNCTION_INFO_V1(spherepoint_in);
 PG_FUNCTION_INFO_V1(spherepoint_from_long_lat);
+PG_FUNCTION_INFO_V1(spherepoint_from_long_lat_deg);
 PG_FUNCTION_INFO_V1(spherepoint_distance);
 PG_FUNCTION_INFO_V1(spherepoint_long);
 PG_FUNCTION_INFO_V1(spherepoint_lat);
@@ -141,16 +143,36 @@ spherepoint_in(PG_FUNCTION_ARGS)
 	PG_RETURN_POINTER(sp);
 }
 
+void create_spherepoint_from_long_lat(SPoint *p, float8 lng, float8 lat)
+{
+	p->lat = lat;
+	p->lng = lng;
+	spoint_check(p);
+}
 
 Datum
 spherepoint_from_long_lat(PG_FUNCTION_ARGS)
 {
 	SPoint *p = (SPoint *) palloc(sizeof(SPoint));
 
-	p->lng = PG_GETARG_FLOAT8(0);
-	p->lat = PG_GETARG_FLOAT8(1);
-	spoint_check(p);
+	const float8 lng = PG_GETARG_FLOAT8(0);
+	const float8 lat = PG_GETARG_FLOAT8(1);
+	create_spherepoint_from_long_lat(p, lng, lat);
 	PG_RETURN_POINTER(p);
+}
+
+Datum
+spherepoint_from_long_lat_deg(PG_FUNCTION_ARGS)
+{
+	Datum res;
+	const float8 lng = deg_to_rad(PG_GETARG_FLOAT8(0));
+	const float8 lat = deg_to_rad(PG_GETARG_FLOAT8(1));
+	res = DirectFunctionCall2(
+		spherepoint_from_long_lat,
+		Float8GetDatum(lng),
+		Float8GetDatum(lat)
+		);
+	PG_RETURN_DATUM(res);
 }
 
 static double
