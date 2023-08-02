@@ -1,4 +1,5 @@
 #include "types.h"
+#include <stdarg.h>
 
 #if !defined(PGSPHERE_VERSION)
 #error "PGSPHERE_VERSION macro is not set"
@@ -384,7 +385,7 @@ spheretrans_out(PG_FUNCTION_ARGS)
 {
 	SEuler	   *se = (SEuler *) PG_GETARG_POINTER(0);
 	char	   *buffer = (char *) palloc(255);
-	char		buf[100];
+	char	   *buf;
 	char		etype[4];
 	SPoint		val[3];
 	unsigned char i,
@@ -412,21 +413,26 @@ spheretrans_out(PG_FUNCTION_ARGS)
 		{
 
 			case OUTPUT_DEG:
-				sprintf(&buf[0],
+				buf = psprintf(
 						"%.*gd",
-						sphere_output_precision, RADIANS * val[i].lng);
+						sphere_output_precision, RADIANS * val[i].lng
+						);
 				break;
 
 			case OUTPUT_HMS:
 			case OUTPUT_DMS:
 				rad_to_dms(val[i].lng, &rdeg, &rmin, &rsec);
-				sprintf(&buf[0],
+				buf = psprintf(
 						"%2ud %2um %.*gs",
-						rdeg, rmin, sphere_output_precision, rsec);
+						rdeg, rmin, sphere_output_precision, rsec
+						);
 				break;
 
 			default:
-				sprintf(&buf[0], "%.*g", sphere_output_precision, val[i].lng);
+				buf = psprintf(
+						"%.*g",
+						sphere_output_precision, val[i].lng
+						);
 				break;
 		}
 		strcat(&buf[0], ", ");
@@ -461,7 +467,7 @@ spheretrans_out(PG_FUNCTION_ARGS)
 	}
 	etype[3] = '\0';
 	strcat(buffer, etype);
-
+	pfree(buf);
 	PG_RETURN_CSTRING(buffer);
 }
 
