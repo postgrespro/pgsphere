@@ -5,6 +5,22 @@
 (1 row)
 
 -- Input/Output ---
+SELECT scircle_deg(spoint(10,10), 90);
+               scircle_deg                
+------------------------------------------
+ <(0.57522204 , -0.57522204) , 1.5707963>
+(1 row)
+
+SELECT scircle_deg(spoint(10,10), 91);
+ERROR:  radius must not be greater than 90 degrees or less than 0
+SELECT scircle_deg(spoint(0,0), 0);
+  scircle_deg  
+---------------
+ <(0 , 0) , 0>
+(1 row)
+
+SELECT scircle_deg(spoint(10,10), -1);
+ERROR:  radius must not be greater than 90 degrees or less than 0
 SELECT set_sphere_output( 'RAD' );
  set_sphere_output 
 -------------------

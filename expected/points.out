@@ -239,6 +239,24 @@ SELECT spoint(0.0109083078249646 , -0.000727220521664407);
  (0.625d , -0.041666667d)
 (1 row)
 
+SELECT spoint_deg(57.2958, 57.2958);
+      spoint_deg       
+-----------------------
+ (57.2958d , 57.2958d)
+(1 row)
+
+SELECT spoint_deg(0, 0);
+ spoint_deg 
+------------
+ (0d , 0d)
+(1 row)
+
+SELECT spoint_deg(114.5916, 0);
+    spoint_deg    
+------------------
+ (114.5916d , 0d)
+(1 row)
+
 SELECT set_sphere_output( 'RAD' );
  set_sphere_output 
 -------------------

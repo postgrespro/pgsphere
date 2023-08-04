@@ -46,9 +46,19 @@ void	spoint_vector3d(Vector3D *v, const SPoint *p);
 Datum	spherepoint_in(PG_FUNCTION_ARGS);
 
 /*
+ * Create spherical point from lat, lng and store to first argument(pointer)
+ */
+void	create_spherepoint_from_long_lat(SPoint *p, float8 lng, float8 lat);
+
+/*
  * Create a spherical point from longitude and latitude both in radians.
  */
 Datum	spherepoint_from_long_lat(PG_FUNCTION_ARGS);
+
+/*
+ * Create a spherical point from longitude and latitude both in degrees.
+ */
+Datum	spherepoint_from_long_lat_deg(PG_FUNCTION_ARGS);
 
 /*
  * Calculate the distance between two spherical points.

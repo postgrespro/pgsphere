@@ -26,4 +26,9 @@ conv_theta(double x)
 	return y;
 }
 
+static inline double deg_to_rad(double in)
+{
+	return in * PI / 180;
+}
+
 #endif

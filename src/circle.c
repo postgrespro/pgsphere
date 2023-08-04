@@ -1,4 +1,5 @@
 #include "circle.h"
+#include "pgs_util.h"
 
 /* Circle functions */
 
@@ -22,6 +23,7 @@ PG_FUNCTION_INFO_V1(spherecircle_center);
 PG_FUNCTION_INFO_V1(spherecircle_radius);
 PG_FUNCTION_INFO_V1(spherepoint_to_circle);
 PG_FUNCTION_INFO_V1(spherecircle_by_center);
+PG_FUNCTION_INFO_V1(spherecircle_by_center_deg);
 PG_FUNCTION_INFO_V1(spherecircle_area);
 PG_FUNCTION_INFO_V1(spherecircle_circ);
 PG_FUNCTION_INFO_V1(spheretrans_circle);
@@ -79,7 +81,7 @@ spherecircle_in(PG_FUNCTION_ARGS)
 		{
 			pfree(c);
 			c = NULL;
-			elog(ERROR, "spherecircle_in: radius must be not greater than 90 degrees");
+			elog(ERROR, "spherecircle_in: radius must not be greater than 90 degrees or less than 0");
 		}
 		else if (FPeq(c->radius, PIH))
 		{
@@ -361,13 +363,27 @@ spherecircle_by_center(PG_FUNCTION_ARGS)
 
 	if (FPgt(rad, PIH) || FPlt(rad, 0.0))
 	{
-		elog(ERROR, "radius must be not greater than 90 degrees or less than 0");
+		elog(ERROR, "radius must not be greater than 90 degrees or less than 0");
 		PG_RETURN_NULL();
 	}
 	c = (SCIRCLE *) palloc(sizeof(SCIRCLE));
 	memcpy((void *) &c->center, (void *) p, sizeof(SPoint));
 	c->radius = rad;
 	PG_RETURN_POINTER(c);
+}
+
+Datum
+spherecircle_by_center_deg(PG_FUNCTION_ARGS)
+{
+	Datum res;
+	SPoint	   *p = (SPoint *) PG_GETARG_POINTER(0);
+	const float8 rad = deg_to_rad(PG_GETARG_FLOAT8(1));
+	res = DirectFunctionCall2(
+		spherecircle_by_center,
+		PointerGetDatum(p),
+		Float8GetDatum(rad)
+		);
+	PG_RETURN_DATUM(res);
 }
 
 Datum
