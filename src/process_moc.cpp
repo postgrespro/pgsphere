@@ -621,31 +621,31 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 		for (size_t k = 1; k < depth; ++k)
 		{
 			rnode_iter z(moc_data, m.layout[k].level_end);
-			rnode_iter n(moc_data, m.layout[k + 1].level_end);
+			rnode_iter b(moc_data, m.layout[k + 1].level_end);
 			rnode_iter last_z;
 			rnode_iter z_end = rend;
 			for ( ; z != z_end; ++z)
 			{
 				if (z.page_ready())
 				{
-					n.set(make_node(z.index(), (*z).start));
-					last_rend = n;
-					rend = ++n;
+					b.set(make_node(z.index(), (*z).start));
+					last_rend = b;
+					rend = ++b;
 				}
 				last_z = z;
 			}
 			if (!last_z.page_ready())
 			{
-				n.set(make_node(last_z.index(), (*last_z).start));
-				last_rend = n;
-				rend = ++n;
+				b.set(make_node(last_z.index(), (*last_z).start));
+				last_rend = b;
+				rend = ++b;
 			}
 		}
 
 		// The level-end section must be put relative to the actual beginning
 		// of the root node to prevent confusing redunancies.
 		int32 tree_begin = last_rend.index() - depth * MOC_INDEX_ALIGN;
-		
+
 		// fill out level-end section
 		int32* level_ends = data_as<int32>(detoasted_offset(moc, tree_begin));
 		moc->depth	= depth;
