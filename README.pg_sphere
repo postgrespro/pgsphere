@@ -13,7 +13,21 @@ This is an R-Tree implementation using GiST for spherical objects like
 spherical points and spherical circles with useful functions and operators.
 
 NOTICE:
-     This version will work only with PostgreSQL version 9.6 and above.
+     This version will work only with PostgreSQL version 10 and above.
+
+VERSIONING:
+
+Stable versions are marked with tags containing version numbers in the GitHub
+repository at https://github.com/postgrespro/pgsphere/. Each stable version
+contains upgrade scripts for updating an existing installation to the latest
+version using the ALTER EXTENSION UPDATE TO command.
+
+The master branch is intended for development purposes and may contain
+intermediate changes. The current version in the master branch and its
+functionality are subject to change.
+
+Note: The master branch should not be used in production because the upgrade
+scripts and the current version number may be changed.
 
 INSTALLATION:
 
