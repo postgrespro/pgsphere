@@ -96,6 +96,12 @@ SELECT spoly_deg(NULL::float8[]);
 
 SELECT spoly '{(0d,0d),(10d,10d),(0d,10d),(10d,0d)}';
 
+--- degenerate polygons -----
+
+SELECT spoly '{(0d,1d),(0d,2d),(0d,3d)}';
+
+SELECT spoly '{(1d,0d),(2d,0d),(3d,0d)}';
+
 --- functions
 
 SELECT npoints( spoly '{(10d,0d),(10d,1d),(15d,0d)}');
