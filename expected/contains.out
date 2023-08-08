@@ -1,0 +1,233 @@
+/*
+This set of tests is designed to verify the compliance of the contain operation with the DE-9IM model
+*/
+-- sline vs spoint
+-- the point lies far beyond the line
+select 'sline ~ spoint', 'f' as expected, sline(spoint'(270d,10d)', spoint'(270d,30d)') ~ spoint'(0d, 50d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ sline ~ spoint | f        | f
+(1 row)
+
+-- the point lies in the boundary of line
+select 'sline ~ spoint', 'f' as expected, sline(spoint'(270d,10d)', spoint'(270d,30d)') ~ spoint'(270d, 10d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ sline ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the interior of line
+select 'sline ~ spoint', 't' as expected, sline(spoint'(270d,10d)', spoint'(270d,30d)') ~ spoint'(270d, 20d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ sline ~ spoint | t        | t
+(1 row)
+
+-- the point and line that degenerated into the point coincide
+select 'sline ~ spoint', 't' as expected, sline(spoint'(270d,10d)', spoint'(270d,10d)') ~ spoint'(270d, 10d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ sline ~ spoint | t        | t
+(1 row)
+
+-- the point and line that degenerated into the point do not coincide
+select 'sline ~ spoint', 'f' as expected, sline(spoint'(270d,10d)', spoint'(270d,10d)') ~ spoint'(270d, 20d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ sline ~ spoint | f        | f
+(1 row)
+
+-- spoint vs scircle
+-- the point lies far beyond the circle
+select 'spoint @ scircle', 'f' as expected, spoint'(0d,0d)' @ scircle'<(0d,90d),50d>' as actual;
+     ?column?     | expected | actual 
+------------------+----------+--------
+ spoint @ scircle | f        | f
+(1 row)
+
+-- the point lies in the boundary of circle
+select 'spoint @ scircle', 'f' as expected, spoint'(0d,80d)' @ scircle'<(0d,90d),10d>' as actual;
+     ?column?     | expected | actual 
+------------------+----------+--------
+ spoint @ scircle | f        | t
+(1 row)
+
+-- the point lies in the interior of circle
+select 'spoint @ scircle', 't' as expected, spoint'(0d,80d)' @ scircle'<(0d,90d),50d>' as actual;
+     ?column?     | expected | actual 
+------------------+----------+--------
+ spoint @ scircle | t        | t
+(1 row)
+
+-- the point and circle that degenerated into the point coincide
+select 'spoint @ scircle', 't' as expected, spoint'(0d,90d)' @ scircle'<(0d,90d),0d>' as actual;
+     ?column?     | expected | actual 
+------------------+----------+--------
+ spoint @ scircle | t        | t
+(1 row)
+
+-- the point and circle that degenerated into the point do not coincide
+select 'spoint @ scircle', 'f' as expected, spoint'(0d,50d)' @ scircle'<(0d,90d),0d>' as actual;
+     ?column?     | expected | actual 
+------------------+----------+--------
+ spoint @ scircle | f        | f
+(1 row)
+
+-- sellipse vs spoint
+-- the point lies far beyond the ellipse
+select 'sellipse ~ spoint', 'f' as expected, sellipse'<{ 30d , 20d }, (0d , 90d) , 0d>' ~ spoint'(0d, 0d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | f        | f
+(1 row)
+
+-- the point lies in the boundary of ellipse
+select 'sellipse ~ spoint', 'f' as expected, sellipse'<{ 30d , 20d }, (0d , 90d) , 0d>' ~ spoint'(0d, 70d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the interior of ellipse
+select 'sellipse ~ spoint', 't' as expected, sellipse'<{ 30d , 20d }, (0d , 90d) , 0d>' ~ spoint'(90d, 65d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | t        | t
+(1 row)
+
+-- the point lies in the boundary of ellipse that degenerated into the line
+select 'sellipse ~ spoint', 't' as expected, sellipse'<{ 10d , 0d }, (0d , 0d) , 0d>' ~ spoint'(10d, 0d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | t        | t
+(1 row)
+
+-- the point lies in the interior of ellipse that degenerated into the line
+select 'sellipse ~ spoint', 't' as expected, sellipse'<{ 10d , 0d }, (0d , 0d) , 0d>' ~ spoint'(0d, 0d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | t        | t
+(1 row)
+
+-- the point and ellipse that degenerated into the point coincide
+select 'sellipse ~ spoint', 't' as expected, sellipse'<{ 0d , 0d }, (0d , 90d) , 0d>' ~ spoint'(0d, 90d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | t        | t
+(1 row)
+
+-- the point and ellipse that degenerated into the point do not coincide
+select 'sellipse ~ spoint', 'f' as expected, sellipse'<{ 0d , 0d }, (0d , 90d) , 0d>' ~ spoint'(0d, 91d)' as actual;
+     ?column?      | expected | actual 
+-------------------+----------+--------
+ sellipse ~ spoint | f        | f
+(1 row)
+
+-- spath vs spoint
+-- the point lies far beyond the opened path
+select 'spath ~ spoint', 'f' as expected, spath'{ (-10d, 0d),(10d,0d),(45d,15d),(80d,30d) }' ~ spoint'(0d, 90d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spath ~ spoint | f        | f
+(1 row)
+
+-- the point lies in the boundary of opened path
+select 'spath ~ spoint', 'f' as expected, spath'{ (-10d, 0d),(10d,0d),(45d,15d),(80d,30d) }' ~ spoint'(-10d, 0d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spath ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the boundary of unsimple opened path
+select 'spath ~ spoint', 'f' as expected, spath'{ (-10d, 0d),(10d,0d),(45d,15d),(80d,30d),(-5d, 0d) }' ~ spoint'(-5d, 0d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spath ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the interior of opened path
+select 'spath ~ spoint', 't' as expected, spath'{ (-10d, 0d),(10d,0d),(45d,15d),(80d,30d) }' ~ spoint'(9d, 0d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spath ~ spoint | t        | t
+(1 row)
+
+-- the point lies in the interior of closed path
+select 'spath ~ spoint', 't' as expected, spath'{ (-10d, 0d),(10d,0d),(45d,15d),(80d,30d),(-10d, 0d) }' ~ spoint'(-10d, 0d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spath ~ spoint | t        | t
+(1 row)
+
+-- spoly vs spoint
+-- the point lies far beyond the polygon
+select 'spoly ~ spoint', 'f' as expected, spoly'{ (0d,0d), (10d,0d), (20d,20d) }' ~ spoint'(0d, 90d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spoly ~ spoint | f        | f
+(1 row)
+
+-- the point lies in the boundary of polygon
+select 'spoly ~ spoint', 'f' as expected, spoly'{ (0d,0d), (10d,0d), (20d,20d) }' ~ spoint'(5d, 0d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spoly ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the boundary of polygon
+select 'spoly ~ spoint', 'f' as expected, spoly'{ (0d,0d), (10d,0d), (20d,20d) }' ~ spoint'(20d, 20d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spoly ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the interior of polygon
+select 'spoly ~ spoint', 't' as expected, spoly'{ (0d,0d), (10d,0d), (20d,20d) }' ~ spoint'(5d, 5d)' as actual;
+    ?column?    | expected | actual 
+----------------+----------+--------
+ spoly ~ spoint | t        | t
+(1 row)
+
+-- sbox vs spoint
+--  the point lies far beyond the box
+select 'sbox ~ spoint', 'f' as expected, sbox'( (0d,0d), (20d,10d) )' ~ spoint'(0d, 90d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | f        | f
+(1 row)
+
+-- the point lies in the boundary of box
+select 'sbox ~ spoint', 'f' as expected, sbox'( (0d,0d), (20d,10d) )' ~ spoint'(0d, 5d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the boundary of box
+select 'sbox ~ spoint', 'f' as expected, sbox'( (0d,0d), (20d,10d) )' ~ spoint'(0d, 0d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | f        | t
+(1 row)
+
+-- the point lies in the interior of box
+select 'sbox ~ spoint', 't' as expected, sbox'( (0d,0d), (20d,10d) )' ~ spoint'(5d, 5d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | t        | t
+(1 row)
+
+-- the point and box that degenerated into the point coincide
+select 'sbox ~ spoint', 't' as expected, sbox'( (0d,0d), (0d,0d) )' ~ spoint'(0d, 0d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | t        | t
+(1 row)
+
+-- the point and box that degenerated into the point do not coincide
+select 'sbox ~ spoint', 'f' as expected, sbox'( (0d,0d), (0d,0d) )' ~ spoint'(0d, 1d)' as actual;
+   ?column?    | expected | actual 
+---------------+----------+--------
+ sbox ~ spoint | f        | f
+(1 row)
+
