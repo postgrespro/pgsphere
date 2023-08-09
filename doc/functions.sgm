@@ -463,7 +463,7 @@
               Positions at a path
             </title>
             <para>
-              <application>pgSphere</application> provides two functions to
+              <application>pgSphere</application> provides three functions to
               get points at a path.
             </para>
             <funcsynopsis>
@@ -476,6 +476,10 @@
                 <funcdef><function>spoint</function></funcdef>
                   <paramdef>spath  <parameter>path</parameter></paramdef>
                   <paramdef>float8 <parameter>f</parameter></paramdef>
+              </funcprototype>
+              <funcprototype>
+                <funcdef><function>spath_as_array</function></funcdef>
+                  <paramdef>spath  <parameter>path</parameter></paramdef>
               </funcprototype>
             </funcsynopsis>
             <para>
@@ -495,6 +499,36 @@
 <![CDATA[  spoint]]>
 <![CDATA[------------]]>
 <![CDATA[ (15d , 0d)]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+            <example>
+              <title>
+                Get i-th point of a path
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT spoint( spath '{(0, 0),(1, 1)}', 1 );]]>
+<![CDATA[   spoint  ]]>
+<![CDATA[------------]]>
+<![CDATA[  (0 , 0) ]]>
+<![CDATA[(1 row)]]>
+<![CDATA[]]>
+<![CDATA[sql> SELECT spoint( spath '{(0, 0),(1, 1)}', 2 );]]>
+<![CDATA[   spoint  ]]>
+<![CDATA[------------]]>
+<![CDATA[  (1 , 1) ]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+            <example>
+              <title>
+                Get array representation of points
+              </title>
+              <programlisting>
+<![CDATA[sql> SELECT spath_as_array( spath '{(0, 0),(1, 1)}');]]>
+<![CDATA[    spath_as_array     ]]>
+<![CDATA[-----------------------]]>
+<![CDATA[ {"(0 , 0)","(1 , 1)"}]]>
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
@@ -532,7 +566,58 @@
             </example>
 
           </sect3>
-            
+          <sect3 id="funcs.spoly.pos">
+            <title>
+              Positions at a polygon
+            </title>
+            <para>
+              <application>pgSphere</application> provides two functions to
+              get points at a path.
+            </para>
+            <funcsynopsis>
+              <funcprototype>
+                <funcdef><function>spoint</function></funcdef>
+                  <paramdef>spoly <parameter>path</parameter></paramdef>
+                  <paramdef>int4 <parameter>i</parameter></paramdef>
+              </funcprototype>
+              <funcprototype>
+                <funcdef><function>spoly_as_array</function></funcdef>
+                  <paramdef>spath  <parameter>path</parameter></paramdef>
+              </funcprototype>
+              </funcsynopsis>
+              <example>
+              <title>Get by index</title>
+              <programlisting>
+<![CDATA[sql> SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 1 );]]>
+<![CDATA[ spoint  ]]>
+<![CDATA[---------]]>
+<![CDATA[ (0 , 0)]]>
+<![CDATA[ (1 row)]]>
+<![CDATA[]]>
+<![CDATA[sql> SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 2 );]]>
+<![CDATA[ spoint  ]]>
+<![CDATA[---------]]>
+<![CDATA[ (1 , 0)]]>
+<![CDATA[ (1 row)]]>
+<![CDATA[]]>
+<![CDATA[sql> SELECT  spoint( spoly '{(0,0),(1,0),(1,1)}', 3 );]]>
+<![CDATA[ spoint  ]]>
+<![CDATA[---------]]>
+<![CDATA[ (1 , 1)]]>
+<![CDATA[ (1 row)]]>
+              </programlisting>
+            </example>
+                          <example>
+              <title>Represent points as array</title>
+              <programlisting>
+<![CDATA[sql> SELECT  spoly_as_array( spoly '{(0,0),(1,0),(1,1)}' );]]>
+<![CDATA[         spoly_as_array          ]]>
+<![CDATA[---------------------------------]]>
+<![CDATA[ {"(0 , 0)","(1 , 0)","(1 , 1)"}]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+            </sect3>
         </sect2>
 
         <sect2 id="funcs.sbox">

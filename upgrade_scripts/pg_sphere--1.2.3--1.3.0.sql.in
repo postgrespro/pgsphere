@@ -27,3 +27,30 @@ COMMENT ON FUNCTION spoly_deg(float8[]) IS
    Two consecutive numbers among those present
    refer to the same occurrence and cover its
    latitude and longitude, respectively.';
+
+CREATE FUNCTION spath_as_array(spath)
+   RETURNS spoint[]
+   AS 'MODULE_PATHNAME', 'spherepath_get_array'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spath_as_array(spath) IS
+  'returns spath as array of points';
+
+CREATE FUNCTION spoint(spoly, int4)
+   RETURNS spoint
+   AS 'MODULE_PATHNAME', 'spherepoly_get_point'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spoint(spoly, int4) IS
+  'returns n-th point of spherical polygon';
+
+CREATE FUNCTION spoly_as_array(spoly)
+   RETURNS spoint[]
+   AS 'MODULE_PATHNAME', 'spherepoly_get_array'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spoly_as_array(spoly) IS
+  'returns spoly as array of points';

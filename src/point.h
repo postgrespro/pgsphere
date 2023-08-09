@@ -15,6 +15,8 @@ typedef struct
 	float8	lat;	/* latitude value in radians */
 } SPoint;
 
+Oid	get_spoint_type_oid(void);
+
 /*
  * Calculate the distance between two spherical points in radians.
  */

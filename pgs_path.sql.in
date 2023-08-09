@@ -34,6 +34,14 @@ CREATE FUNCTION spoint(spath, float8)
 COMMENT ON FUNCTION  spoint(spath, float8) IS
   'returns n-th point of spherical path using linear interpolation';
 
+CREATE FUNCTION spath_as_array(spath)
+   RETURNS spoint[]
+   AS 'MODULE_PATHNAME', 'spherepath_get_array'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION  spath_as_array(spath) IS
+  'returns spath as array of points';
 
 -- ******************************
 --
