@@ -1,3 +1,14 @@
+\set ECHO none
+ outputfile_for_majorversion 
+-----------------------------
+ 10, 11, 12
+(1 row)
+
+ outputfile_for_arch_bits 
+--------------------------
+ 64-bit
+(1 row)
+
 CREATE TABLE moc100 (
 	ivoid text,
 	coverage smoc,

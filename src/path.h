@@ -36,7 +36,7 @@ typedef struct
 
 
 #define PG_GETARG_SPATH(arg) \
-	( (SPATH *) DatumGetPointer(PG_DETOAST_DATUM(PG_GETARG_DATUM(arg))) )
+	( (SPATH *) (PG_DETOAST_DATUM(PG_GETARG_DATUM(arg))) )
 
 /*
  * Checks whether two paths are equal.
