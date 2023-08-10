@@ -31,7 +31,7 @@
 <article lang="en">
     <articleinfo>
         <title>
-            pgSphere 1.1.5
+            pgSphere 1.3.0
         </title>
         <author>
             <surname>pgSphere development team</surname>
@@ -50,8 +50,9 @@
                 <application>PostgreSQL</application>.
             </para>
             <para>
-              The project is hosted at <ulink url="http://pgfoundry.org/projects/pgsphere/"><citetitle>pgfoundry.org</citetitle></ulink>
-              and <ulink url="https://github.com/akorotkov/pgsphere"><citetitle>https://github.com/akorotkov/pgsphere</citetitle></ulink>
+              The project is hosted at <ulink url="https://github.com/postgrespro/pgsphere/">
+                <citetitle>https://github.com/postgrespro/pgsphere</citetitle>
+              </ulink>
             </para>
             <para>    
                 This document
