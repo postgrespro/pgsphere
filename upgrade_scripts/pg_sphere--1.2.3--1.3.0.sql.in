@@ -54,3 +54,42 @@ CREATE FUNCTION spoly_as_array(spoly)
 
 COMMENT ON FUNCTION  spoly_as_array(spoly) IS
   'returns spoly as array of points';
+
+CREATE FUNCTION dist(sline, spoint)
+   RETURNS FLOAT8
+   AS 'MODULE_PATHNAME', 'sphereline_point_distance'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+COMMENT ON FUNCTION dist(sline, spoint) IS
+  'returns the distance between spherical line and spherical point';
+
+CREATE OPERATOR  <-> (
+   LEFTARG    = sline,
+   RIGHTARG   = spoint,
+   COMMUTATOR = '<->',
+   PROCEDURE  = dist
+);
+
+COMMENT ON OPERATOR <-> (sline, spoint) IS
+  'returns the distance between spherical line and spherical point';
+
+CREATE FUNCTION dist(spoint, sline)
+   RETURNS FLOAT8
+   AS 'MODULE_PATHNAME', 'sphereline_point_distance_com'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT;
+
+COMMENT ON FUNCTION dist(spoint, sline) IS
+  'returns the distance between spherical line and spherical point';
+
+
+CREATE OPERATOR  <-> (
+   LEFTARG    = spoint,
+   RIGHTARG   = sline,
+   COMMUTATOR = '<->',
+   PROCEDURE  = dist
+);
+
+COMMENT ON OPERATOR <-> (spoint, sline) IS
+  'returns the distance between spherical line and spherical point';

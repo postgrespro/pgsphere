@@ -1,2 +1,2 @@
-psql:pg_sphere.test.sql:9207: NOTICE:  return type smoc is only a shell
-psql:pg_sphere.test.sql:9213: NOTICE:  argument type smoc is only a shell
+psql:pg_sphere.test.sql:9257: NOTICE:  return type smoc is only a shell
+psql:pg_sphere.test.sql:9263: NOTICE:  argument type smoc is only a shell

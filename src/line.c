@@ -33,6 +33,8 @@ PG_FUNCTION_INFO_V1(sphereline_overlap_neg);
 PG_FUNCTION_INFO_V1(spheretrans_from_line);
 PG_FUNCTION_INFO_V1(spheretrans_line);
 PG_FUNCTION_INFO_V1(spheretrans_line_inverse);
+PG_FUNCTION_INFO_V1(sphereline_point_distance);
+PG_FUNCTION_INFO_V1(sphereline_point_distance_com);
 
 /*
  * Swaps the beginning and ending of the line.
@@ -642,6 +644,59 @@ sline_center(SPoint *c, const SLine *sl)
 	euler_spoint_trans(c, &p, &se);
 }
 
+float8 sline_point_dist(const SLine *sl, const SPoint *p)
+{
+	Vector3D	v_beg;
+	Vector3D	v_end;
+	Vector3D	v;
+	Vector3D	normal1;
+	Vector3D	normal2;
+	Vector3D	line;
+	Vector3D	first_p;
+	float8		norma;
+	SPoint		fp;
+	SPoint		sp;
+	float8		fpdist;
+	float8		spdist;
+
+	if (spoint_at_sline(p, sl))
+	{
+		return 0.0;
+	}
+
+	sline_vector_begin(&v_beg, sl);
+	sline_vector_end(&v_end, sl);
+	spoint_vector3d(&v, p);
+
+	/* normal1 to the plane passing through the line and the center of the sphere */
+	vector3d_cross(&normal1, &v_beg, &v_end);
+	if (vector3d_eq(&normal1, &v))
+	{
+		return PIH;
+	}
+
+	/* normal2 to the plane perpendicular to the given line. */
+	vector3d_cross(&normal2, &normal1, &v);
+	vector3d_cross(&line, &normal2, &normal1);
+	norma = sqrt(line.x * line.x + line.y * line.y + line.z * line.z);
+
+	first_p.x = line.x / norma;
+	first_p.y = line.y / norma;
+	first_p.z = line.z / norma;
+	vector3d_spoint(&fp, &first_p);
+
+	if (spoint_at_sline(&fp, sl))
+	{
+		return spoint_dist(&fp, p);
+	}
+
+	vector3d_spoint(&fp, &v_beg);
+	vector3d_spoint(&sp, &v_end);
+	fpdist = spoint_dist(p, &fp);
+	spdist = spoint_dist(p, &sp);
+	return Min(fpdist, spdist);
+}
+
 Datum
 sphereline_in(PG_FUNCTION_ARGS)
 {
@@ -1051,3 +1106,20 @@ spheretrans_from_line(PG_FUNCTION_ARGS)
 	sphereline_to_euler(e, l);
 	PG_RETURN_POINTER(e);
 }
+
+Datum
+sphereline_point_distance(PG_FUNCTION_ARGS)
+{
+	const SLine		*s = (SLine *) PG_GETARG_POINTER(0);
+	const SPoint	*p = (SPoint *) PG_GETARG_POINTER(1);
+	PG_RETURN_FLOAT8(sline_point_dist(s, p));
+}
+
+Datum
+sphereline_point_distance_com(PG_FUNCTION_ARGS)
+{
+	const SPoint	*p = (SPoint *) PG_GETARG_POINTER(0);
+	const SLine		*s = (SLine *) PG_GETARG_POINTER(1);
+	PG_RETURN_FLOAT8(sline_point_dist(s, p));
+}
+
