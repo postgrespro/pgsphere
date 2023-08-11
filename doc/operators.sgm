@@ -331,7 +331,8 @@
                 a non-boolean operator returning the distance between two
                 objects in radians. Currently,
                 <application>pgSphere</application> supports only distances
-                between points, circles, and between point and circle. If the
+                between points, circles, between point and circle, and
+                between point and line. If the
                 objects are overlapping, the distance operator returns zero
                 (0.0).
             </para>
@@ -343,6 +344,17 @@
 <![CDATA[ dist]]>
 <![CDATA[------]]>
 <![CDATA[ 16]]>
+<![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+            <example>
+              <title>Distance between point and line</title>
+              <programlisting>
+<![CDATA[sql> SELECT 180 * (sline '( 0d, 0d, 0d, XYZ ), 40d ' <-> spoint '( 0d, 90d )')]]>
+<![CDATA[        / pi() AS dist ;]]>
+<![CDATA[ dist]]>
+<![CDATA[------]]>
+<![CDATA[ 90]]>
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>

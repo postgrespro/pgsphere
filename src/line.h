@@ -130,6 +130,11 @@ void	euler_sline_trans(SLine *out, const SLine *in, const SEuler *se);
 void	sline_center(SPoint *c, const SLine *sl);
 
 /*
+ * Calculates the distance between a line 'sl' and a point 'p'
+ */
+float8	sline_point_dist(const SLine *sl, const SPoint *p);
+
+/*
  * The input function for spherical line.
  */
 Datum	sphereline_in(PG_FUNCTION_ARGS);
@@ -289,5 +294,15 @@ Datum	spheretrans_line(PG_FUNCTION_ARGS);
  * Transforms a line with an inverse Euler transformation.
  */
 Datum	spheretrans_line_inverse(PG_FUNCTION_ARGS);
+
+/*
+ * Returns the distance between a line and a point.
+ */
+Datum	sphereline_point_distance(PG_FUNCTION_ARGS);
+
+/*
+ * Returns the distance between a point and a line.
+ */
+Datum	sphereline_point_distance_com(PG_FUNCTION_ARGS);
 
 #endif

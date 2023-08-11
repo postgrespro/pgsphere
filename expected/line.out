@@ -4,6 +4,7 @@
  SET 8
 (1 row)
 
+SET extra_float_digits TO -3;
 -- checking spherical line operators
 SELECT sline ( spoint '(0, 90d)', spoint '(0, -89d)' )   =
        sline ( spoint '(0, 90d)', spoint '(0, -89d)' )  ;
@@ -134,4 +135,35 @@ SELECT sline ( spoint '(0,   0d)', spoint '(0.000001d, 0d)' )   #
  f
 (1 row)
 
-       
+-- checking the distance between a line and a point
+SELECT sline '( 90d, 0d, 0d, XYZ ), 40d ' <-> spoint '( 0d, 90d )';
+    ?column?    
+----------------
+ 0.872664625997
+(1 row)
+
+SELECT sline '( 90d, 0d, 0d, XYZ ), 40d ' <-> spoint '( 0d, 90d )'   =
+       spoint '( 0d, 90d )' <-> sline '( 90d, 0d, 0d, XYZ ), 40d ';
+ ?column? 
+----------
+ t
+(1 row)
+
+SELECT sline '( 0d, 0d, 0d, XYZ ), 0d ' <-> spoint '( 0d, 90d )';
+   ?column?    
+---------------
+ 1.57079632679
+(1 row)
+
+SELECT sline '( 0d, 0d, 0d, XYZ ), 0d ' <-> spoint '( 0d, 0d )';
+ ?column? 
+----------
+        0
+(1 row)
+
+SELECT sline '( 0d, 0d, 0d, XYZ ), 30d ' <-> spoint '( 0d, 30d )';
+    ?column?    
+----------------
+ 0.523598775598
+(1 row)
+
