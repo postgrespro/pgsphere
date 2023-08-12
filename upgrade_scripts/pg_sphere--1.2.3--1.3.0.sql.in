@@ -93,3 +93,12 @@ CREATE OPERATOR  <-> (
 
 COMMENT ON OPERATOR <-> (spoint, sline) IS
   'returns the distance between spherical line and spherical point';
+
+CREATE FUNCTION spoly_is_convex(spoly)
+   RETURNS BOOL
+   AS 'MODULE_PATHNAME', 'spherepoly_is_convex'
+   LANGUAGE 'c'
+   IMMUTABLE PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly_is_convex(spoly) IS
+  'true if spherical polygon is convex';

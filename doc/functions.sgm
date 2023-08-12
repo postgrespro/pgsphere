@@ -618,6 +618,33 @@
               </programlisting>
             </example>
             </sect3>
+
+          <sect3 id="funcs.spoly.isconvex">
+            <title>
+              Spoly is convex
+            </title>
+            <para>
+              Returns true if the specified spherical polygon is convex.
+              Returns false otherwise.
+            </para>
+            <funcsynopsis>
+              <funcprototype>
+                <funcdef><function>spoly_is_convex</function></funcdef>
+                  <paramdef>spoly <parameter>polygon</parameter></paramdef>
+              </funcprototype>
+            </funcsynopsis>
+            <example>
+              <title>Check if polygon is convex</title>
+              <programlisting>
+<![CDATA[sql> SELECT spoly_is_convex( spoly '{(0,0),(1,0),(1,1),(1,2)}' );]]>
+<![CDATA[ spoly_is_convex]]>
+<![CDATA[-----------------]]>
+<![CDATA[ t]]>
+<![CDATA[ (1 row)]]>
+              </programlisting>
+            </example>
+          </sect3>
+
         </sect2>
 
         <sect2 id="funcs.sbox">

@@ -973,3 +973,17 @@ CREATE AGGREGATE spoly (
     stype     = spoly,
     finalfunc = spoly_add_points_fin_aggr
 );
+
+
+--
+-- polygon is convex
+--
+
+CREATE FUNCTION spoly_is_convex(spoly)
+   RETURNS BOOL
+   AS 'MODULE_PATHNAME', 'spherepoly_is_convex'
+   LANGUAGE 'c'
+   IMMUTABLE PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly_is_convex(spoly) IS
+  'true if spherical polygon is convex';
