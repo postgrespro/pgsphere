@@ -21,7 +21,11 @@
  * Default is radians.
  */
 static unsigned char sphere_output = OUTPUT_RAD;
-static short int sphere_output_precision = DBL_DIG;
+
+/*
+ * Defines the precision of floating point values in output.
+ */
+static int sphere_output_precision = DBL_DIG;
 
 PG_FUNCTION_INFO_V1(set_sphere_output);
 PG_FUNCTION_INFO_V1(spherepoint_out);
