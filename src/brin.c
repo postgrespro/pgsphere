@@ -53,7 +53,7 @@ spoint_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 		PG_RETURN_BOOL(true);
 	}
 
-	spherepoint_gen_key(&spointkey, newval);
+	spherepoint_gen_key(spointkey, newval);
 
 	/*
 	 * If spherekey pointer is NULL, we consider the spoint entry as 'empty'.
@@ -61,6 +61,7 @@ spoint_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	 * The OpClass support empty entries: we need to set the "contains empty"
 	 * flag in the element (unless already set).
 	 */
+	/*
 	if (spointkey == NULL)
 	{
 		if (!DatumGetBool(column->bv_values[INCLUSION_CONTAINS_EMPTY]))
@@ -71,6 +72,7 @@ spoint_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 
 		PG_RETURN_BOOL(false);
 	}
+	*/
 
 	/* if the recorded value is null, we just need to store the spherekey */
 	if (column->bv_allnulls)
@@ -121,7 +123,7 @@ sbox_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 		PG_RETURN_BOOL(true);
 	}
 
-	spherebox_gen_key(&sboxkey, newval);
+	spherebox_gen_key(sboxkey, newval);
 
 	/*
 	 * If spherekey pointer is NULL, we consider the spoint entry as 'empty'.
@@ -129,6 +131,7 @@ sbox_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	 * The OpClass support empty entries: we need to set the "contains empty"
 	 * flag in the element (unless already set).
 	 */
+	/*
 	if (sboxkey == NULL)
 	{
 		if (!DatumGetBool(column->bv_values[INCLUSION_CONTAINS_EMPTY]))
@@ -139,6 +142,7 @@ sbox_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 
 		PG_RETURN_BOOL(false);
 	}
+	*/
 
 	/* if the recorded value is null, we just need to store the spherekey */
 	if (column->bv_allnulls)
@@ -178,7 +182,7 @@ spoint_overlaps_spherekey(PG_FUNCTION_ARGS)
 	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherepoint_gen_key(&k1, p1);
+	spherepoint_gen_key(k1, p1);
 	if (spherekey_interleave(k1, k2) == SCKEY_OVERLAP)
 	{
 		PG_RETURN_BOOL(true);
@@ -194,7 +198,7 @@ spoint_contains_spherekey(PG_FUNCTION_ARGS)
 	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherepoint_gen_key(&k1, p1);
+	spherepoint_gen_key(k1, p1);
 	if (spherekey_interleave(k1, k2) == SCKEY_IN)
 	{
 		PG_RETURN_BOOL(true);
@@ -210,7 +214,7 @@ spoint_iscontained_spherekey(PG_FUNCTION_ARGS)
 	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherepoint_gen_key(&k1, p1);
+	spherepoint_gen_key(k1, p1);
 	if (spherekey_interleave(k2, k1) == SCKEY_IN)
 	{
 		PG_RETURN_BOOL(true);
@@ -226,7 +230,7 @@ sbox_overlaps_spherekey(PG_FUNCTION_ARGS)
 	SBOX	   *p1 = (SBOX *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherebox_gen_key(&k1, p1);
+	spherebox_gen_key(k1, p1);
 	if (spherekey_interleave(k1, k2) == SCKEY_OVERLAP)
 	{
 		PG_RETURN_BOOL(true);
@@ -242,7 +246,7 @@ sbox_contains_spherekey(PG_FUNCTION_ARGS)
 	SBOX	   *p1 = (SBOX *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherebox_gen_key(&k1, p1);
+	spherebox_gen_key(k1, p1);
 	if (spherekey_interleave(k1, k2) == SCKEY_IN)
 	{
 		PG_RETURN_BOOL(true);
@@ -258,7 +262,7 @@ sbox_iscontained_spherekey(PG_FUNCTION_ARGS)
 	SBOX	   *p1 = (SBOX *) PG_GETARG_POINTER(0);
 	int32	   *k2 = (int32 *) PG_GETARG_POINTER(1);
 
-	spherebox_gen_key(&k1, p1);
+	spherebox_gen_key(k1, p1);
 	if (spherekey_interleave(k2, k1) == SCKEY_IN)
 	{
 		PG_RETURN_BOOL(true);
@@ -317,8 +321,8 @@ spoint_overlaps_sbox(PG_FUNCTION_ARGS)
 	int32		k2[6];
 	SBOX	   *p2 = (SBOX *) PG_GETARG_POINTER(1);
 
-	spherepoint_gen_key(&k1, p1);
-	spherebox_gen_key(&k2, p2);
+	spherepoint_gen_key(k1, p1);
+	spherebox_gen_key(k2, p2);
 
 	if (spherekey_interleave(k1, k2) == SCKEY_OVERLAP)
 	{
@@ -336,8 +340,8 @@ sbox_iscontained_spoint(PG_FUNCTION_ARGS)
 	int32		k2[6];
 	SPoint	   *p2 = (SPoint *) PG_GETARG_POINTER(1);
 
-	spherebox_gen_key(&k1, p1);
-	spherepoint_gen_key(&k2, p2);
+	spherebox_gen_key(k1, p1);
+	spherepoint_gen_key(k2, p2);
 
 	if (spherekey_interleave(k1, k2) == SCKEY_IN)
 	{

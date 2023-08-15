@@ -93,7 +93,7 @@ BEGIN
   FOR exp IN EXECUTE 'EXPLAIN ' || q
   LOOP
     --RAISE NOTICE 'EXP: %', exp;
-    mat := regexp_matches(exp, ' *(?:-> *)?(.*Scan)');
+    mat := regexp_matches(exp, ' *(?:-> *)?(.*Scan on (test_points|brin_spoint))');
     --RAISE NOTICE 'MAT: %', mat;
     IF mat IS NOT NULL THEN
       ret := array_append(ret, mat[1]);

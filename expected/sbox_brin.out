@@ -1,0 +1,91 @@
+SELECT set_sphere_output_precision(8);
+ set_sphere_output_precision 
+-----------------------------
+ SET 8
+(1 row)
+
+CREATE TABLE test_boxes (
+    b sbox
+);
+COPY test_boxes (b) FROM stdin;
+CREATE OR REPLACE FUNCTION qnodes(q text) RETURNS text
+LANGUAGE 'plpgsql' AS
+$$
+DECLARE
+  exp TEXT;
+  mat TEXT[];
+  ret TEXT[];
+BEGIN
+  FOR exp IN EXECUTE 'EXPLAIN ' || q
+  LOOP
+    --RAISE NOTICE 'EXP: %', exp;
+    mat := regexp_matches(exp, ' *(?:-> *)?(.*Scan on (test_boxes|test_boxes_brin_idx))');
+    --RAISE NOTICE 'MAT: %', mat;
+    IF mat IS NOT NULL THEN
+      ret := array_append(ret, mat[1]);
+    END IF;
+    --RAISE NOTICE 'RET: %', ret;
+  END LOOP;
+  RETURN array_to_string(ret,',');
+END;
+$$;
+CREATE INDEX test_boxes_brin_idx ON test_boxes USING brin (b);
+SET enable_indexscan = OFF;
+SET enable_bitmapscan = OFF;
+SET enable_seqscan = ON;
+SELECT 'scan_seq', qnodes('SELECT * FROM test_boxes WHERE b <@ sbox ''( (10d,10d), (20d,20d) )''');
+ ?column? |         qnodes         
+----------+------------------------
+ scan_seq | Seq Scan on test_boxes
+(1 row)
+
+SELECT * FROM test_boxes WHERE b <@ sbox '( (10d,10d), (20d,20d) )';
+ b 
+---
+(0 rows)
+
+SELECT 'scan_seq', qnodes('SELECT * FROM test_boxes WHERE b && sbox ''( (10d,10d), (20d,20d) )''');
+ ?column? |         qnodes         
+----------+------------------------
+ scan_seq | Seq Scan on test_boxes
+(1 row)
+
+SELECT * FROM test_boxes WHERE b && sbox '( (10d,10d), (20d,20d) )';
+                           b                            
+--------------------------------------------------------
+ ((0.34906585 , 0.17453293), (0.35006585 , 0.17463293))
+(1 row)
+
+SET enable_indexscan = OFF;
+SET enable_bitmapscan = ON;
+SET enable_seqscan = OFF;
+SELECT 'scan_idx', qnodes('SELECT * FROM test_boxes WHERE b <@ sbox ''( (10d,10d), (20d,20d) )''');
+ ?column? |                                 qnodes                                  
+----------+-------------------------------------------------------------------------
+ scan_idx | Bitmap Heap Scan on test_boxes,Bitmap Index Scan on test_boxes_brin_idx
+(1 row)
+
+SELECT * FROM test_boxes WHERE b <@ sbox '( (10d,10d), (20d,20d) )';
+ b 
+---
+(0 rows)
+
+SELECT 'scan_idx', qnodes('SELECT * FROM test_boxes WHERE b && sbox ''( (10d,10d), (20d,20d) )''');
+ ?column? |                                 qnodes                                  
+----------+-------------------------------------------------------------------------
+ scan_idx | Bitmap Heap Scan on test_boxes,Bitmap Index Scan on test_boxes_brin_idx
+(1 row)
+
+SELECT * FROM test_boxes WHERE b && sbox '( (10d,10d), (20d,20d) )';
+                           b                            
+--------------------------------------------------------
+ ((0.34906585 , 0.17453293), (0.35006585 , 0.17463293))
+(1 row)
+
+---- cleanup
+DROP INDEX test_boxes_brin_idx;
+DROP TABLE test_boxes;
+DROP FUNCTION qnodes(text);
+SET enable_indexscan = ON;
+SET enable_bitmapscan = ON;
+SET enable_seqscan = ON;

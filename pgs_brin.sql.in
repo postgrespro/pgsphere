@@ -406,6 +406,8 @@ ALTER OPERATOR FAMILY brin_inclusion_spheric_ops USING brin ADD
     OPERATOR      7         @>(sbox, spoint),
     OPERATOR      7         @>(spoint, sbox),
     OPERATOR      8         <@(sbox, spoint),
-    OPERATOR      8         <@(spoint, sbox);
+    OPERATOR      8         <@(spoint, sbox),
 
-
+    OPERATOR      3         &&(sbox, sbox),
+    OPERATOR      7         @>(sbox, sbox),
+    OPERATOR      8         <@(sbox, sbox);
