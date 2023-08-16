@@ -212,7 +212,7 @@ do \
 		{ \
 			int32 *k = (int32 *) palloc(KEYSIZE); \
 			if (detoast) \
-				genkey(k, (type *) DatumGetPointer(PG_DETOAST_DATUM(entry->key))); \
+				genkey(k, (type *) (PG_DETOAST_DATUM(entry->key))); \
 			else \
 				genkey(k, (type *) DatumGetPointer(entry->key)); \
 			gistentryinit(*retval, PointerGetDatum(k), \
@@ -2202,7 +2202,7 @@ do_picksplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 		for (i = 0; i < commonEntriesCount; i++)
 		{
 			box = &boxes[i];
-			commonEntries[i].delta = Abs((unionSizeBox3D(leftBox, box) - leftBoxSize) -
+			commonEntries[i].delta = fabs((unionSizeBox3D(leftBox, box) - leftBoxSize) -
 							 (unionSizeBox3D(rightBox, box) - rightBoxSize));
 		}
 

@@ -8,9 +8,10 @@ env:
   - PG_SUPPORTED_VERSIONS=13
   - PG_SUPPORTED_VERSIONS=14
   - PG_SUPPORTED_VERSIONS=15
+  - PG_SUPPORTED_VERSIONS=16
 
 language: C
-dist: bionic
+dist: focal
 
 before_install:
   # extra apt.pg.o.sh options added in version 204, travis currently has 199 (2019-11-27)

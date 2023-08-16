@@ -43,7 +43,7 @@ typedef struct
 
 
 #define PG_GETARG_SPOLY( arg ) \
-	( (SPOLY  *) DatumGetPointer(PG_DETOAST_DATUM(PG_GETARG_DATUM(arg))) )
+	( (SPOLY  *) (PG_DETOAST_DATUM(PG_GETARG_DATUM(arg))) )
 
 /*
  * Checks whether two polygons are equal.
