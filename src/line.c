@@ -349,7 +349,7 @@ sphereline_circle_pos(const SLine *sl, const SCIRCLE *sc)
 	{
 		/* line is point */
 		sline_begin(&p[0], sl);
-		if (spoint_in_circle(&p[0], &c))
+		if (spoint_in_circle(&p[0], sc))
 		{
 			return PGS_CIRCLE_CONT_LINE;
 		}
