@@ -835,14 +835,14 @@ select 'sbox && scircle', 'f' as expected, sbox'((0d , 0d), (20d , 20d))' && sci
 select 'sbox && scircle', 'f' as expected, sbox'((0d , 0d), (0d , 0d))' && scircle'<(10d , 0d) , 10d>' as actual;
     ?column?     | expected | actual 
 -----------------+----------+--------
- sbox && scircle | f        | f
+ sbox && scircle | f        | t
 (1 row)
 
 -- the box degenerated into the point lies in the interior of circle
 select 'sbox && scircle', 'f' as expected, sbox'((0d , 0d), (0d , 0d))' && scircle'<(0d , 0d) , 10d>' as actual;
     ?column?     | expected | actual 
 -----------------+----------+--------
- sbox && scircle | f        | f
+ sbox && scircle | f        | t
 (1 row)
 
 -- the box and circle are degenerated into the point and coincide
