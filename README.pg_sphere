@@ -9,8 +9,9 @@ It provides:
 * Object rotation by Euler angles
 * Indexing of spherical data types
 
-This is an R-Tree implementation using GiST for spherical objects like
+This is an R-tree implementation using GiST for spherical objects like
 spherical points and spherical circles with useful functions and operators.
+It also supports the Block Range INdexing (BRIN) for large datasets.
 
 NOTICE:
      This version will work only with PostgreSQL version 10 and above.
