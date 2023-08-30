@@ -263,7 +263,7 @@ pg_sphere--1.2.2--1.2.3.sql:
 	cat upgrade_scripts/$@.in > $@
 
 pg_sphere--1.2.3--1.3.0.sql: pgs_brin.sql.in
-	cat upgrade_scripts/$@.in > $@
+	cat upgrade_scripts/$@.in $^ > $@
 
 # end of local stuff
 
