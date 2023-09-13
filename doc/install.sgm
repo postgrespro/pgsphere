@@ -1,19 +1,18 @@
-    <sect1>
-        <title>
-            Installation
-        </title>
-        <sect2>
+<chapter id="install">
+ <title>Installation</title>
+
+        <sect1 id="install-download">
             <title>
                 Download
             </title>
-            <para>  
-                <application>pgSphere</application> is not part of the <application>PostgreSQL</application> software. 
+            <para>
+                <application>pgSphere</application> is not part of the <application>PostgreSQL</application> software.
                 You can download it from the <application>pgSphere</application> homepage
-                <ulink url="https://github.com/akorotkov/pgsphere"><citetitle>https://github.com/akorotkov/pgsphere</citetitle></ulink>
+                <ulink url="https://github.com/postgrespro/pgsphere"><citetitle>https://github.com/postgrespro/pgsphere</citetitle></ulink>
             </para>
-        </sect2>
+        </sect1>
 
-        <sect2>
+        <sect1 id="install-sect2">
             <title>
                 Installation
             </title>
@@ -27,9 +26,9 @@
             <para>
                 There are two ways to compile <application>pgSphere</application>.
                 The first is to copy the sources into the contribution directory of
-                <application>PostgreSQL</application>'s source tree 
+                <application>PostgreSQL</application>'s source tree
                 (<filename>POSTGRESQL_SRC/src/contrib</filename>).
-                Then, change into <filename>POSTGRESQL_SRC/src/contrib</filename>. 
+                Then, change into <filename>POSTGRESQL_SRC/src/contrib</filename>.
                 If the sources are not yet installed and the directory
                 <filename>pg_sphere</filename> does not exist, take the
                 gzipped <application>pgSphere</application> sources ( e. g.,
@@ -82,43 +81,43 @@
 <![CDATA[shell> make installcheck]]>
             </programlisting>
             <para>
-                The check status will be displayed. Please note, the check gives different results with 
+                The check status will be displayed. Please note, the check gives different results with
 		different <application>PostgreSQL</application>-versions. Currently, the check should
 		run without errors with <application>PostgreSQL</application>-version 8.4. Otherwise check
 		the file <filename>regression.diff</filename>.
             </para>
-            
-        </sect2>
-        
-        <sect2>
+
+        </sect1>
+
+        <sect1 id="install-sect3">
             <title>
                 Creating a database with <application>pgSphere</application>
             </title>
             <para>
                 We assume you have already created a database
                 <database>datab</database>, where <database>datab</database>
-                is the name of any database. 
+                is the name of any database.
                 Presupposing the name of your
                 <application>PostgreSQL</application>'s superuser is
                 <parameter>postgres</parameter>, type:
             </para>
             <programlisting>
-<![CDATA[shell> psql -U postgres -c 'CREATE EXTENSION pg_sphere;' datab]]>
+<![CDATA[shell> psql -U postgres -c 'CREATE EXTENSION pg_sphere' datab]]>
             </programlisting>
             <para>
                 Depending on your system, it may be necessary to give more
-                <command>psql</command> options like port or host name. 
+                <command>psql</command> options like port or host name.
                 Please have a look at the
                 <application>PostgreSQL</application> documentation for more
                 details.
             </para>
             <para>
-                To get the version of installed pgSphere software, simply 
+                To get the version of installed pgSphere software, simply
                 call:
             </para>
             <programlisting>
 <![CDATA[pgsql> SELECT pg_sphere_version();]]>
             </programlisting>
-        </sect2>
-        
-    </sect1>
+        </sect1>
+
+</chapter>

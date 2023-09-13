@@ -1,8 +1,7 @@
-    <sect1 id="types">
-        <title>
-            Data types
-        </title>
-        <sect2 id="dt.over">
+<chapter id="types">
+ <title>Data Types</title>
+
+        <sect1 id="dt.over">
             <title>
                 Overview
             </title>
@@ -100,9 +99,9 @@
               </tgroup>
             </table>
 
-        </sect2>
-        
-        <sect2 id="dt.spoint">
+        </sect1>
+
+        <sect1 id="dt.spoint">
             <title>
                 Point
             </title>
@@ -118,28 +117,28 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        sites on earth 
+                        sites on earth
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        star positions on the sky sphere 
+                        star positions on the sky sphere
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        spherical positions on planets 
+                        spherical positions on planets
                     </para>
                 </listitem>
-                
+
             </itemizedlist>
             <para>
                 A spherical point (or position) is given by two values:
                 longitude and latitude.  Longitude is a floating point
                 value between <literal>0</literal> and
-                <literal>2&pgr;</literal>.  Latitude is a floating point
-                value, too, but between <literal>-&pgr;/2</literal> and
-                <literal>&pgr;/2</literal>. It is possible to give a
+                <literal>2&pg_pgr;</literal>.  Latitude is a floating point
+                value, too, but between <literal>-&pg_pgr;/2</literal> and
+                <literal>&pg_pgr;/2</literal>. It is possible to give a
                 spherical position in degrees (<literal>DEG</literal>) or
                 with a triple value of degrees, minutes and seconds
                 (<literal>DMS</literal>). Degrees and minutes are integer
@@ -189,10 +188,10 @@
                 longitude and latitude. The value pairs are always enclosed
                 within braces. Spaces are optional.
             </para>
-            
-        </sect2>
 
-        <sect2 id="dt.strans">
+        </sect1>
+
+        <sect1 id="dt.strans">
             <title>
                 Euler transformation
             </title>
@@ -210,12 +209,12 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        spherical object transformations 
+                        spherical object transformations
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        spherical coordinates transformations 
+                        spherical coordinates transformations
                     </para>
                 </listitem>
             </itemizedlist>
@@ -226,7 +225,7 @@
             <para>
               where <parameter>axes</parameter> is an optional 3 letter code
               with letters : <literal>X</literal>, <literal>Y</literal>, or
-              <literal>Z</literal>. Default is <literal>ZXZ</literal>. 
+              <literal>Z</literal>. Default is <literal>ZXZ</literal>.
               <parameter>angleN</parameter> is any valid angle with the input
               format <literal>RAD</literal>, <literal>DEG</literal>, or
               <literal>DMS</literal>.
@@ -263,9 +262,9 @@
 <![CDATA[sql> SELECT strans '2d 20m, 10d, 0';]]>
               </programlisting>
             </example>
-        </sect2>
-        
-        <sect2 id="dt.scircle">
+        </sect1>
+
+        <sect1 id="dt.scircle">
             <title>
                 Circle
             </title>
@@ -289,12 +288,12 @@
                 </listitem>
                 <listitem>
                     <para>
-                        round cluster or nebula on sky sphere 
+                        round cluster or nebula on sky sphere
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        a position with an undirected position error 
+                        a position with an undirected position error
                     </para>
                 </listitem>
             </itemizedlist>
@@ -318,9 +317,9 @@
 <![CDATA[sql> SELECT scircle '< (0d, 90d), 5d >';]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="dt.sline">
+        <sect1 id="dt.sline">
             <title>
                 Line
             </title>
@@ -336,12 +335,12 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        direct connection of two points 
+                        direct connection of two points
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        meteors on the sky sphere 
+                        meteors on the sky sphere
                     </para>
                 </listitem>
             </itemizedlist>
@@ -395,9 +394,9 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT sline '( -90d, -20d, 200d, XYZ ), 30d ';]]>
               </programlisting>
             </example>
-        </sect2>
-        
-        <sect2 id="dt.sellipse">
+        </sect1>
+
+        <sect1 id="dt.sellipse">
             <title>
                 Ellipses
             </title>
@@ -432,7 +431,7 @@ i             syntax is a somewhat complex.
                 </listitem>
                 <listitem>
                     <para>
-                        to describe a position error 
+                        to describe a position error
                     </para>
                 </listitem>
             </itemizedlist>
@@ -442,12 +441,12 @@ i             syntax is a somewhat complex.
             <itemizedlist>
                 <listitem>
                     <para>
-                        a major radius <parameter>rad_1</parameter> 
+                        a major radius <parameter>rad_1</parameter>
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        a minor radius <parameter>rad_2</parameter> 
+                        a minor radius <parameter>rad_2</parameter>
                     </para>
                 </listitem>
                 <listitem>
@@ -505,9 +504,9 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT sellipse '< { 10d, 5d } , ( 20d, 0d ), 90d >';]]>
                </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="dt.spath">
+        <sect1 id="dt.spath">
             <title>
                 Path
             </title>
@@ -523,7 +522,7 @@ i             syntax is a somewhat complex.
             <itemizedlist>
                 <listitem>
                     <para>
-                        rivers on earth 
+                        rivers on earth
                     </para>
                 </listitem>
                 <listitem>
@@ -548,7 +547,7 @@ i             syntax is a somewhat complex.
                   </listitem>
                   <listitem>
                       <para>
-                          At least 2 positions are required. 
+                          At least 2 positions are required.
                       </para>
                   </listitem>
                 </itemizedlist>
@@ -565,9 +564,9 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT spath '{ (10d,0d),(45d,15d),(80d,30d) } ';]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="dt.spoly">
+        <sect1 id="dt.spoly">
             <title>
                 Polygon
             </title>
@@ -582,7 +581,7 @@ i             syntax is a somewhat complex.
               A spherical polygon is a
               closed spherical path where line segments cannot be crossed.
               One main use case are areas on the earth and sky sphere.
-              Polygons within <application>pgSphere</application> 
+              Polygons within <application>pgSphere</application>
               have the same input syntax as paths:
             </para>
             <synopsis>&lcub;pos1,pos2,pos3&lsqb;,pos4&lsqb;,... &rsqb;&rsqb;&rcub;</synopsis>
@@ -598,7 +597,7 @@ i             syntax is a somewhat complex.
                   </listitem>
                   <listitem>
                       <para>
-                          The line segments can not be crossed. 
+                          The line segments can not be crossed.
                       </para>
                   </listitem>
                   <listitem>
@@ -621,9 +620,9 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT spoly '{ (270d,-10d), (270d,30d), (290d,10d) } ';]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="dt.sbox">
+        <sect1 id="dt.sbox">
             <title>
                 Coordinates range
             </title>
@@ -689,9 +688,9 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT sbox '( (350d,-10d), (10d,+10d) )';]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="dt.smoc">
+        <sect1 id="dt.smoc">
             <title>
               <type>smoc</type>: HEALPix Multi-Order Coverage map
             </title>
@@ -750,5 +749,6 @@ i             syntax is a somewhat complex.
 <![CDATA[sql> SELECT smoc '0/4 1/0 2 12-13 34-35 45 47 2/4 6 12 14 56-57 60-61 88 90-91 116-117 119 130-131 134-135 177 179 185 187';]]>
               </programlisting>
             </example>
-        </sect2>
-    </sect1>
+        </sect1>
+
+</chapter>

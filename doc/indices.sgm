@@ -1,8 +1,7 @@
-    <sect1 id="indices">
-      <title>
-        Create an index
-      </title>
-      <sect2 id="ind.sphere">
+<chapter id="indices">
+ <title>Indexes</title>
+
+      <sect1 id="ind.sphere">
         <title>
           Spherical index
         </title>
@@ -27,7 +26,7 @@
           linkend="op.over"><literal>&amp;&amp;</literal></link>, <link
           linkend="op.cross"><literal>&num;</literal></link>, <link
           linkend="op.equal"><literal>=</literal></link>, and <link
-          linkend="op.equal"><literal>!=</literal></link>. 
+          linkend="op.equal"><literal>!=</literal></link>.
         </para>
         <para>
           You can create a GiST index with the following spherical data types:
@@ -84,7 +83,7 @@
 <![CDATA[VACUUM ANALYZE test;]]>
           </programlisting>
           <para>
-            BRIN index can be created through the following syntax: 
+            BRIN index can be created through the following syntax:
           </para>
           <programlisting>
 <![CDATA[CREATE INDEX test_pos_idx USING BRIN ON test (pos);]]>
@@ -102,9 +101,9 @@
           </programlisting>
         </example>
 
-      </sect2>
+      </sect1>
 
-      <sect2 id="ind.smoc">
+      <sect1 id="ind.smoc">
         <title>
           <type>smoc</type> index
         </title>
@@ -143,6 +142,6 @@
           </programlisting>
         </example>
 
-      </sect2>
+      </sect1>
 
-    </sect1>
+</chapter>

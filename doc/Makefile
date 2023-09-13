@@ -1,8 +1,15 @@
 #----------------------------------------------------------------------------
 #
-# pgSphere documentation makefile
+# pgSphere documentation generation
 #
 #----------------------------------------------------------------------------
+
+ifndef PGSPHERE_VERSION
+include ../Makefile.common.mk
+ifndef PGSPHERE_VERSION
+$(error PGSPHERE_VERSION is not set)
+endif
+endif
 
 USE_PGXS = 1
 ifdef USE_PGXS
@@ -16,75 +23,89 @@ include $(top_builddir)/src/Makefile.global
 include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
-.SECONDARY:
-.NOTPARALLEL:
-
-ifndef COLLATEINDEX
-COLLATEINDEX = $(DOCBOOKSTYLE)/bin/collateindex.pl
+ifndef FOP
+FOP = fop
 endif
 
-ifndef JADE
-JADE = openjade
-endif
-SGMLINCLUDE = -D $(srcdir)
-
-ALLSGML := $(wildcard $(srcdir)/*.sgm)
-
-ifdef DOCBOOKSTYLE
-CATALOG = -c $(DOCBOOKSTYLE)/catalog
+ifdef XMLLINT
+XMLLINT := $(XMLLINT) --nonet
+else
+XMLLINT = $(missing) xmllint
 endif
 
-COLLATEINDEX := $(PERL) $(COLLATEINDEX) -f -g
+ifdef XSLTPROC
+XSLTPROC := $(XSLTPROC) --nonet
+else
+XSLTPROC = $(missing) xsltproc
+endif
 
+override XSLTPROCFLAGS += \
+	--path stylesheets --path img --path . \
+	--stringparam pg_sphere.version '$(PGSPHERE_VERSION)' \
+	--stringparam pg.version '$(PGSPHERE_VERSION)'
 
-all   : html
+XMLINCLUDE = --path .
+ALLSGML := $(wildcard *.sgm)
+ALLIMAGES := $(wildcard img/*.jpg)
 
-.PHONY: html pdf ps
+.PHONY: all html pdf
 
-XMLDCL = declaration/xml.dcl
+all: version.ent html pdf
 
-html  : pg_sphere.xml $(ALLSGML) pg_sphere.dsl
-	@rm -f *.html
-	@rm -rf html
-	mkdir html
-	mkdir html/img
-	cp img/*.jpg img/*.png html/img
-	cp pg_sphere.css html
-	$(JADE) $(JADEFLAGS) $(SGMLINCLUDE) $(CATALOG) -b UTF-8 -d pg_sphere.dsl -i html  -t sgml $(XMLDCL) $<
-	mv *.html html
+version.xml:
+	@echo $(PGSPHERE_VERSION) > version.xml
 
-pg_sphere.tex : pg_sphere.xml $(ALLSGML) pg_sphere.dsl
-	$(JADE) $(JADEFLAGS) $(SGMLINCLUDE) $(CATALOG) -d pg_sphere.dsl -i print -t tex -o $@ $(XMLDCL) $<
+pg_sphere-full.xml: version.xml
+pg_sphere-full.xml: pg_sphere.xml $(ALLSGML)
+	$(XMLLINT) $(XMLINCLUDE) --output $@ --noent --valid $<
 
-pdf : jadetex.cfg pg_sphere.pdf
-
-pg_sphere.pdf: pg_sphere.tex
-	@rm -f $*.aux $*.log $*.out
-	pdfjadetex $<
-	pdfjadetex $<
-	pdfjadetex $<
-
-ps : pg_sphere.ps
-
-pg_sphere.ps: pg_sphere.pdf
-	pdftops $< $@
-
-pg_sphere.dsl : pg_sphere.dsl-dist
-	cp $< $@
-
-jadetex.cfg : jadetex.cfg-dist
-	cp $< $@
-
-
-
-##
-## Clean
-##
-
-clean distclean maintainer-clean:
+#------------------------------------------------------------------------------
 # HTML
-	rm -rf html pg_sphere.dsl
-# print
-	rm -f *.rtf *.tex *.dvi *.aux *.log *.ps *.pdf *.out *.fot jadetex.cfg
-# img
-	make clean -C img
+#------------------------------------------------------------------------------
+
+XSLTPROC_HTML_MULTIPAGE_FLAGS := --stringparam img.src.path ''
+XSLTPROC_HTML_SINGLEPAGE_FLAGS := --stringparam img.src.path ''
+
+html: html-singlepage html-multipage
+
+html-multipage: stylesheets/stylesheet.xsl pg_sphere-full.xml version.xml $(ALLIMAGES)
+	$(XSLTPROC) $(XMLINCLUDE) $(XSLTPROCFLAGS) $(XSLTPROC_HTML_MULTIPAGE_FLAGS) $(wordlist 1,2,$^)
+	mkdir -p html/img
+	cp $(ALLIMAGES) html/img
+
+html-singlepage: pg_sphere-$(PGSPHERE_VERSION).html
+
+pg_sphere-$(PGSPHERE_VERSION).html: stylesheets/stylesheet-html-nochunk.xsl pg_sphere-full.xml version.xml $(ALLIMAGES)
+	$(XSLTPROC) $(XMLINCLUDE) $(XSLTPROCFLAGS) $(XSLTPROC_HTML_SINGLEPAGE_FLAGS) -o $@ $(wordlist 1,2,$^)
+
+#------------------------------------------------------------------------------
+# PDF
+#------------------------------------------------------------------------------
+
+pdf: pg_sphere-${PGSPHERE_VERSION}-A4.pdf pg_sphere-${PGSPHERE_VERSION}-US.pdf
+
+pg_sphere-$(PGSPHERE_VERSION)-A4.pdf: pg_sphere.A4.fo
+	$(FOP) -v -fo $< -pdf $@
+
+pg_sphere-$(PGSPHERE_VERSION)-US.pdf: pg_sphere.US.fo
+	$(FOP) -v -fo $< -pdf $@
+
+pg_sphere.A4.fo: stylesheets/stylesheet-fo.xsl pg_sphere-full.xml version.xml $(ALLIMAGES)
+	$(XSLTPROC) $(XMLINCLUDE) $(XSLTPROCFLAGS) $(XSLTPROC_FO_FLAGS) --stringparam paper.type A4 -o $@ stylesheets/stylesheet-fo.xsl pg_sphere-full.xml
+
+pg_sphere.US.fo: stylesheets/stylesheet-fo.xsl pg_sphere-full.xml version.xml $(ALLIMAGES)
+	$(XSLTPROC) $(XMLINCLUDE) $(XSLTPROCFLAGS) $(XSLTPROC_FO_FLAGS) --stringparam paper.type USLetter -o $@ stylesheets/stylesheet-fo.xsl pg_sphere-full.xml
+
+#------------------------------------------------------------------------------
+# Cleanup
+#------------------------------------------------------------------------------
+
+clean distclean:
+	rm -rf ./html
+	rm -f version.xml
+	rm -f pg_sphere-full.xml
+	rm -f pg_sphere.A4.fo
+	rm -f pg_sphere.US.fo
+	rm -f pg_sphere-$(PGSPHERE_VERSION).html
+	rm -f pg_sphere-$(PGSPHERE_VERSION)-A4.pdf
+	rm -f pg_sphere-$(PGSPHERE_VERSION)-US.pdf
