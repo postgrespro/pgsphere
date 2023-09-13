@@ -12,6 +12,7 @@ endif
 endif
 
 USE_PGXS = 1
+
 ifdef USE_PGXS
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
@@ -23,8 +24,10 @@ include $(top_builddir)/src/Makefile.global
 include $(top_srcdir)/contrib/contrib-global.mk
 endif
 
+.SECONDARY:
+
 ifndef FOP
-FOP = fop
+FOP = $(missing) fop
 endif
 
 ifdef XMLLINT
@@ -48,9 +51,13 @@ XMLINCLUDE = --path .
 ALLSGML := $(wildcard *.sgm)
 ALLIMAGES := $(wildcard img/*.jpg)
 
-.PHONY: all html pdf
+all: html pdf
 
-all: version.ent html pdf
+.PHONY: all html pdf clean
+
+# This line fixes the error like:
+# No rule to make target 'pg_sphere.control'
+.PHONY: pg_sphere.control
 
 version.xml:
 	@echo $(PGSPHERE_VERSION) > version.xml
