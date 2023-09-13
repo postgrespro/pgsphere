@@ -27,7 +27,7 @@ endif
 .SECONDARY:
 
 ifndef FOP
-FOP = $(missing) fop
+FOP = fop
 endif
 
 ifdef XMLLINT
