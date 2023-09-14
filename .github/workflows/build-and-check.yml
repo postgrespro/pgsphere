@@ -1,0 +1,67 @@
+name: Build and Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build_and_test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        pg_version: [10, 11, 12, 13, 14, 15, 16]
+        use_healpix: [0, 1]
+
+    name: PostgreSQL ${{ matrix.pg_version }} - USE_HEALPIX=${{ matrix.use_healpix }}
+
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt update && sudo apt install -y \
+          postgresql-common \
+          libhealpix-cxx-dev \
+          docbook-xml \
+          docbook-xsl \
+          libxml2-utils \
+          xsltproc \
+          fop
+
+    - name: Install Postgres
+      run: sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -p -v ${{ matrix.pg_version }} -i
+
+    - name: Clone pgSphere
+      uses: actions/checkout@v4
+
+    - name: Set MAKE_CMD variable
+      run: echo "MAKE_CMD=make --keep-going -j$(nproc) -l$(nproc) -O" >> $GITHUB_ENV
+
+    - name: Build pgSphere
+      run: ${MAKE_CMD} PROFILE="-Werror -Wall" USE_HEALPIX=${{ matrix.use_healpix }}
+
+    - name: make test
+      run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} test
+
+    - name: Install pgSphere
+      run: sudo ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} install
+
+    - name: make installcheck
+      run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} installcheck
+
+    - name: make crushtest
+      run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} crushtest
+
+    - name: Build docs
+      run: ${MAKE_CMD} -C doc
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      if: success() || failure()
+      with:
+        name: ${{ github.ref_name }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
+        if-no-files-found: ignore
+        path: |
+          ./**/*.log
+          ./**/*.diffs
