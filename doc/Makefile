@@ -11,21 +11,6 @@ $(error PGSPHERE_VERSION is not set)
 endif
 endif
 
-USE_PGXS = 1
-
-ifdef USE_PGXS
-PG_CONFIG = pg_config
-PGXS := $(shell $(PG_CONFIG) --pgxs)
-include $(PGXS)
-else
-subdir = contrib/pg_sphere/doc
-top_builddir = ../../..
-include $(top_builddir)/src/Makefile.global
-include $(top_srcdir)/contrib/contrib-global.mk
-endif
-
-.SECONDARY:
-
 ifndef FOP
 FOP = fop
 endif
@@ -33,13 +18,13 @@ endif
 ifdef XMLLINT
 XMLLINT := $(XMLLINT) --nonet
 else
-XMLLINT = $(missing) xmllint
+XMLLINT = xmllint --nonet
 endif
 
 ifdef XSLTPROC
 XSLTPROC := $(XSLTPROC) --nonet
 else
-XSLTPROC = $(missing) xsltproc
+XSLTPROC = xsltproc --nonet
 endif
 
 override XSLTPROCFLAGS += \

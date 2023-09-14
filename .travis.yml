@@ -40,4 +40,3 @@ script:
   - pg_virtualenv make USE_HEALPIX=0 crushtest
   - if test -s regression.diffs; then cat regression.diffs; exit 1; fi
   - make -C doc
-  - sudo make -C doc install
