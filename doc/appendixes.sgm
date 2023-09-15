@@ -19,7 +19,7 @@
           </listitem>
           <listitem>
             <para>
-              This version is compatible to <application>PostgreSQL</application> 8.4 
+              This version is compatible to <application>PostgreSQL</application> 8.4
             </para>
           </listitem>
         </itemizedlist>
@@ -66,5 +66,5 @@
           </listitem>
         </itemizedlist>
       </sect2>
-        
+
     </sect1>
