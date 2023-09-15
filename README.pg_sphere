@@ -54,7 +54,7 @@ UPDATING AN EXISTING INSTALLATION:
   -- same make and make install steps as above, but, instead of the CREATE
   -- EXTENSION step, you need to do:
 
-  psql -c "ALTER EXTENSION q3c UPDATE TO 'A.B.C';" <database>
+  psql -c "ALTER EXTENSION pg_sphere UPDATE TO 'A.B.C';" <database>
 
   -- where A.B.C is a placeholder for the current version.
   -- You also may want to check what version of pgSphere is installed using
