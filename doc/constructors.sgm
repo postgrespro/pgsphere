@@ -1,7 +1,6 @@
-    <sect1 id="construct">
-        <title>
-            Constructors
-        </title>
+<chapter id="construct">
+ <title>Constructors</title>
+
         <para>
           Constructors within <application>pgSphere</application> are
           functions needed to create spherical data types from other data
@@ -14,7 +13,7 @@
           mentioned here.
         </para>
 
-        <sect2 id="contr.spoint">
+        <sect1 id="contr.spoint">
           <title>
             Point
           </title>
@@ -44,9 +43,9 @@
             </programlisting>
           </example>
 
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.strans">
+        <sect1 id="contr.strans">
           <title>
             Euler transformation
           </title>
@@ -90,9 +89,9 @@
             </programlisting>
           </example>
 
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.scircle">
+        <sect1 id="contr.scircle">
           <title>
             Circle
           </title>
@@ -110,7 +109,7 @@
             returns a spherical circle with center at
             <parameter>center</parameter> and a radius
             <parameter>radius</parameter> in radians.  The circle radius has
-            to be larger than or equal to zero but less or equal to 90&deg;. 
+            to be larger than or equal to zero but less or equal to 90&deg;.
             Otherwise, this function returns an error.
           </para>
           <example>
@@ -134,18 +133,18 @@
            </programlisting>
          </example>
 
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.sline">
+        <sect1 id="contr.sline">
           <title>
             Line
           </title>
           <para>
             The input of spherical lines using Euler transformation and
-            length is quite circumstantial (see <xref linkend="dt.sline"/>). 
+            length is quite circumstantial (see <xref linkend="dt.sline"/>).
             For short lines it is easier to input a line specifying the
             beginning and the end of the line.
-          </para>              
+          </para>
           <funcsynopsis>
             <funcprototype>
               <funcdef><function>sline</function></funcdef>
@@ -155,13 +154,13 @@
           </funcsynopsis>
           <para>
             If the distance between <parameter>begin</parameter> and
-            <parameter>end</parameter> is 180&deg; (&pgr;), this function
-            returns an error because the location of the line is undefined. 
+            <parameter>end</parameter> is 180&deg; (&pg_pgr;), this function
+            returns an error because the location of the line is undefined.
             However, if longitudes of <parameter>begin</parameter> and
             <parameter>end</parameter> are equal,
             <application>pgSphere</application> assumes a meridian and
             returns the corresponding spherical line.
-          </para>               
+          </para>
           <example id="const.line.1">
             <title>A line created using begin and end of line</title>
             <simpara>
@@ -212,9 +211,9 @@
 <![CDATA[(1 row)]]>
             </programlisting>
           </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.sellipse">
+        <sect1 id="contr.sellipse">
           <title>
             Ellipse
           </title>
@@ -238,7 +237,7 @@
             radii of the ellipse in radians. If the major radius is smaller
             than minor radius, <application>pgSphere</application> swaps the
             values automatically.  The last parameter
-            <parameter>incl</parameter> is the inclination angle in radians. 
+            <parameter>incl</parameter> is the inclination angle in radians.
             For more informations about ellipses, see <xref
             linkend="dt.sellipse"/>.
           </para>
@@ -263,9 +262,9 @@
 <![CDATA[(1 row)]]>
             </programlisting>
           </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.spoly">
+        <sect1 id="contr.spoly">
           <title>
             Polygon
           </title>
@@ -318,9 +317,9 @@
 <![CDATA[(1 row)]]>
             </programlisting>
           </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.spath">
+        <sect1 id="contr.spath">
           <title>
             Path
           </title>
@@ -371,9 +370,9 @@
             </programlisting>
           </example>
 
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.sbox">
+        <sect1 id="contr.sbox">
           <title>
             Coordinates range
           </title>
@@ -403,9 +402,9 @@
 <![CDATA[sql> SELECT sbox ( spoint '(0d,0d),(10d,10d)' );]]>
             </programlisting>
           </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="contr.smoc">
+        <sect1 id="contr.smoc">
           <title>
             <type>smoc</type>
           </title>
@@ -449,6 +448,6 @@
           <para>
             creates an <type>smoc</type> of the given order covering the spoly
           </para>
-        </sect2>
+        </sect1>
 
-    </sect1>
+</chapter>

@@ -1,8 +1,7 @@
-    <sect1 id="operators">
-        <title>
-            Operators
-        </title>
-        <sect2 id="op.casting">
+<chapter id="operators">
+ <title>Operators</title>
+
+        <sect1 id="op.casting">
             <title>
                 Casting
             </title>
@@ -120,9 +119,9 @@
               </programlisting>
             </example>
 
-        </sect2>
-        
-        <sect2 id="op.equal">
+        </sect1>
+
+        <sect1 id="op.equal">
             <title>
                 Equality
             </title>
@@ -144,9 +143,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
-        
-        <sect2 id="op.over">
+        </sect1>
+
+        <sect1 id="op.over">
             <title>
                Contain and overlap
             </title>
@@ -156,7 +155,7 @@
                 <literal>a</literal> contained by object
                 <literal>b</literal>?</emphasis> or <emphasis>Does object
                 <literal>a</literal> overlap object
-                <literal>b</literal>?</emphasis> 
+                <literal>b</literal>?</emphasis>
                 <application>pgSphere</application> supports such
                 queries using binary operators returning
                 <emphasis>true</emphasis> or <emphasis>false</emphasis>:
@@ -298,9 +297,9 @@
               </programlisting>
             </example>
 
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.cross">
+        <sect1 id="op.cross">
             <title>
                 Crossing of lines
             </title>
@@ -320,9 +319,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
-        
-        <sect2 id="op.dist">
+        </sect1>
+
+        <sect1 id="op.dist">
             <title>
                 Distance
             </title>
@@ -358,9 +357,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
-        
-        <sect2 id="op.circum">
+        </sect1>
+
+        <sect1 id="op.circum">
             <title>
                 Length and circumference
             </title>
@@ -395,9 +394,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.center">
+        <sect1 id="op.center">
             <title>
                 Center
             </title>
@@ -415,9 +414,9 @@
 <![CDATA[sql> SELECT @@ scircle '<(0d,20d),30d>';]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.direction">
+        <sect1 id="op.direction">
             <title>
                 Change the direction
             </title>
@@ -433,15 +432,15 @@
 <![CDATA[sql> SELECT - sline (spoint '(0d,0d)', spoint '(10d,0d)');]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.turnline">
+        <sect1 id="op.turnline">
             <title>
                 Turn the path of a line
             </title>
             <para>
                 The unary operator <literal>!</literal> turns the
-                path of <type>sline</type> objects, but preserves 
+                path of <type>sline</type> objects, but preserves
                 begin and end of the spherical line. The length of
                 returned line will be 360&deg; minus the line length
                 of operator's argument.
@@ -450,7 +449,7 @@
                 The operator <literal>!</literal> returns
                 <literal>NULL</literal>, if the length of <type>sline</type> argument
                 is 0, because the path of returned <type>sline</type>
-                is undefined. 
+                is undefined.
             </para>
             <example>
               <title>Return length and check if north pole on <type>sline</type>s</title>
@@ -490,9 +489,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.trans">
+        <sect1 id="op.trans">
             <title>
                 Transformation
             </title>
@@ -561,9 +560,9 @@
 <![CDATA[(1 row)]]>
               </programlisting>
             </example>
-        </sect2>
+        </sect1>
 
-        <sect2 id="op.smoc">
+        <sect1 id="op.smoc">
             <title>
                 <type>smoc</type> operators
             </title>
@@ -590,6 +589,6 @@
 <![CDATA[smoc & smoc]]>
               </programlisting>
 
-        </sect2>
+        </sect1>
 
-    </sect1>
+</chapter>

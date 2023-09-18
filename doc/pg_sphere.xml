@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
 <!ENTITY capWhatis     SYSTEM "whatis.sgm">
 <!ENTITY capInstall    SYSTEM "install.sgm">
@@ -25,50 +25,29 @@
 <!ENTITY graphsmoc "img/smoc.png">
 <!ENTITY graph1009 "img/logo.png">
 
+<!ENTITY pg_ohgr "<symbol role='symbol'>&ohgr;</symbol>">
+<!ENTITY pg_OHgr "<symbol role='symbol'>&OHgr;</symbol>">
+<!ENTITY pg_pgr "<symbol role='symbol'>&pgr;</symbol>">
+
+<!ENTITY pg_sphere_version SYSTEM "version.xml">
 ]>
 
+<book lang="en">
 
-<article lang="en">
-    <articleinfo>
-        <title>
-            pgSphere 1.3.0
-        </title>
-        <author>
-            <surname>pgSphere development team</surname>
-        </author>
-        <abstract>
-            <para>
-              <mediaobject>
-                <imageobject>
-                  <imagedata fileref="&graph1009;" width="168px" format="PNG"/>
-                </imageobject>
-              </mediaobject>
-            </para>
-            <para>
-                <application>pgSphere</application> provides spherical data
-                types, functions, and operators for
-                <application>PostgreSQL</application>.
-            </para>
-            <para>
-              The project is hosted at <ulink url="https://github.com/postgrespro/pgsphere/">
-                <citetitle>https://github.com/postgrespro/pgsphere</citetitle>
-              </ulink>
-            </para>
-            <para>    
-                This document
-                describes installation and usage of this module.
-            </para>
-        </abstract>
-    </articleinfo>
-    &capWhatis;
-    &capInstall;
-    &capTypes;
-    &capConstr;
-    &capOperators;
-    &capFunctions;
-    &capIndices;
-    &capExamples;
-    &capFaq;
-    &capAppendixes;
+ <bookinfo>
+  <title>pgSphere &pg_sphere_version;</title>
+  <corpauthor>pgSphere Development Team</corpauthor>
+  <productname>pgSphere</productname>
+  <productnumber>&pg_sphere_version;</productnumber>
+ </bookinfo>
 
-</article>
+ &capWhatis;
+ &capInstall;
+ &capTypes;
+ &capConstr;
+ &capOperators;
+ &capFunctions;
+ &capIndices;
+ &capExamples;
+
+</book>

@@ -1,5 +1,6 @@
-PGSPHERE_VERSION = 1.3.1
-EXTENSION        = pg_sphere
+
+include Makefile.common.mk
+
 RELEASE_SQL      = $(EXTENSION)--$(PGSPHERE_VERSION).sql
 USE_PGXS         = 1
 USE_HEALPIX      =? 1
