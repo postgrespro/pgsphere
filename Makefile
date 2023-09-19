@@ -132,18 +132,12 @@ ifeq ($(has_explain_summary),y)
 endif
 endif
 
-ifeq ($(pg_version_9_5_plus),y)
-        PGS_TMP_DIR = --temp-instance=tmp_check
-else
-        PGS_TMP_DIR = --temp-install=tmp_check --top-builddir=test_top_build_dir
-endif
-
 test: pg_sphere.test.sql sql/init_test.sql
 	cp expected/init_test.out.in expected/init_test.out
 ifneq ($(USE_HEALPIX),0)
 	cat expected/init_test_healpix.out.in >> expected/init_test.out
 endif
-	$(pg_regress_installcheck) $(PGS_TMP_DIR) $(REGRESS_OPTS) $(TESTS)
+	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) $(TESTS)
 
 pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 	tail -n+3 $< | sed 's,MODULE_PATHNAME,$(realpath $(shlib)),g' >$@
@@ -187,12 +181,6 @@ UPGRADE_1_0_PRE_AAF2D5 = contains-ops-fixes-1.sql pgs_gist_drop_spoint2.sql.in \
 # create "create extension from unpacked*" files
 
 # create "alter extension" files
-
-
-ifeq ($(pg_version_9_5_plus),y)
-# 1.1.1.5 -> 1.1.5.1 for Postgres 9.5+ features
-else
-endif
 
 # local stuff follows here
 AUGMENT_GAVO_111 = $(AUGMENT_UNP_111) # for vanilla 1.1.1 users
