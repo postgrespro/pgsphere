@@ -7,8 +7,15 @@
             </title>
             <para>
                 <application>pgSphere</application> is not part of the <application>PostgreSQL</application> software.
-                You can download it from the <application>pgSphere</application> homepage
-                <ulink url="https://github.com/postgrespro/pgsphere"><citetitle>https://github.com/postgrespro/pgsphere</citetitle></ulink>
+                You can download the latest release sources from the
+                <ulink url="https://github.com/postgrespro/pgsphere/releases">
+                    <application>pgSphere</application> homepage
+                </ulink> (the Releases page). The sources can also be downloaded by
+                cloning the repository with the appropriate release tag (each release is
+                marked with a tag).
+                The master branch is intended for development use
+                and can contain an intermediate work.
+                It is not recommented for use in production.
             </para>
         </sect1>
 
@@ -17,8 +24,7 @@
                 Installation
             </title>
             <para>
-                You will need <application>PostgreSQL
-                9.1</application> or above. We assume that you have
+                We assume that you have
                 <application>PostgreSQL</application> already compiled and
                 installed. Please note: Depending on your system configuration mostly you have to be logged in as the system
                 superuser.
@@ -32,10 +38,11 @@
                 If the sources are not yet installed and the directory
                 <filename>pg_sphere</filename> does not exist, take the
                 gzipped <application>pgSphere</application> sources ( e. g.,
-                <filename>pg_sphere_xxx.tgz</filename> ) and run:
+                <filename>pgsphere-X.X.X.tgz</filename>, where X.X.X is the version number)
+                and run:
             </para>
             <programlisting>
-<![CDATA[shell> tar -xzf path/to/pg_sphere_xxx.tgz]]>
+<![CDATA[shell> tar -xzf path/to/pgsphere-X.X.X.tgz]]>
             </programlisting>
             <para>
                 Now, change into the <filename>pg_sphere</filename>
@@ -58,7 +65,7 @@
               First unpack the <application>pgSphere</application> sources:
             </para>
             <programlisting>
-<![CDATA[shell> tar -xzf path_to_pg_sphere_xxx.tgz]]>
+<![CDATA[shell> tar -xzf path/to/pgsphere-X.X.X.tgz]]>
             </programlisting>
             <para>
               Now, change into the <filename>pg_sphere</filename>
@@ -80,12 +87,6 @@
             <programlisting>
 <![CDATA[shell> make installcheck]]>
             </programlisting>
-            <para>
-                The check status will be displayed. Please note, the check gives different results with
-		different <application>PostgreSQL</application>-versions. Currently, the check should
-		run without errors with <application>PostgreSQL</application>-version 8.4. Otherwise check
-		the file <filename>regression.diff</filename>.
-            </para>
 
         </sect1>
 
@@ -105,11 +106,13 @@
 <![CDATA[shell> psql -U postgres -c 'CREATE EXTENSION pg_sphere' datab]]>
             </programlisting>
             <para>
-                Depending on your system, it may be necessary to give more
-                <command>psql</command> options like port or host name.
-                Please have a look at the
-                <application>PostgreSQL</application> documentation for more
-                details.
+                It may be necessary to give more
+                <command>psql</command> options, like port or host name,
+                depending on your system.
+                Please take a look at the psql user manual for details.
+                The psql user manual for the latest postgresql version can be
+                found at <ulink url="https://www.postgresql.org/docs/current/app-psql.html">
+                PostgreSQL site</ulink>.
             </para>
             <para>
                 To get the version of installed pgSphere software, simply
