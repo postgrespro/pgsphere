@@ -14,8 +14,8 @@
                 cloning the repository with the appropriate release tag (each release is
                 marked with a tag).
                 The master branch is intended for development use
-                and can contain an intermediate work.
-                It is not recommented for use in production.
+                and may contain the code in a transitional state.
+                It is not recommended for use in production.
             </para>
         </sect1>
 
