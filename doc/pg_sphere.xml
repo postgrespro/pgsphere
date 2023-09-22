@@ -26,6 +26,10 @@
 <!ENTITY pg_ohgr "<symbol role='symbol'>&ohgr;</symbol>">
 <!ENTITY pg_OHgr "<symbol role='symbol'>&OHgr;</symbol>">
 <!ENTITY pg_pgr "<symbol role='symbol'>&pgr;</symbol>">
+<!ENTITY pgsphere "<application>pgSphere</application>">
+<!ENTITY postgresql "<application>PostgreSQL</application>">
+<!ENTITY pg_config "<application>pg_config</application>">
+<!ENTITY pgsphereurl "https://github.com/postgrespro/pgsphere/releases">
 
 <!ENTITY pg_sphere_version SYSTEM "version.xml">
 ]>

@@ -1,126 +1,98 @@
 <chapter id="install">
  <title>Installation</title>
 
-        <sect1 id="install-download">
-            <title>
-                Download
-            </title>
-            <para>
-                <application>pgSphere</application> is not part of the <application>PostgreSQL</application> software.
-                You can download the latest release sources from the
-                <ulink url="https://github.com/postgrespro/pgsphere/releases">
-                    <application>pgSphere</application> homepage
-                </ulink> (the Releases page). The sources can also be downloaded by
-                cloning the repository with the appropriate release tag (each release is
-                marked with a tag).
-                The master branch is intended for development use
-                and may contain the code in a transitional state.
-                It is not recommended for use in production.
-            </para>
-        </sect1>
+ <sect1 id="install-download">
+  <title>Download</title>
 
-        <sect1 id="install-sect2">
-            <title>
-                Installation
-            </title>
-            <para>
-                We assume that you have
-                <application>PostgreSQL</application> already compiled and
-                installed. Please note: Depending on your system configuration mostly you have to be logged in as the system
-                superuser.
-            </para>
-            <para>
-                There are two ways to compile <application>pgSphere</application>.
-                The first is to copy the sources into the contribution directory of
-                <application>PostgreSQL</application>'s source tree
-                (<filename>POSTGRESQL_SRC/src/contrib</filename>).
-                Then, change into <filename>POSTGRESQL_SRC/src/contrib</filename>.
-                If the sources are not yet installed and the directory
-                <filename>pg_sphere</filename> does not exist, take the
-                gzipped <application>pgSphere</application> sources ( e. g.,
-                <filename>pgsphere-X.X.X.tgz</filename>, where X.X.X is the version number)
-                and run:
-            </para>
-            <programlisting>
+  <para>
+   &pgsphere; is not the part of the &postgresql; software. You can download
+   the latest release sources from the
+   <ulink url="&pgsphereurl;">&pgsphere; Releases page</ulink>.
+   The sources can also be downloaded by cloning the repository with the
+   appropriate release tag. The master branch is intended for development
+   use and may contain the code in a transitional state. It is not recommended
+   for use in production.
+  </para>
+ </sect1>
+
+ <sect1 id="install-build">
+  <title>Install</title>
+  <para>
+   It is assumed that &postgresql; is already installed. Depending on the
+   system configuration, superuser (root) access rights may be required to
+   complete the installation.
+  </para>
+
+  <para>
+   The installation script uses &pg_config; utility. Make sure that the
+   environment variable PATH includes path to &pg_config; utility. The path
+   to &pg_config; can be also specified in make command:
+   make&nbsp;PG_CONFIG=/path/to/pgconfig.
+  </para>
+
+  <para>Unpack the downloaded archive and enter the directory:</para>
+  <programlisting>
 <![CDATA[shell> tar -xzf path/to/pgsphere-X.X.X.tgz]]>
-            </programlisting>
-            <para>
-                Now, change into the <filename>pg_sphere</filename>
-                directory and run :
-            </para>
-            <programlisting>
+<![CDATA[shell> cd pgsphere-X.X.X]]>
+  </programlisting>
+
+  <para>
+   Compile the code. By default, &pgsphere; is compiled with the HEALPIX
+   support.
+  </para>
+  <programlisting>
 <![CDATA[shell> make]]>
-            </programlisting>
-            <para>
-                and to install <application>pgSphere</application> :
-            </para>
-            <programlisting>
+  </programlisting>
+  <para>or compile without HEALPIX support:</para>
+  <programlisting>
+<![CDATA[shell> make USE_HEALPIX=0]]>
+  </programlisting>
+
+  <para>
+   Run regression tests optionally. If the &pgsphere; was compiled without
+   HEALPIX support, USE_HEALPIX=0 should be specified in make command line.
+  </para>
+  <programlisting>
+<![CDATA[shell> make test]]>
+  </programlisting>
+
+  <para>
+   Install &pgsphere; files to the installation directories. The installation
+   directories are defined by &pg_config; utility. Superuser (root) access
+   rights may be required.
+  </para>
+  <programlisting>
 <![CDATA[shell> make install]]>
-            </programlisting>
-            <para>
-              The second way does not require the <application>PostgreSQL</application> sources but
-              the configuration tool <application>pg_config</application>.
-            </para>
-            <para>
-              First unpack the <application>pgSphere</application> sources:
-            </para>
-            <programlisting>
-<![CDATA[shell> tar -xzf path/to/pgsphere-X.X.X.tgz]]>
-            </programlisting>
-            <para>
-              Now, change into the <filename>pg_sphere</filename>
-              directory and run:
-            </para>
-            <programlisting>
-<![CDATA[shell> make USE_PGXS=1 PG_CONFIG=/path/to/pg_config]]>
-            </programlisting>
-            <para>
-              To install <application>pgSphere</application> you have to run :
-            </para>
-            <programlisting>
-<![CDATA[shell> make USE_PGXS=1 PG_CONFIG=/path/to/pg_config install]]>
-            </programlisting>
-            <para>
-                To check the installation change into the <filename>pg_sphere</filename> source
-                directory again and run:
-            </para>
-            <programlisting>
-<![CDATA[shell> make installcheck]]>
-            </programlisting>
+  </programlisting>
 
-        </sect1>
+ </sect1>
 
-        <sect1 id="install-sect3">
-            <title>
-                Creating a database with <application>pgSphere</application>
-            </title>
-            <para>
-                We assume you have already created a database
-                <database>datab</database>, where <database>datab</database>
-                is the name of any database.
-                Presupposing the name of your
-                <application>PostgreSQL</application>'s superuser is
-                <parameter>postgres</parameter>, type:
-            </para>
-            <programlisting>
-<![CDATA[shell> psql -U postgres -c 'CREATE EXTENSION pg_sphere' datab]]>
-            </programlisting>
-            <para>
-                It may be necessary to give more
-                <command>psql</command> options, like port or host name,
-                depending on your system.
-                Please take a look at the psql user manual for details.
-                The psql user manual for the latest postgresql version can be
-                found at <ulink url="https://www.postgresql.org/docs/current/app-psql.html">
-                PostgreSQL site</ulink>.
-            </para>
-            <para>
-                To get the version of installed pgSphere software, simply
-                call:
-            </para>
-            <programlisting>
+ <sect1 id="install-sect3">
+  <title>Configure Extension</title>
+
+  <para>
+   We assume you have already created a database <database>userdb</database>,
+   where <database>userdb</database> is the name of any database. Assume that
+   the name of &postgresql;'s superuser is <parameter>postgres</parameter>.
+  </para>
+  <programlisting>
+<![CDATA[shell> psql -U postgres -c 'CREATE EXTENSION pg_sphere' userdb]]>
+  </programlisting>
+
+  <para>
+   It may be necessary to give more <command>psql</command> options, like port
+   or host name, depending on your system configuration. Please, take a look at
+   the psql user manual for details. The psql user manual for the latest
+   &postgresql; version can be found at
+   <ulink url="https://www.postgresql.org/docs/current/app-psql.html">
+      &postgresql; site
+   </ulink>.
+  </para>
+
+  <para>To get the version of installed pgSphere software:</para>
+  <programlisting>
 <![CDATA[pgsql> SELECT pg_sphere_version();]]>
-            </programlisting>
-        </sect1>
+  </programlisting>
 
+ </sect1>
 </chapter>
