@@ -6,9 +6,9 @@
 
   <para>
    &pgsphere; is not the part of the &postgresql; software. You can download
-   the latest release sources from the
+   the latest release from the
    <ulink url="&pgsphereurl;">&pgsphere; Releases page</ulink>.
-   The sources can also be downloaded by cloning the repository with the
+   The source code can also be downloaded by cloning the repository with the
    appropriate release tag. The master branch is intended for development
    use and may contain the code in a transitional state. It is not recommended
    for use in production.
@@ -27,7 +27,9 @@
    The installation script uses &pg_config; utility. Make sure that the
    environment variable PATH includes path to &pg_config; utility. The path
    to &pg_config; can be also specified in make command:
-   make&nbsp;PG_CONFIG=/path/to/pgconfig.
+    <programlisting>
+<![CDATA[shell> make PG_CONFIG=/path/to/pgconfig ...]]>
+    </programlisting>
   </para>
 
   <para>Unpack the downloaded archive and enter the directory:</para>
@@ -37,20 +39,20 @@
   </programlisting>
 
   <para>
-   Compile the code. By default, &pgsphere; is compiled with the HEALPIX
+   Compile the code. By default, &pgsphere; is compiled with the &healpix;
    support.
   </para>
   <programlisting>
 <![CDATA[shell> make]]>
   </programlisting>
-  <para>or compile without HEALPIX support:</para>
+  <para>or compile without &healpix; support:</para>
   <programlisting>
 <![CDATA[shell> make USE_HEALPIX=0]]>
   </programlisting>
 
   <para>
-   Run regression tests optionally. If the &pgsphere; was compiled without
-   HEALPIX support, USE_HEALPIX=0 should be specified in make command line.
+   Run regression tests optionally. If &pgsphere; was compiled without &healpix;
+   support, USE_HEALPIX=0 should be specified in make command line.
   </para>
   <programlisting>
 <![CDATA[shell> make test]]>
@@ -59,7 +61,8 @@
   <para>
    Install &pgsphere; files to the installation directories. The installation
    directories are defined by &pg_config; utility. Superuser (root) access
-   rights may be required.
+   rights may be required. If &pgsphere; was compiled without &healpix; support,
+   USE_HEALPIX=0 should be added after make.
   </para>
   <programlisting>
 <![CDATA[shell> make install]]>
@@ -89,7 +92,7 @@
    </ulink>.
   </para>
 
-  <para>To get the version of installed pgSphere software:</para>
+  <para>To get the version of installed &pgsphere; software:</para>
   <programlisting>
 <![CDATA[pgsql> SELECT pg_sphere_version();]]>
   </programlisting>

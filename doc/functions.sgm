@@ -30,7 +30,7 @@
             </example>
 
             <example>
-              <title>Area of a moc object</title>
+              <title>Area of a Multi-Order Coverage (MOC) object</title>
               <programlisting>
 <![CDATA[sql> SELECT area(smoc '0/1-3');]]>
 <![CDATA[       area]]>
