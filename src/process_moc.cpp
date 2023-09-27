@@ -122,7 +122,7 @@ char* data_as_char(Smoc* moc, size_t offset = 0)
 static
 char* detoasted_offset(Smoc* moc, size_t offset = 0)
 {
-	return offset + reinterpret_cast<char*>(&(moc->version));
+	return offset + reinterpret_cast<char*>(moc) + offsetof(Smoc, version);
 }
 
 template<class X, class Y>
@@ -240,7 +240,7 @@ struct moc_tree_layout
 		{
 			rest_level = entries - rest_entries;
 			this_page = page_rest;
-		}			
+		}
 		else // there is only a single page fragment at this level
 		{
 			rest_level = 0;
@@ -526,13 +526,13 @@ get_moc_size(void* moc_in_context, pgs_error_handler error_out)
 		}
 		if (check == b_tree_inf)
 			throw std::logic_error("infinite loop for MOC B-tree depth");
-		
+
 		// layout: start with the section of the ends of each B+-tree level
 		size_t depth = m.layout.size() - 1;
 		moc_size += depth * MOC_INDEX_ALIGN;
 		// layout: B+-tree layout, starting at root node
 		for (unsigned k = depth; k >= 1; --k)
-{		
+{
 			m.layout[k].layout_level(moc_size, MOC_TREE_ENTRY_SIZE);
 }
 		if (m.layout[depth].level_end > static_cast<size_t>(
@@ -568,7 +568,7 @@ create_moc_release_context(void* moc_in_context, Smoc* moc,
 
 		hpint64	area = 0;
 
-		// this guards against  
+		// this guards against
 		char* moc_data = detoasted_offset(moc, 0);
 
 		// All levels will be filled out from end to beginning such that
@@ -726,7 +726,7 @@ order_break(output_map & outputs, const moc_interval & x, int max_order)
 void
 ascii_out(std::string & m_s, char* s, Smoc* moc, int32 begin, int32 end,
 															int32 entry_size)
-{	
+{
 	// moc output fiddling:
 	int order = moc->order;
 	m_s.reserve(end); // rough guess
@@ -817,7 +817,7 @@ create_moc_out_context(Smoc* moc, int32 end, pgs_error_handler error_out)
 	return ret;
 }
 
-void 
+void
 release_moc_out_context(moc_out_data out_context, pgs_error_handler error_out)
 {
 	release_context<moc_output>(out_context.context, error_out);
