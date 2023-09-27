@@ -39,8 +39,7 @@
   </programlisting>
 
   <para>
-   Compile the code. By default, &pgsphere; is compiled with the &healpix;
-   support.
+   Compile the code. By default, &pgsphere; is compiled with &healpix; support.
   </para>
   <programlisting>
 <![CDATA[shell> make]]>
