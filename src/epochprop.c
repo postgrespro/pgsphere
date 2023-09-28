@@ -35,27 +35,44 @@ stuffing an updated phase vector in result.
 
 This does not propagate errors.
 */
-static void propagate_phasevec(
-	const phasevec *pv,
-	const double delta_t,
-	phasevec *result) {
+static void
+propagate_phasevec(const phasevec *pv,
+				   const double delta_t,
+				   phasevec *result)
+{
 
-	double distance_factor, mu0abs, zeta0, parallax;
+	double		distance_factor,
+				mu0abs,
+				zeta0,
+				parallax;
 
-	Vector3D p0, r0, q0;
-	Vector3D mu0, pprime, qprime, mu, muprime, u, uprime;
+	Vector3D	p0,
+				r0,
+				q0;
+	Vector3D	mu0,
+				pprime,
+				qprime,
+				mu,
+				muprime,
+				u,
+				uprime;
 
-	/* for very small or null parallaxes, our algorithm breaks; avoid that
-		and, if we did emergency measures, do not talk about parallax and
-		radial velocity in the output */
-	if (pv->parallax_valid) {
+	/*
+	 * for very small or null parallaxes, our algorithm breaks; avoid that
+	 * and, if we did emergency measures, do not talk about parallax and
+	 * radial velocity in the output
+	 */
+	if (pv->parallax_valid)
+	{
 		parallax = pv->parallax;
-	} else {
+	}
+	else
+	{
 		parallax = PX_MIN;
 	}
 	result->parallax_valid = pv->parallax_valid;
 
-	/* compute the normal triad as Vector3D-s, eq. (1.2.15)*/
+	/* compute the normal triad as Vector3D-s, eq. (1.2.15) */
 	spoint_vector3d(&r0, &(pv->pos));
 
 	p0.x = -sin(pv->pos.lng);
@@ -72,13 +89,15 @@ static void propagate_phasevec(
 	vector3d_addwithscalar(&mu0, pv->pm[1], &q0);
 	mu0abs = vector3d_length(&mu0);
 
-	/* radial velocity in mas/yr ("change of parallax per year").  eq. (1.5.24)
-		We're transforming this to rad/yr so the units work out below */
+	/*
+	 * radial velocity in mas/yr ("change of parallax per year").  eq.
+	 * (1.5.24) We're transforming this to rad/yr so the units work out below
+	 */
 	zeta0 = (pv->rv * parallax / A_NU) / 3.6e6 / RADIANS;
 	/* distance factor eq. (1.5.25) */
-	distance_factor = 1/sqrt(1
-		+ 2 * zeta0 * delta_t
-		+ (mu0abs * mu0abs + zeta0 * zeta0) * delta_t * delta_t);
+	distance_factor = 1 / sqrt(1
+							   + 2 * zeta0 * delta_t
+							   + (mu0abs * mu0abs + zeta0 * zeta0) * delta_t * delta_t);
 
 	/* the propagated proper motion vector, eq. (1.5.28) */
 	muprime.x = muprime.y = muprime.z = 0;
@@ -88,7 +107,7 @@ static void propagate_phasevec(
 	vector3d_addwithscalar(&mu, pow(distance_factor, 3), &muprime);
 
 	/* parallax, eq. (1.5.27) */
-	result->parallax = distance_factor*parallax;
+	result->parallax = distance_factor * parallax;
 	/* zeta/rv, eq. (1.5.29); go back from rad to mas, too */
 	result->rv = (zeta0 + (mu0abs * mu0abs + zeta0 * zeta0) * delta_t)
 		* distance_factor * distance_factor
@@ -128,46 +147,64 @@ static void propagate_phasevec(
 	pmlat, pmlong (in rad/yr), rv (in km/s).
 */
 Datum
-epoch_prop(PG_FUNCTION_ARGS) {
-	double delta_t;
-	phasevec input, output;
-	ArrayType *result;
-	Datum retvals[6];
+epoch_prop(PG_FUNCTION_ARGS)
+{
+	double		delta_t;
+	phasevec	input,
+				output;
+	ArrayType  *result;
+	Datum		retvals[6];
 
-	if (PG_ARGISNULL(0)) {
+	if (PG_ARGISNULL(0))
+	{
 		ereport(ERROR,
-			(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
-				errmsg("NULL position not supported in epoch propagation"))); }
-	memcpy(&(input.pos), (void*)PG_GETARG_POINTER(0), sizeof(SPoint));
-	if (PG_ARGISNULL(1)) {
+				(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
+				 errmsg("NULL position not supported in epoch propagation")));
+	}
+	memcpy(&(input.pos), (void *) PG_GETARG_POINTER(0), sizeof(SPoint));
+	if (PG_ARGISNULL(1))
+	{
 		input.parallax = 0;
-	} else {
+	}
+	else
+	{
 		input.parallax = PG_GETARG_FLOAT8(1);
 	}
 	input.parallax_valid = fabs(input.parallax) > PX_MIN;
-	
-	if (PG_ARGISNULL(2)) {
+
+	if (PG_ARGISNULL(2))
+	{
 		input.pm[0] = 0;
-	} else {
+	}
+	else
+	{
 		input.pm[0] = PG_GETARG_FLOAT8(2);
 	}
 
-	if (PG_ARGISNULL(3)) {
+	if (PG_ARGISNULL(3))
+	{
 		input.pm[1] = 0;
-	} else {
+	}
+	else
+	{
 		input.pm[1] = PG_GETARG_FLOAT8(3);
 	}
 
-	if (PG_ARGISNULL(4)) {
+	if (PG_ARGISNULL(4))
+	{
 		input.rv = 0;
-	} else {
+	}
+	else
+	{
 		input.rv = PG_GETARG_FLOAT8(4);
 	}
 
-	if (PG_ARGISNULL(5)) {
+	if (PG_ARGISNULL(5))
+	{
 		ereport(ERROR,
-			(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
-				errmsg("NULL delta t not supported in epoch propagation"))); }
+				(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),
+				 errmsg("NULL delta t not supported in epoch propagation")));
+	}
 	delta_t = PG_GETARG_FLOAT8(5);
 
 	propagate_phasevec(&input, delta_t, &output);
@@ -181,23 +218,24 @@ epoch_prop(PG_FUNCTION_ARGS) {
 	retvals[5] = Float8GetDatum(output.rv);
 
 	{
-		bool isnull[6] = {0, 0, 0, 0, 0, 0};
-		int lower_bounds[1] = {1};
-		int dims[1] = {6};
+		bool		isnull[6] = {0, 0, 0, 0, 0, 0};
+		int			lower_bounds[1] = {1};
+		int			dims[1] = {6};
 #ifdef USE_FLOAT8_BYVAL
-		bool embyval = true;
+		bool		embyval = true;
 #else
-		bool embyval = false;
+		bool		embyval = false;
 #endif
 
-		if (! output.parallax_valid) {
+		if (!output.parallax_valid)
+		{
 			/* invalidate parallax and rv */
 			isnull[2] = 1;
 			isnull[5] = 1;
 		}
 
 		result = construct_md_array(retvals, isnull, 1, dims, lower_bounds,
-			FLOAT8OID, sizeof(float8), embyval, 'd');
+									FLOAT8OID, sizeof(float8), embyval, 'd');
 	}
 	PG_RETURN_ARRAYTYPE_P(result);
 }

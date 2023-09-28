@@ -68,7 +68,7 @@ my_acos(float8 a)
 static void
 sellipse_check(SELLIPSE *e)
 {
-	SPoint sp;
+	SPoint		sp;
 
 	sp.lng = e->phi;
 	spoint_check(&sp);
@@ -92,7 +92,7 @@ sellipse_check(SELLIPSE *e)
 static void
 sellipse_circle(SCIRCLE *sc, const SELLIPSE *e)
 {
-	SPoint sp;
+	SPoint		sp;
 
 	sellipse_center(&sp, e);
 	memcpy((void *) &sc->center, (void *) &sp, sizeof(SPoint));
@@ -136,7 +136,7 @@ sellipse_in(float8 r1, float8 r2, const SPoint *c, float8 inc)
 static float8
 sellipse_dist(float8 rada, float8 radb, float8 ang)
 {
-	float8 e;
+	float8		e;
 
 	e = (1 - Sqr(sin(radb)) / Sqr(sin(rada)));
 	return (asin(sin(radb) / sqrt(1 - e * Sqr(cos(ang)))));
@@ -148,9 +148,11 @@ sellipse_dist(float8 rada, float8 radb, float8 ang)
 static float8
 sellipse_point_dist(const SELLIPSE *se, const SPoint *sp)
 {
-	SEuler e;
-	SPoint p;
-	float8 dist, rad, ang;
+	SEuler		e;
+	SPoint		p;
+	float8		dist,
+				rad,
+				ang;
 
 	sellipse_trans(&e, se);
 	spheretrans_inv(&e);
@@ -193,9 +195,9 @@ sellipse_point_dist(const SELLIPSE *se, const SPoint *sp)
 static void
 euler_sellipse_trans(SELLIPSE *out, const SELLIPSE *in, const SEuler *se)
 {
-	SEuler	et;
-	SLine	sl[2];
-	SPoint	p[2];
+	SEuler		et;
+	SLine		sl[2];
+	SPoint		p[2];
 
 	sellipse_trans(&et, in);
 	sl[0].length = PIH;
@@ -228,7 +230,7 @@ euler_sellipse_trans(SELLIPSE *out, const SELLIPSE *in, const SEuler *se)
 static int8
 sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 {
-	int8 r;
+	int8		r;
 
 	/* equality */
 	if (sellipse_eq(se1, se2))
@@ -240,7 +242,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 	if (FPeq(se2->rad[0], se2->rad[1]))
 	{
 
-		SCIRCLE c;
+		SCIRCLE		c;
 
 		sellipse_circle(&c, se2);
 		r = sellipse_circle_pos(se1, &c);
@@ -265,7 +267,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 	if (FPeq(se1->rad[0], se1->rad[1]))
 	{
 
-		SCIRCLE c;
+		SCIRCLE		c;
 
 		sellipse_circle(&c, se1);
 		r = sellipse_circle_pos(se2, &c);
@@ -288,7 +290,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 	/* se2 is line */
 	if (FPzero(se2->rad[1]))
 	{
-		SLine	l;
+		SLine		l;
 
 		sellipse_line(&l, se2);
 		r = sellipse_line_pos(se1, &l);
@@ -309,7 +311,7 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 	/* se1 is line */
 	if (FPzero(se1->rad[1]))
 	{
-		SLine	l;
+		SLine		l;
 
 		sellipse_line(&l, se1);
 		r = sellipse_line_pos(se2, &l);
@@ -331,8 +333,9 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 	do
 	{
 
-		SPoint	p1, p2;
-		float8	dist;
+		SPoint		p1,
+					p2;
+		float8		dist;
 
 		/* check inner and outer circles */
 		sellipse_center(&p1, se1);
@@ -353,7 +356,8 @@ sellipse_ellipse_pos(const SELLIPSE *se1, const SELLIPSE *se2)
 		else
 		{
 			SEuler		eul;
-			SELLIPSE		etmp, e;
+			SELLIPSE	etmp,
+						e;
 			SPoint		sp[3];
 			int			i;
 			float8		diff[3];
@@ -515,9 +519,9 @@ sellipse_line(SLine *sl, const SELLIPSE *e)
 {
 	if (!FPzero(e->rad[0]))
 	{
-		SEuler se;
-		SLine slt;
-		SPoint p[2];
+		SEuler		se;
+		SLine		slt;
+		SPoint		p[2];
 
 		p[0].lat = p[1].lat = 0.0;
 		p[0].lng = -e->rad[0];
@@ -543,7 +547,7 @@ sellipse_eq(const SELLIPSE *e1, const SELLIPSE *e2)
 	else if (FPzero(e1->rad[0]))
 	{
 		/* point */
-		SPoint p[2];
+		SPoint		p[2];
 
 		sellipse_center(&p[0], e1);
 		sellipse_center(&p[1], e2);
@@ -552,7 +556,7 @@ sellipse_eq(const SELLIPSE *e1, const SELLIPSE *e2)
 	else if (FPeq(e1->rad[0], e1->rad[1]))
 	{
 		/* circle */
-		SCIRCLE c[2];
+		SCIRCLE		c[2];
 
 		sellipse_circle(&c[0], e1);
 		sellipse_circle(&c[1], e2);
@@ -560,7 +564,7 @@ sellipse_eq(const SELLIPSE *e1, const SELLIPSE *e2)
 	}
 	else
 	{
-		SEuler se[2];
+		SEuler		se[2];
 
 		sellipse_trans(&se[0], e1);
 		sellipse_trans(&se[1], e2);
@@ -663,8 +667,8 @@ sellipse_line_pos(const SELLIPSE *se, const SLine *sl)
 	/* ellipse is line */
 	if (FPzero(se->rad[1]))
 	{
-		SLine l;
-		int8 res;
+		SLine		l;
+		int8		res;
 
 		sellipse_line(&l, se);
 		res = sline_sline_pos(&l, sl);
@@ -867,8 +871,8 @@ sellipse_circle_pos(const SELLIPSE *se, const SCIRCLE *sc)
 	/* ellipse is circle */
 	if (FPeq(se->rad[0], se->rad[1]))
 	{
-		SCIRCLE	tc;
-		float8	dist;
+		SCIRCLE		tc;
+		float8		dist;
 
 		sellipse_circle(&tc, se);
 		if (scircle_eq(&tc, sc))
@@ -897,8 +901,8 @@ sellipse_circle_pos(const SELLIPSE *se, const SCIRCLE *sc)
 	/* ellipse is line */
 	if (FPzero(se->rad[1]))
 	{
-		SLine	l;
-		int8	res;
+		SLine		l;
+		int8		res;
 
 		sellipse_line(&l, se);
 		res = sphereline_circle_pos(&l, sc);
@@ -919,12 +923,11 @@ sellipse_circle_pos(const SELLIPSE *se, const SCIRCLE *sc)
 	else
 	{
 		/*
-		 * now ellipse is a real ellipse and
-		 * circle is a real circle
+		 * now ellipse is a real ellipse and circle is a real circle
 		 */
 
-		float8	dist;
-		SPoint	c;
+		float8		dist;
+		SPoint		c;
 
 		sellipse_center(&c, se);
 		dist = spoint_dist(&sc->center, &c);
@@ -948,9 +951,10 @@ sellipse_circle_pos(const SELLIPSE *se, const SCIRCLE *sc)
 		else
 		{
 
-			SEuler	et;
-			SPoint	p;
-			float8	a, e;
+			SEuler		et;
+			SPoint		p;
+			float8		a,
+						e;
 
 			sellipse_trans(&et, se);
 			spheretrans_inv(&et);

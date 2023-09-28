@@ -12,7 +12,7 @@ PG_MODULE_MAGIC;
 static void
 key_add_point(int32 *key, const SPoint *p)
 {
-	int32	k[6];
+	int32		k[6];
 
 	spherepoint_gen_key(&k[0], p);
 	spherekey_union_two(key, &k[0]);
@@ -51,7 +51,7 @@ void
 spherepoint_gen_key(int32 *k, const SPoint *sp)
 {
 	Vector3D	v;
-	const int32	ks = MAXCVALUE;
+	const int32 ks = MAXCVALUE;
 
 	spoint_vector3d(&v, sp);
 
@@ -81,7 +81,7 @@ spherecircle_gen_key(int32 *k, const SCIRCLE *c)
 {
 	double		r,
 				d;
-	const int32	ks = MAXCVALUE;
+	const int32 ks = MAXCVALUE;
 	int			i;
 	Vector3D	v[8];
 	Vector3D	tv;
@@ -186,7 +186,7 @@ sphereellipse_gen_key(int32 *k, const SELLIPSE *e)
 {
 	double		r[2],
 				d;
-	const int32	ks = MAXCVALUE;
+	const int32 ks = MAXCVALUE;
 	int			i;
 	Vector3D	v[8];
 	Vector3D	tv;
@@ -286,7 +286,7 @@ sphereellipse_gen_key(int32 *k, const SELLIPSE *e)
 void
 sphereline_gen_key(int32 *k, const SLine *sl)
 {
-	const int32	ks = MAXCVALUE;
+	const int32 ks = MAXCVALUE;
 	SPoint		p[3];
 
 	sline_begin(&p[0], sl);
@@ -294,7 +294,8 @@ sphereline_gen_key(int32 *k, const SLine *sl)
 
 	if (FPzero(sl->length))
 	{
-		Vector3D	vbeg, vend;
+		Vector3D	vbeg,
+					vend;
 
 		spoint_vector3d(&vbeg, &p[0]);
 		spoint_vector3d(&vend, &p[1]);
@@ -386,11 +387,11 @@ sphereline_gen_key(int32 *k, const SLine *sl)
 void
 spherepoly_gen_key(int32 *key, const SPOLY *sp)
 {
-	int32	i;
-	SLine	l;
-	SPoint	p;
-	int32	tk[6];
-	bool	start = true;
+	int32		i;
+	SLine		l;
+	SPoint		p;
+	int32		tk[6];
+	bool		start = true;
 
 	for (i = 0; i < sp->npts; i++)
 	{
@@ -452,7 +453,7 @@ spherepath_gen_key(int32 *key, const SPATH *sp)
 	int32		tk[6];
 	bool		start = true;
 
-	for (i=0; i < sp->npts - 1; i++)
+	for (i = 0; i < sp->npts - 1; i++)
 	{
 		sline_from_points(&l, &sp->p[i], &sp->p[i + 1]);
 		sphereline_gen_key(&tk[0], &l);
@@ -476,8 +477,8 @@ spherepath_gen_key(int32 *key, const SPATH *sp)
 void
 spherebox_gen_key(int32 *key, const SBOX *box)
 {
-	SPoint	p;
-	float8	d;
+	SPoint		p;
+	float8		d;
 
 	key[0] = key[1] = key[2] = MAXCVALUE;
 	key[3] = key[4] = key[5] = -MAXCVALUE;

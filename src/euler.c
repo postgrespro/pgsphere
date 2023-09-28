@@ -108,9 +108,8 @@ spheretrans_from_float8_and_type(PG_FUNCTION_ARGS)
 	d[0] = PG_GETARG_DATUM(0);
 	d[1] = PG_GETARG_DATUM(1);
 	d[2] = PG_GETARG_DATUM(2);
-	se = (SEuler *) DatumGetPointer(
-						DirectFunctionCall3(spheretrans_from_float8,
-											d[0], d[1], d[2]));
+	se = (SEuler *) DatumGetPointer(DirectFunctionCall3(spheretrans_from_float8,
+														d[0], d[1], d[2]));
 
 	for (i = 0; i < 3; i++)
 	{
@@ -165,7 +164,8 @@ seuler_set_zxz(SEuler *se)
 bool
 strans_eq(const SEuler *e1, const SEuler *e2)
 {
-	SPoint	in[2], p[4];
+	SPoint		in[2],
+				p[4];
 
 	in[0].lng = 0.0;
 	in[0].lat = 0.0;
@@ -210,6 +210,7 @@ Datum
 spheretrans_theta(PG_FUNCTION_ARGS)
 {
 	SEuler	   *se = (SEuler *) PG_GETARG_POINTER(0);
+
 	PG_RETURN_FLOAT8(se->theta);
 }
 
@@ -267,8 +268,8 @@ spheretrans_type(PG_FUNCTION_ARGS)
 void
 spheretrans_inv(SEuler *se)
 {
-	float8				lng[3];
-	const unsigned char	c = se->phi_a;
+	float8		lng[3];
+	const unsigned char c = se->phi_a;
 
 	lng[2] = -se->phi;
 	lng[1] = -se->theta;
@@ -298,7 +299,7 @@ strans_zxz(SEuler *ret, const SEuler *se)
 	}
 	else
 	{
-		SEuler	tmp;
+		SEuler		tmp;
 
 		tmp.psi = 0.0;
 		tmp.theta = 0.0;
@@ -339,7 +340,7 @@ spheretrans_invert(PG_FUNCTION_ARGS)
 void
 seuler_trans_zxz(SEuler *out, const SEuler *in, const SEuler *se)
 {
-	SPoint	sp[4];
+	SPoint		sp[4];
 
 	sp[0].lng = 0.0;
 	sp[0].lat = 0.0;
@@ -380,7 +381,8 @@ spheretrans_trans_inv(PG_FUNCTION_ARGS)
 void
 euler_spoint_trans(SPoint *out, const SPoint *in, const SEuler *se)
 {
-	Vector3D	v, o;
+	Vector3D	v,
+				o;
 
 	spoint_vector3d(&v, in);
 	euler_vector_trans(&o, &v, se);
@@ -425,7 +427,9 @@ spherevector_to_euler_inv(SEuler *se, const SPoint *spb, const SPoint *spe)
 	}
 	else
 	{
-		Vector3D	vbeg, vend, vtmp;
+		Vector3D	vbeg,
+					vend,
+					vtmp;
 		SPoint		spt[2];
 		SEuler		set;
 
@@ -448,7 +452,7 @@ spherevector_to_euler_inv(SEuler *se, const SPoint *spb, const SPoint *spe)
 bool
 spherevector_to_euler(SEuler *se, const SPoint *spb, const SPoint *spe)
 {
-	bool	ret;
+	bool		ret;
 
 	ret = spherevector_to_euler_inv(se, spb, spe);
 	if (ret)
@@ -461,10 +465,13 @@ spherevector_to_euler(SEuler *se, const SPoint *spb, const SPoint *spe)
 void
 euler_vector_trans(Vector3D *out, const Vector3D *in, const SEuler *se)
 {
-	int				i;
-	unsigned char	t;
-	const double   *a;
-	double 			u[3], vr[3], sa, ca;
+	int			i;
+	unsigned char t;
+	const double *a;
+	double		u[3],
+				vr[3],
+				sa,
+				ca;
 
 	t = 0;
 	a = NULL;

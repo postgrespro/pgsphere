@@ -11,8 +11,8 @@
  */
 typedef struct
 {
-	SPoint	sw;		/* South-west value of a box */
-	SPoint	ne;		/* North-east value of a box */
+	SPoint		sw;				/* South-west value of a box */
+	SPoint		ne;				/* North-east value of a box */
 } SBOX;
 
 
@@ -56,373 +56,373 @@ typedef struct
 /*
  * Checks whether two boxes are equal.
  */
-bool	sbox_eq(SBOX *b1, SBOX *b2);
+bool		sbox_eq(SBOX *b1, SBOX *b2);
 
 /*
  * Checks whether a point is contained by a box.
  */
-bool	sbox_cont_point(const SBOX *b, const SPoint *p);
+bool		sbox_cont_point(const SBOX *b, const SPoint *p);
 
 
 /*
  * Input function of a box.
  */
-Datum	spherebox_in(PG_FUNCTION_ARGS);
+Datum		spherebox_in(PG_FUNCTION_ARGS);
 
 /*
  * Input function of a box from two points. The first point
  * is the south-west position, the second the north-east position.
  */
-Datum	spherebox_in_from_points(PG_FUNCTION_ARGS);
+Datum		spherebox_in_from_points(PG_FUNCTION_ARGS);
 
 /*
  * Returns the south-west edge of a box.
  */
-Datum	spherebox_sw(PG_FUNCTION_ARGS);
+Datum		spherebox_sw(PG_FUNCTION_ARGS);
 
 /*
  * Returns the north-east edge of a box.
  */
-Datum	spherebox_ne(PG_FUNCTION_ARGS);
+Datum		spherebox_ne(PG_FUNCTION_ARGS);
 
 /*
  * Returns the south-east edge of a box.
  */
-Datum	spherebox_se(PG_FUNCTION_ARGS);
+Datum		spherebox_se(PG_FUNCTION_ARGS);
 
 /*
  * Returns the north-west edge of a box.
  */
-Datum	spherebox_nw(PG_FUNCTION_ARGS);
+Datum		spherebox_nw(PG_FUNCTION_ARGS);
 
 /*
  * Returns the area of a box.
  */
-Datum	spherebox_area(PG_FUNCTION_ARGS);
+Datum		spherebox_area(PG_FUNCTION_ARGS);
 
 /*
  * Returns the circumference of a box.
  */
-Datum	spherebox_circ(PG_FUNCTION_ARGS);
+Datum		spherebox_circ(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether two boxes are equal.
  */
-Datum	spherebox_equal(PG_FUNCTION_ARGS);
+Datum		spherebox_equal(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether two boxes are not equal.
  */
-Datum	spherebox_equal_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_equal_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a point is contained by a box.
  */
-Datum	spherebox_cont_point(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_point(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a point isn't contained by a box.
  */
-Datum	spherebox_cont_point_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_point_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a point is contained by a box.
  */
-Datum	spherebox_cont_point_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_point_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a point isn't contained by a box.
  */
-Datum	spherebox_cont_point_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_point_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a circle.
  */
-Datum	spherebox_cont_circle(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_circle(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a circle.
  */
-Datum	spherebox_cont_circle_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_circle_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a circle.
  */
-Datum	spherebox_cont_circle_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_circle_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a circle.
  */
-Datum	spherebox_cont_circle_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_circle_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle contains a box.
  */
-Datum	spherecircle_cont_box(PG_FUNCTION_ARGS);
+Datum		spherecircle_cont_box(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle doesn't contain a box.
  */
-Datum	spherecircle_cont_box_neg(PG_FUNCTION_ARGS);
+Datum		spherecircle_cont_box_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle contains a box.
  */
-Datum	spherecircle_cont_box_com(PG_FUNCTION_ARGS);
+Datum		spherecircle_cont_box_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle doesn't contain a box.
  */
-Datum	spherecircle_cont_box_com_neg(PG_FUNCTION_ARGS);
+Datum		spherecircle_cont_box_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle and a box overlap.
  */
-Datum	spherebox_overlap_circle(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_circle(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle and a box don't overlap.
  */
-Datum	spherebox_overlap_circle_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_circle_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle and a box overlap.
  */
-Datum	spherebox_overlap_circle_com(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_circle_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a circle and a box don't overlap.
  */
-Datum	spherebox_overlap_circle_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_circle_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a line.
  */
-Datum	spherebox_cont_line(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_line(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a line.
  */
-Datum	spherebox_cont_line_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_line_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a line.
  */
-Datum	spherebox_cont_line_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_line_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a line.
  */
-Datum	spherebox_cont_line_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_line_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a line overlap.
  */
-Datum	spherebox_overlap_line(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_line(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a line don't overlap.
  */
-Datum	spherebox_overlap_line_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_line_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a line overlap.
  */
-Datum	spherebox_overlap_line_com(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_line_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a line don't overlap.
  */
-Datum	spherebox_overlap_line_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_line_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a path.
  */
-Datum	spherebox_cont_path(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_path(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a path.
  */
-Datum	spherebox_cont_path_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_path_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a path.
  */
-Datum	spherebox_cont_path_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_path_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a path.
  */
-Datum	spherebox_cont_path_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_path_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a path overlap.
  */
-Datum	spherebox_overlap_path(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_path(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a path don't overlap.
  */
-Datum	spherebox_overlap_path_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_path_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a path overlap.
  */
-Datum	spherebox_overlap_path_com(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_path_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box and a path don't overlap.
  */
-Datum	spherebox_overlap_path_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_path_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a polygon.
  */
-Datum	spherebox_cont_poly(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_poly(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a polygon.
  */
-Datum	spherebox_cont_poly_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_poly_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains a polygon.
  */
-Datum	spherebox_cont_poly_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_poly_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain a polygon.
  */
-Datum	spherebox_cont_poly_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_poly_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon contains a box.
  */
-Datum	spherepoly_cont_box(PG_FUNCTION_ARGS);
+Datum		spherepoly_cont_box(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon doesn't contain a box.
  */
-Datum	spherepoly_cont_box_neg(PG_FUNCTION_ARGS);
+Datum		spherepoly_cont_box_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon contains a box.
  */
-Datum	spherepoly_cont_box_com(PG_FUNCTION_ARGS);
+Datum		spherepoly_cont_box_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon doesn't contain a box.
  */
-Datum	spherepoly_cont_box_com_neg(PG_FUNCTION_ARGS);
+Datum		spherepoly_cont_box_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon and a box overlap.
  */
-Datum	spherebox_overlap_poly(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_poly(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon and a box don't overlap.
  */
-Datum	spherebox_overlap_poly_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_poly_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon and a box overlap.
  */
-Datum	spherebox_overlap_poly_com(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_poly_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a polygon and a box don't overlap.
  */
-Datum	spherebox_overlap_poly_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_poly_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains an ellipse.
  */
-Datum	spherebox_cont_ellipse(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_ellipse(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain an ellipse.
  */
-Datum	spherebox_cont_ellipse_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_ellipse_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains an ellipse.
  */
-Datum	spherebox_cont_ellipse_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_ellipse_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain an ellipse.
  */
-Datum	spherebox_cont_ellipse_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_ellipse_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse contains a box.
  */
-Datum	sphereellipse_cont_box(PG_FUNCTION_ARGS);
+Datum		sphereellipse_cont_box(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse doesn't contain a box.
  */
-Datum	sphereellipse_cont_box_neg(PG_FUNCTION_ARGS);
+Datum		sphereellipse_cont_box_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse contains a box.
  */
-Datum	sphereellipse_cont_box_com(PG_FUNCTION_ARGS);
+Datum		sphereellipse_cont_box_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse doesn't contain a box.
  */
-Datum	sphereellipse_cont_box_com_neg(PG_FUNCTION_ARGS);
+Datum		sphereellipse_cont_box_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse and a box overlap.
  */
-Datum	spherebox_overlap_ellipse(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_ellipse(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse and a box don't overlap.
  */
-Datum	spherebox_overlap_ellipse_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_ellipse_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse and a box overlap.
  */
-Datum	spherebox_overlap_ellipse_com(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_ellipse_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether an ellipse and a box don't overlap.
  */
-Datum	spherebox_overlap_ellipse_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_ellipse_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains another box.
  */
-Datum	spherebox_cont_box(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_box(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain another box.
  */
-Datum	spherebox_cont_box_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_box_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box contains another box.
  */
-Datum	spherebox_cont_box_com(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_box_com(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether a box doesn't contain another box.
  */
-Datum	spherebox_cont_box_com_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_cont_box_com_neg(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether two boxes overlap.
  */
-Datum	spherebox_overlap_box(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_box(PG_FUNCTION_ARGS);
 
 /*
  * Checks whether two boxes don't overlap.
  */
-Datum	spherebox_overlap_box_neg(PG_FUNCTION_ARGS);
+Datum		spherebox_overlap_box_neg(PG_FUNCTION_ARGS);
 
 #endif

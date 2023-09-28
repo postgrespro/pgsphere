@@ -84,7 +84,7 @@ sbox_check(SBOX *box)
 	if (FPgt(box->sw.lat, box->ne.lat))
 	{
 		/* swap */
-		SPoint sp;
+		SPoint		sp;
 
 		memcpy((void *) &sp, (void *) &box->sw, sizeof(SPoint));
 		memcpy((void *) &box->sw, (void *) &box->ne, sizeof(SPoint));
@@ -130,10 +130,10 @@ sbox_circle_pos(const SCIRCLE *sc, const SBOX *sb)
 		const SPoint tmps = {0.0, -PIH};
 
 		if (spoint_eq(&sb->ne, &tmpn) &&
-				FPge(sc->center.lat - sc->radius, sb->sw.lat))
+			FPge(sc->center.lat - sc->radius, sb->sw.lat))
 		{
 			if (spoint_eq(&sc->center, &tmpn) &&
-					FPeq(sc->radius, (PIH - sb->sw.lat)))
+				FPeq(sc->radius, (PIH - sb->sw.lat)))
 			{
 				return PGS_BOX_CIRCLE_EQUAL;
 			}
@@ -146,7 +146,7 @@ sbox_circle_pos(const SCIRCLE *sc, const SBOX *sb)
 				 FPle(sc->center.lat + sc->radius, sb->ne.lat))
 		{
 			if (spoint_eq(&sc->center, &tmps) &&
-					FPeq(sc->radius, (PIH + sb->ne.lat)))
+				FPeq(sc->radius, (PIH + sb->ne.lat)))
 			{
 				return PGS_BOX_CIRCLE_EQUAL;
 			}
@@ -169,8 +169,8 @@ sbox_circle_pos(const SCIRCLE *sc, const SBOX *sb)
 	else
 	{
 		bool		lat_b_cont_c =
-						((sc->center.lat + sc->radius) <= sb->ne.lat) &&
-						((sc->center.lat - sc->radius) >= sb->sw.lat);
+			((sc->center.lat + sc->radius) <= sb->ne.lat) &&
+			((sc->center.lat - sc->radius) >= sb->sw.lat);
 		bool		bcc = sbox_cont_point(sb, &sc->center);
 		bool		ccb = false;
 		int8		pw,
@@ -218,8 +218,8 @@ sbox_circle_pos(const SCIRCLE *sc, const SBOX *sb)
 		}
 		if (bcc && lat_b_cont_c)
 		{
-			bool	touw = false,
-					toue = false;
+			bool		touw = false,
+						toue = false;
 
 			if (pw == PGS_CIRCLE_LINE_OVER)
 			{
@@ -255,11 +255,19 @@ sbox_circle_pos(const SCIRCLE *sc, const SBOX *sb)
 static int8
 sbox_line_pos(const SLine *sl, const SBOX *sb)
 {
-	SPoint	p1, p2, pbg, ped;
-	SPoint	lc[4];
-	int8	pw, pe, lcn, lcs;
-	SLine	bw, be;
-	float8	minlat,	maxlat;
+	SPoint		p1,
+				p2,
+				pbg,
+				ped;
+	SPoint		lc[4];
+	int8		pw,
+				pe,
+				lcn,
+				lcs;
+	SLine		bw,
+				be;
+	float8		minlat,
+				maxlat;
 
 	sline_begin(&pbg, sl);
 	sline_end(&ped, sl);
@@ -308,7 +316,7 @@ sbox_line_pos(const SLine *sl, const SBOX *sb)
 
 	/* special case: east/west boundaries are connected */
 	if ((FPeq(sb->ne.lat, PIH) || FPeq(sb->sw.lat, -PIH)) &&
-			FPeq(fabs(sb->sw.lng - sb->ne.lng), PI))
+		FPeq(fabs(sb->sw.lng - sb->ne.lng), PI))
 	{
 		if (FPeq(sb->ne.lat, PIH))
 		{
@@ -377,13 +385,13 @@ sbox_line_pos(const SLine *sl, const SBOX *sb)
 
 	if (pw && pe)
 	{
-		SPoint	sp;
-		int		i;
+		SPoint		sp;
+		int			i;
 
 		for (i = 0; i < lcn; i++)
 		{
 			if (sbox_cont_point(sb, &lc[i]) &&
-					(!spoint_eq(&pbg, &lc[i]) && !spoint_eq(&ped, &lc[i])))
+				(!spoint_eq(&pbg, &lc[i]) && !spoint_eq(&ped, &lc[i])))
 			{
 				return PGS_BOX_LINE_OVER;
 			}
@@ -403,7 +411,7 @@ sbox_line_pos(const SLine *sl, const SBOX *sb)
 	}
 	else if (!pw && !pe)
 	{
-		int		i;
+		int			i;
 
 		for (i = 0; i < lcn; i++)
 		{
@@ -558,7 +566,7 @@ sbox_ellipse_pos(const SELLIPSE *ell, const SBOX *box)
 
 	if (spoint_eq(&box->sw, &box->ne))
 	{
-		bool	scp = sellipse_cont_point(ell, &box->sw);
+		bool		scp = sellipse_cont_point(ell, &box->sw);
 
 		if (scp)
 		{
@@ -622,8 +630,8 @@ sbox_ellipse_pos(const SELLIPSE *ell, const SBOX *box)
 		{
 			/* full latitude range */
 			if ((po == PGS_CIRCLE_CONT_ELLIPSE
-						|| po == PGS_ELLIPSE_CIRCLE_EQUAL) &&
-					pi == PGS_ELLIPSE_CIRCLE_AVOID)
+				 || po == PGS_ELLIPSE_CIRCLE_EQUAL) &&
+				pi == PGS_ELLIPSE_CIRCLE_AVOID)
 			{
 				return PGS_BOX_CONT_ELLIPSE;
 			}
@@ -674,15 +682,15 @@ sbox_ellipse_pos(const SELLIPSE *ell, const SBOX *box)
 	{
 		/* center is between west and east meridians */
 		if ((FPgt(box->sw.lng, box->ne.lng) &&
-					(FPle(ec.lng, box->ne.lng) || FPgt(ec.lng, box->sw.lng))) ||
+			 (FPle(ec.lng, box->ne.lng) || FPgt(ec.lng, box->sw.lng))) ||
 			(FPle(box->sw.lng, box->ne.lng) &&
-					(FPge(ec.lng, box->sw.lng) && FPle(ec.lng, box->ne.lng))))
+			 (FPge(ec.lng, box->sw.lng) && FPle(ec.lng, box->ne.lng))))
 		{
 			if (FPeq(sco.center.lat, sci.center.lat))
 			{
 				if ((po == PGS_CIRCLE_CONT_ELLIPSE
-							|| po == PGS_ELLIPSE_CIRCLE_EQUAL) &&
-						pi == PGS_ELLIPSE_CIRCLE_AVOID)
+					 || po == PGS_ELLIPSE_CIRCLE_EQUAL) &&
+					pi == PGS_ELLIPSE_CIRCLE_AVOID)
 				{
 					return PGS_BOX_CONT_ELLIPSE;
 				}
@@ -710,7 +718,8 @@ sbox_ellipse_pos(const SELLIPSE *ell, const SBOX *box)
 	}
 	else
 	{
-		SPoint	p1, p2;
+		SPoint		p1,
+					p2;
 
 		/* create east/west boundaries */
 		p1.lat = box->sw.lat;
@@ -744,10 +753,14 @@ sbox_ellipse_pos(const SELLIPSE *ell, const SBOX *box)
 static int8
 sbox_box_pos(const SBOX *b1, const SBOX *b2, bool recheck)
 {
-	SPoint	p1, p2, bc;
-	int8	pw, pe;
-	SLine	bw, be;
-	bool	scp;
+	SPoint		p1,
+				p2,
+				bc;
+	int8		pw,
+				pe;
+	SLine		bw,
+				be;
+	bool		scp;
 
 	if (spoint_eq(&b2->sw, &b2->ne))
 	{

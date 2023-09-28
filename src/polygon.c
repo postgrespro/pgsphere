@@ -62,11 +62,12 @@ PG_FUNCTION_INFO_V1(spherepoly_add_points_finalize);
 PG_FUNCTION_INFO_V1(spherepoly_is_convex);
 
 
- /*
+ /* --------
   * Writes "center" of a polygon into 'v'.
   *
   * v    - pointer to the center of a polygon
   * poly - pointer to the polygon
+  * --------
   */
 static void
 spherepoly_center(Vector3D *v, const SPOLY *poly)
@@ -169,7 +170,7 @@ spherepoly_check(const SPOLY *poly)
 static SPOLY *
 spherepoly_from_array(SPoint *arr, int32 nelem)
 {
-	SPOLY *poly = NULL;
+	SPOLY	   *poly = NULL;
 
 	if (nelem < 3)
 	{
@@ -178,9 +179,9 @@ spherepoly_from_array(SPoint *arr, int32 nelem)
 	}
 	else
 	{
-		int32	i;
-		float8	scheck;
-		int32	size;
+		int32		i;
+		float8		scheck;
+		int32		size;
 
 		for (i = 0; i < nelem; i++)
 		{
@@ -216,7 +217,7 @@ spherepoly_from_array(SPoint *arr, int32 nelem)
 			return NULL;
 		}
 
-		size = offsetof(SPOLY, p[0]) +sizeof(SPoint) * nelem;
+		size = offsetof(SPOLY, p[0]) + sizeof(SPoint) * nelem;
 		poly = (SPOLY *) palloc(size);
 		SET_VARSIZE(poly, size);
 		poly->npts = nelem;
@@ -494,15 +495,15 @@ poly_poly_pos(const SPOLY *p1, const SPOLY *p2, bool recheck)
 bool
 spoly_eq(const SPOLY *p1, const SPOLY *p2, bool dir)
 {
-	bool ret = false;
+	bool		ret = false;
 
 	if (p1->npts == p2->npts)
 	{
 
-		int32	i,
-				k,
-				cntr,
-				shift;
+		int32		i,
+					k,
+					cntr,
+					shift;
 
 		for (shift = 0; shift < p1->npts; shift++)
 		{
@@ -574,8 +575,8 @@ Datum
 spherepoly_get_point(PG_FUNCTION_ARGS)
 {
 	int32		i;
-	SPOLY		*poly = PG_GETARG_SPOLY(0);
-	SPoint		*sp = (SPoint *) palloc(sizeof(SPoint));
+	SPOLY	   *poly = PG_GETARG_SPOLY(0);
+	SPoint	   *sp = (SPoint *) palloc(sizeof(SPoint));
 
 	i = PG_GETARG_INT32(1);
 	if (spoly_get_point(sp, poly, i - 1))
@@ -825,8 +826,8 @@ poly_line_pos(const SPOLY *poly, const SLine *line)
 		/* Recheck line crossing */
 		if (pos == sl_cr)
 		{
-			bool	bal,
-					eal;
+			bool		bal,
+						eal;
 
 			bal = spoint_at_sline(&slbeg, &sl);
 			eal = spoint_at_sline(&slend, &sl);
@@ -1465,7 +1466,7 @@ spherepoly_add_point(PG_FUNCTION_ARGS)
 	}
 	if (poly == NULL)
 	{
-		size = offsetof(SPOLY, p[0]) +sizeof(SPoint);
+		size = offsetof(SPOLY, p[0]) + sizeof(SPoint);
 		poly = (SPOLY *) palloc(size);
 		memcpy((void *) &poly->p[0], (void *) p, sizeof(SPoint));
 		SET_VARSIZE(poly, size);
@@ -1487,7 +1488,7 @@ spherepoly_add_point(PG_FUNCTION_ARGS)
 		elog(NOTICE, "spoly(spoint): Skip point, distance of previous point is 180deg");
 	}
 
-	size = offsetof(SPOLY, p[0]) +sizeof(SPoint) * (poly->npts + 1);
+	size = offsetof(SPOLY, p[0]) + sizeof(SPoint) * (poly->npts + 1);
 	poly_new = palloc(size);
 	memcpy((void *) poly_new, (void *) poly, VARSIZE(poly));
 	poly_new->npts++;
@@ -1501,7 +1502,7 @@ spherepoly_add_point(PG_FUNCTION_ARGS)
 Datum
 spherepoly_add_points_finalize(PG_FUNCTION_ARGS)
 {
-	SPOLY *poly = (SPOLY *) PG_GETARG_POINTER(0);
+	SPOLY	   *poly = (SPOLY *) PG_GETARG_POINTER(0);
 
 	if (poly == NULL)
 	{
@@ -1542,10 +1543,10 @@ spherepoly_is_convex(PG_FUNCTION_ARGS)
 				vsu,
 				wsv,
 				crs;
-	int32 		i;
+	int32		i;
 	float8		cur = 0.0,
 				prev = 0.0;
-	SPOLY		*poly = (SPOLY *) PG_GETARG_POINTER(0);
+	SPOLY	   *poly = (SPOLY *) PG_GETARG_POINTER(0);
 
 	if (poly == NULL)
 	{
@@ -1560,8 +1561,8 @@ spherepoly_is_convex(PG_FUNCTION_ARGS)
 
 	for (i = 0; i < poly->npts; i++)
 	{
-		const int j = (i - 1 + poly->npts) % poly->npts;
-		const int k = (i + 1) % poly->npts;
+		const int	j = (i - 1 + poly->npts) % poly->npts;
+		const int	k = (i + 1) % poly->npts;
 
 		spoint_vector3d(&u, &poly->p[i]);
 		spoint_vector3d(&v, &poly->p[j]);

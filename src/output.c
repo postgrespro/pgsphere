@@ -11,10 +11,10 @@
 
 
 /* Output modes */
-#define OUTPUT_RAD	1	 /* output in radians */
-#define OUTPUT_DEG	2	 /* output in degrees */
-#define OUTPUT_DMS	3	 /* output in degrees, minutes, seconds */
-#define OUTPUT_HMS	4	 /* output in hour, minutes, seconds */
+#define OUTPUT_RAD	1			/* output in radians */
+#define OUTPUT_DEG	2			/* output in degrees */
+#define OUTPUT_DMS	3			/* output in degrees, minutes, seconds */
+#define OUTPUT_HMS	4			/* output in hour, minutes, seconds */
 
 /*.
  * Holds the current output modus.
@@ -25,7 +25,7 @@ static unsigned char sphere_output = OUTPUT_RAD;
 /*
  * Defines the precision of floating point values in output.
  */
-static int sphere_output_precision = DBL_DIG;
+static int	sphere_output_precision = DBL_DIG;
 
 PG_FUNCTION_INFO_V1(set_sphere_output);
 PG_FUNCTION_INFO_V1(spherepoint_out);
@@ -42,72 +42,73 @@ PG_FUNCTION_INFO_V1(pg_sphere_version);
  /*
   * Sets the output modus.
   */
-Datum	set_sphere_output(PG_FUNCTION_ARGS);
+Datum		set_sphere_output(PG_FUNCTION_ARGS);
 
  /*
   * Sets the output precision.
   */
-Datum	set_sphere_output_precision(PG_FUNCTION_ARGS);
+Datum		set_sphere_output_precision(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical point.
   */
-Datum	spherepoint_out(PG_FUNCTION_ARGS);
+Datum		spherepoint_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical circle.
   */
-Datum	spherecircle_out(PG_FUNCTION_ARGS);
+Datum		spherecircle_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical line.
   */
-Datum	sphereline_out(PG_FUNCTION_ARGS);
+Datum		sphereline_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of Euler transformation.
   */
-Datum	spheretrans_out(PG_FUNCTION_ARGS);
+Datum		spheretrans_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical polygon.
   */
-Datum	spherepoly_out(PG_FUNCTION_ARGS);
+Datum		spherepoly_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical path.
   */
-Datum	spherepath_out(PG_FUNCTION_ARGS);
+Datum		spherepath_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical ellipse.
   */
-Datum	sphereellipse_out(PG_FUNCTION_ARGS);
+Datum		sphereellipse_out(PG_FUNCTION_ARGS);
 
  /*
   * The output function of spherical box.
   */
-Datum	spherebox_out(PG_FUNCTION_ARGS);
+Datum		spherebox_out(PG_FUNCTION_ARGS);
 
  /*
   * Returns pg_sphere version.
   */
-Datum	pg_sphere_version(PG_FUNCTION_ARGS);
+Datum		pg_sphere_version(PG_FUNCTION_ARGS);
 
 
- /*
+ /* --------
   * Converts radians to DEG ( degrees, minutes, seconds )
   *
   * rad - input in radians
   * deg - pointer to degrees
   * min - pointer to minutes
   * sec - pointer to seconds
+  * --------
   */
 static void
 rad_to_dms(double rad, unsigned int *deg, unsigned int *min, double *sec)
 {
-	double			rsign = rad < 0 ? -1 : 1;
-	const double	sec_dig = pow(10, FLT_DIG);
+	double		rsign = rad < 0 ? -1 : 1;
+	const double sec_dig = pow(10, FLT_DIG);
 
 	rad *= (rsign * RADIANS);
 
@@ -179,14 +180,14 @@ set_sphere_output(PG_FUNCTION_ARGS)
 Datum
 spherepoint_out(PG_FUNCTION_ARGS)
 {
-	SPoint		   *sp = (SPoint *) PG_GETARG_POINTER(0);
-	char		   *buffer = (char *) palloc(255);
-	unsigned int	latdeg,
-					latmin,
-					lngdeg,
-					lngmin;
-	double			latsec,
-					lngsec;
+	SPoint	   *sp = (SPoint *) PG_GETARG_POINTER(0);
+	char	   *buffer = (char *) palloc(255);
+	unsigned int latdeg,
+				latmin,
+				lngdeg,
+				lngmin;
+	double		latsec,
+				lngsec;
 
 	latdeg = latmin = lngdeg = lngmin = 0;
 	latsec = lngsec = 0.0;
@@ -235,9 +236,8 @@ spherecircle_out(PG_FUNCTION_ARGS)
 {
 	SCIRCLE    *c = (SCIRCLE *) PG_GETARG_POINTER(0);
 	char	   *buffer = (char *) palloc(255);
-	char	   *pointstr = DatumGetPointer(
-								DirectFunctionCall1(spherepoint_out,
-													PointerGetDatum(&c->center)));
+	char	   *pointstr = DatumGetPointer(DirectFunctionCall1(spherepoint_out,
+															   PointerGetDatum(&c->center)));
 
 	unsigned int rdeg,
 				rmin;
@@ -266,7 +266,7 @@ spherecircle_out(PG_FUNCTION_ARGS)
 			break;
 
 		default:
-			sprintf(buffer,	"<%s , %.*g>",
+			sprintf(buffer, "<%s , %.*g>",
 					pointstr, sphere_output_precision, c->radius);
 			break;
 	}
@@ -320,12 +320,12 @@ sphereellipse_out(PG_FUNCTION_ARGS)
 
 		default:
 			sprintf(
-				buffer,
-				"<{ %.*g , %.*g }, %s , %.*g>",
-				sphere_output_precision, e->rad[0],
-				sphere_output_precision, e->rad[1],
-				pointstr,
-				sphere_output_precision, e->phi);
+					buffer,
+					"<{ %.*g , %.*g }, %s , %.*g>",
+					sphere_output_precision, e->rad[0],
+					sphere_output_precision, e->rad[1],
+					pointstr,
+					sphere_output_precision, e->phi);
 			break;
 	}
 
@@ -336,14 +336,14 @@ sphereellipse_out(PG_FUNCTION_ARGS)
 Datum
 sphereline_out(PG_FUNCTION_ARGS)
 {
-	SLine		   *sl = (SLine *) PG_GETARG_POINTER(0);
-	char		   *out = (char *) palloc(255);
-	char		   *tstr = NULL;
-	SEuler			se;
+	SLine	   *sl = (SLine *) PG_GETARG_POINTER(0);
+	char	   *out = (char *) palloc(255);
+	char	   *tstr = NULL;
+	SEuler		se;
 
-	unsigned int	rdeg,
-					rmin;
-	double			rsec;
+	unsigned int rdeg,
+				rmin;
+	double		rsec;
 
 	rdeg = rmin = 0;
 	rsec = 0.0;
@@ -522,12 +522,10 @@ spherebox_out(PG_FUNCTION_ARGS)
 {
 	SBOX	   *box = (SBOX *) PG_GETARG_POINTER(0);
 	char	   *buffer = (char *) palloc(255);
-	char	   *str1 = DatumGetPointer(
-							DirectFunctionCall1(spherepoint_out,
-												PointerGetDatum(&box->sw)));
-	char	   *str2 = DatumGetPointer(
-							DirectFunctionCall1(spherepoint_out,
-												PointerGetDatum(&box->ne)));
+	char	   *str1 = DatumGetPointer(DirectFunctionCall1(spherepoint_out,
+														   PointerGetDatum(&box->sw)));
+	char	   *str2 = DatumGetPointer(DirectFunctionCall1(spherepoint_out,
+														   PointerGetDatum(&box->ne)));
 
 	sprintf(buffer, "(%s, %s)", str1, str2);
 	pfree(str1);
@@ -538,8 +536,9 @@ spherebox_out(PG_FUNCTION_ARGS)
 Datum
 pg_sphere_version(PG_FUNCTION_ARGS)
 {
-	const char	*s = PGSPHERE_STRINGIFY(PGSPHERE_VERSION);
-	char		*p = (char *)palloc(strlen(s) + 1);
+	const char *s = PGSPHERE_STRINGIFY(PGSPHERE_VERSION);
+	char	   *p = (char *) palloc(strlen(s) + 1);
+
 	strcpy(p, s);
 	PG_RETURN_CSTRING(p);
 }

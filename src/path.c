@@ -66,7 +66,7 @@ PG_FUNCTION_INFO_V1(spherepath_get_array);
 static SPATH *
 spherepath_from_array(SPoint *arr, int32 nelem)
 {
-	SPATH *path = NULL;
+	SPATH	   *path = NULL;
 
 	if (nelem < 2)
 	{
@@ -76,9 +76,9 @@ spherepath_from_array(SPoint *arr, int32 nelem)
 	else
 	{
 
-		int32	i;
-		float8	scheck;
-		int32	size;
+		int32		i;
+		float8		scheck;
+		int32		size;
 
 		for (i = 0; i < nelem; i++)
 		{
@@ -110,7 +110,7 @@ spherepath_from_array(SPoint *arr, int32 nelem)
 			return NULL;
 		}
 
-		size = offsetof(SPATH, p[0]) +sizeof(path->p[0]) * nelem;
+		size = offsetof(SPATH, p[0]) + sizeof(path->p[0]) * nelem;
 		path = (SPATH *) palloc(size);
 		SET_VARSIZE(path, size);
 		path->npts = nelem;
@@ -146,7 +146,7 @@ spherepath_from_array(SPoint *arr, int32 nelem)
 static void
 euler_spath_trans(SPATH *out, const SPATH *in, const SEuler *se)
 {
-	int32 i;
+	int32		i;
 
 	SET_VARSIZE(out, VARSIZE(in));
 	out->npts = in->npts;
@@ -220,9 +220,9 @@ path_circle_pos(const SPATH *path, const SCIRCLE *circ)
 static bool
 path_line_overlap(const SPATH *path, const SLine *line)
 {
-	int32	i;
-	SLine	sl;
-	int32	n;
+	int32		i;
+	SLine		sl;
+	int32		n;
 
 	n = path->npts - 1;
 
@@ -261,8 +261,8 @@ path_ellipse_pos(const SPATH *path, const SELLIPSE *ell)
 
 	if (FPzero(ell->rad[0]))
 	{
-		bool	pcp;
-		SPoint	cen;
+		bool		pcp;
+		SPoint		cen;
 
 		sellipse_center(&cen, ell);
 		pcp = spath_cont_point(path, &cen);
@@ -278,7 +278,7 @@ path_ellipse_pos(const SPATH *path, const SELLIPSE *ell)
 
 	if (FPzero(ell->rad[1]))
 	{
-		SLine	l;
+		SLine		l;
 
 		sellipse_line(&l, ell);
 		/* TODO implement ellipse contains path if ellipse is a line */
@@ -326,8 +326,8 @@ path_ellipse_pos(const SPATH *path, const SELLIPSE *ell)
 static bool
 path_overlap(const SPATH *path1, const SPATH *path2)
 {
-	int32	i;
-	SLine	sl;
+	int32		i;
+	SLine		sl;
 
 	for (i = 0; i < path1->npts; i++)
 	{
@@ -368,7 +368,7 @@ path_poly_pos(const SPATH *path, const SPOLY *poly)
 		pos = (1 << poly_line_pos(poly, &sl));
 		if (pos == sp_ov)
 		{
-			return PGS_POLY_PATH_OVER; /* overlap */
+			return PGS_POLY_PATH_OVER;	/* overlap */
 		}
 		res |= pos;
 	}
@@ -385,7 +385,7 @@ path_poly_pos(const SPATH *path, const SPOLY *poly)
 }
 
 
- /*
+ /* --------
   * Returns the i-th point of a path.
   *
   * sp   - pointer to the result point
@@ -393,6 +393,7 @@ path_poly_pos(const SPATH *path, const SPOLY *poly)
   * i    - number of the point
   *
   * See spath_point(SPoint * , SPATH *, float8)
+  * --------
   */
 static bool
 spath_get_point(SPoint *sp, const SPATH *path, int32 i)
@@ -405,7 +406,7 @@ spath_get_point(SPoint *sp, const SPATH *path, int32 i)
 	return false;
 }
 
- /*
+ /* --------
   * This function interpolates between points. Returns the f-th point
   * of a path.
   *
@@ -414,6 +415,7 @@ spath_get_point(SPoint *sp, const SPATH *path, int32 i)
   * f    - 'number' of the point
   *
   * See spherepath_point(PG_FUNCTION_ARGS)
+  * --------
   */
 static bool
 spath_point(SPoint *sp, const SPATH *path, float8 f)
@@ -425,8 +427,8 @@ spath_point(SPoint *sp, const SPATH *path, float8 f)
 
 	if (spath_segment(&sl, path, i))
 	{
-		SEuler	se;
-		SPoint	tp;
+		SEuler		se;
+		SPoint		tp;
 
 		sphereline_to_euler(&se, &sl);
 
@@ -449,8 +451,8 @@ spath_eq(const SPATH *p1, const SPATH *p2)
 {
 	if (p1->npts == p2->npts)
 	{
-		int32	i;
-		bool	ret;
+		int32		i;
+		bool		ret;
 
 		ret = true;
 
@@ -470,10 +472,10 @@ spath_eq(const SPATH *p1, const SPATH *p2)
 bool
 spath_cont_point(const SPATH *path, const SPoint *sp)
 {
-	int32	n;
-	bool	ret;
-	SLine	sl;
-	int32	i;
+	int32		n;
+	bool		ret;
+	SLine		sl;
+	int32		i;
 
 	n = path->npts - 1;
 	ret = false;
@@ -507,7 +509,8 @@ spherepath_in(PG_FUNCTION_ARGS)
 {
 	SPATH	   *path;
 	char	   *c = PG_GETARG_CSTRING(0);
-	int32		i, nelem;
+	int32		i,
+				nelem;
 	void		sphere_yyparse(void);
 
 	init_buffer(c);
@@ -561,25 +564,25 @@ spherepath_get_point(PG_FUNCTION_ARGS)
 Datum
 spherepath_get_array(PG_FUNCTION_ARGS)
 {
-    SPATH *path = PG_GETARG_SPATH(0);
-    Datum *datum_arr = (Datum *) palloc(sizeof(Datum) * path->npts);
-    ArrayType *res;
-	SPoint *p = (SPoint *) palloc(sizeof(SPoint) * path->npts);
+	SPATH	   *path = PG_GETARG_SPATH(0);
+	Datum	   *datum_arr = (Datum *) palloc(sizeof(Datum) * path->npts);
+	ArrayType  *res;
+	SPoint	   *p = (SPoint *) palloc(sizeof(SPoint) * path->npts);
 
-    for (size_t i = 0; i < path->npts; i++)
-    {
-        if (!spath_get_point(&p[i], path, i))
-        {
-            pfree(p);
-            pfree(datum_arr);
-            PG_RETURN_NULL();
-        }
-        datum_arr[i] = PointerGetDatum(&p[i]);
-    }
+	for (size_t i = 0; i < path->npts; i++)
+	{
+		if (!spath_get_point(&p[i], path, i))
+		{
+			pfree(p);
+			pfree(datum_arr);
+			PG_RETURN_NULL();
+		}
+		datum_arr[i] = PointerGetDatum(&p[i]);
+	}
 
-    res = construct_array(datum_arr, path->npts, get_spoint_type_oid(), sizeof(SPoint), false, 'd');
+	res = construct_array(datum_arr, path->npts, get_spoint_type_oid(), sizeof(SPoint), false, 'd');
 
-    PG_RETURN_ARRAYTYPE_P(res);
+	PG_RETURN_ARRAYTYPE_P(res);
 }
 
 Datum

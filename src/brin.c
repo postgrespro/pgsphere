@@ -61,7 +61,8 @@ spoint_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	 * The OpClass support empty entries: we need to set the "contains empty"
 	 * flag in the element (unless already set).
 	 */
-	/*
+
+	/* --------
 	if (spointkey == NULL)
 	{
 		if (!DatumGetBool(column->bv_values[INCLUSION_CONTAINS_EMPTY]))
@@ -72,6 +73,7 @@ spoint_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 
 		PG_RETURN_BOOL(false);
 	}
+	* --------
 	*/
 
 	/* if the recorded value is null, we just need to store the spherekey */
@@ -131,7 +133,8 @@ sbox_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 	 * The OpClass support empty entries: we need to set the "contains empty"
 	 * flag in the element (unless already set).
 	 */
-	/*
+
+	/* --------
 	if (sboxkey == NULL)
 	{
 		if (!DatumGetBool(column->bv_values[INCLUSION_CONTAINS_EMPTY]))
@@ -142,6 +145,7 @@ sbox_brin_inclusion_add_value(PG_FUNCTION_ARGS)
 
 		PG_RETURN_BOOL(false);
 	}
+	* --------
 	*/
 
 	/* if the recorded value is null, we just need to store the spherekey */

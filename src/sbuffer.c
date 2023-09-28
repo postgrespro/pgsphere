@@ -10,53 +10,53 @@
 unsigned char spheretype;
 
 /* The angle buffer. */
-float8	bufangle[MAX_BUF_ANGLE];
+float8		bufangle[MAX_BUF_ANGLE];
 
 /* A simple spherical point. */
 typedef struct
 {
-	double	lng;	/* longitude */
-	double	lat;	/* latitude */
+	double		lng;			/* longitude */
+	double		lat;			/* latitude */
 } bpoint;
 
  /* Spherical point buffer. */
 struct
 {
-	int		m;		/* count of buffered points */
-	bpoint *p;		/* pointer to array of points */
-}		bufpoints;
+	int			m;				/* count of buffered points */
+	bpoint	   *p;				/* pointer to array of points */
+}			bufpoints;
 
 /* ID of line's length angle. */
-int		bufline;
+int			bufline;
 
 /*
  * First element is the ID of spherical point ( center ).
  * Second element is the ID of radius angle.
  */
-int		bufcircle[2];
+int			bufcircle[2];
 
 /* Buffer of ellipse. */
-int		bufellipse[5];
+int			bufellipse[5];
 
 /* Buffer of IDs of Euler transformation values. */
-int		bufeuler[3];
+int			bufeuler[3];
 
 /* Structure to buffer the axes of Euler transformation. */
 struct
 {
-	unsigned char	phi,	/* first axis */
-					theta,	/* second axis */
-					psi;	/* third axis */
-}		bufeulertype;
+	unsigned char phi,			/* first axis */
+				theta,			/* second axis */
+				psi;			/* third axis */
+}			bufeulertype;
 
 /* Current angle ID. */
-int		bufapos;
+int			bufapos;
 
 /* Current point ID. */
-int		bufspos;
+int			bufspos;
 
 /* Pointer to input buffer. */
-char   *parse_buffer;
+char	   *parse_buffer;
 
 
 void
@@ -172,7 +172,7 @@ set_line(int length)
 void
 set_euler(int phi, int theta, int psi, char *etype)
 {
-	int			  i;
+	int			i;
 	unsigned char t = 0;
 
 	bufeuler[0] = phi;
@@ -229,7 +229,7 @@ int
 get_line(double *phi, double *theta,
 		 double *psi, unsigned char *etype, double *length)
 {
-	int i;
+	int			i;
 
 	if (spheretype != STYPE_LINE)
 	{
@@ -263,7 +263,7 @@ int
 get_euler(double *phi, double *theta,
 		  double *psi, unsigned char *etype)
 {
-	int i;
+	int			i;
 
 	if (spheretype != STYPE_EULER)
 	{
@@ -367,7 +367,7 @@ get_box(double *lng1, double *lat1, double *lng2, double *lat2)
 int
 get_buffer(char *buf, int offset)
 {
-	int slen = strlen(parse_buffer);
+	int			slen = strlen(parse_buffer);
 
 	if (!parse_buffer || !(slen > 0))
 	{

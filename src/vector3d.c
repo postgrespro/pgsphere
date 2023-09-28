@@ -19,7 +19,7 @@ vector3d_cross(Vector3D *out, const Vector3D *v1, const Vector3D *v2)
 }
 
 void
-vector3d_addwithscalar(Vector3D *result, double scalar, const Vector3D *delta) 
+vector3d_addwithscalar(Vector3D *result, double scalar, const Vector3D *delta)
 {
 	result->x = result->x + delta->x * scalar;
 	result->y = result->y + delta->y * scalar;
@@ -29,7 +29,7 @@ vector3d_addwithscalar(Vector3D *result, double scalar, const Vector3D *delta)
 float8
 vector3d_scalar(Vector3D *v1, Vector3D *v2)
 {
-	float8 out = 0;
+	float8		out = 0;
 
 	out += v1->x * v2->x;
 	out += v1->y * v2->y;

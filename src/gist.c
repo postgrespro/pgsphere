@@ -96,9 +96,9 @@ spherekey_in(PG_FUNCTION_ARGS)
 Datum
 spherekey_out(PG_FUNCTION_ARGS)
 {
-	const float8	ks = (float8) MAXCVALUE;
-	int32		   *k = (int32 *) PG_GETARG_POINTER(0);
-	char		   *buffer = (char *) palloc(1024);
+	const float8 ks = (float8) MAXCVALUE;
+	int32	   *k = (int32 *) PG_GETARG_POINTER(0);
+	char	   *buffer = (char *) palloc(1024);
 
 	sprintf(buffer, "(%.9f,%.9f,%.9f),(%.9f,%.9f,%.9f)",
 			k[0] / ks, k[1] / ks, k[2] / ks,
@@ -111,8 +111,8 @@ spherekey_out(PG_FUNCTION_ARGS)
 static bool
 get_sizes(GiSTSPointKey *k, float8 sizes[3])
 {
-	int				i;
-	const float8	ks = (float8) MAXCVALUE;
+	int			i;
+	const float8 ks = (float8) MAXCVALUE;
 
 	if (IS_LEAF(k))
 		return false;
@@ -172,9 +172,9 @@ pointkey_in(PG_FUNCTION_ARGS)
 Datum
 pointkey_out(PG_FUNCTION_ARGS)
 {
-	const float8	ks = (float8) MAXCVALUE;
-	GiSTSPointKey  *k = (GiSTSPointKey *) PG_GETARG_POINTER(0);
-	char		   *buffer = (char *) palloc(1024);
+	const float8 ks = (float8) MAXCVALUE;
+	GiSTSPointKey *k = (GiSTSPointKey *) PG_GETARG_POINTER(0);
+	char	   *buffer = (char *) palloc(1024);
 
 	if (IS_LEAF(k))
 	{
@@ -182,9 +182,9 @@ pointkey_out(PG_FUNCTION_ARGS)
 	}
 	else
 	{
-		sprintf(buffer,	"(%.9f,%.9f,%.9f),(%.9f,%.9f,%.9f)",
+		sprintf(buffer, "(%.9f,%.9f,%.9f),(%.9f,%.9f,%.9f)",
 				k->k[0] / ks, k->k[1] / ks, k->k[2] / ks,
-				k->k[3] / ks, k->k[4] / ks,	k->k[5] / ks);
+				k->k[3] / ks, k->k[4] / ks, k->k[5] / ks);
 	}
 
 	PG_RETURN_CSTRING(buffer);
@@ -294,12 +294,12 @@ g_spoint3_compress(PG_FUNCTION_ARGS)
 			key->lat = p->lat;
 			key->lng = p->lng;
 			gistentryinit(*retval, PointerGetDatum(key), entry->rel,
-											entry->page, entry->offset, false);
+						  entry->page, entry->offset, false);
 		}
 		else
 		{
 			gistentryinit(*retval, (Datum) 0, entry->rel, entry->page,
-											entry->offset, false);
+						  entry->offset, false);
 		}
 	}
 	else
@@ -312,10 +312,11 @@ g_spoint3_compress(PG_FUNCTION_ARGS)
 Datum
 g_spherekey_union(PG_FUNCTION_ARGS)
 {
-	GistEntryVector	   *entryvec = (GistEntryVector *) PG_GETARG_POINTER(0);
-	int				   *sizep = (int *) PG_GETARG_POINTER(1);
-	int					numranges, i;
-	int32			   *ret = (int32 *) palloc(KEYSIZE);
+	GistEntryVector *entryvec = (GistEntryVector *) PG_GETARG_POINTER(0);
+	int		   *sizep = (int *) PG_GETARG_POINTER(1);
+	int			numranges,
+				i;
+	int32	   *ret = (int32 *) palloc(KEYSIZE);
 
 	numranges = entryvec->n;
 	memcpy((void *) ret,
@@ -334,10 +335,11 @@ g_spherekey_union(PG_FUNCTION_ARGS)
 Datum
 g_spoint3_union(PG_FUNCTION_ARGS)
 {
-	GistEntryVector	   *entryvec = (GistEntryVector *) PG_GETARG_POINTER(0);
-	int				   *sizep = (int *) PG_GETARG_POINTER(1);
-	int					numranges, i;
-	GiSTSPointKey	   *ret;
+	GistEntryVector *entryvec = (GistEntryVector *) PG_GETARG_POINTER(0);
+	int		   *sizep = (int *) PG_GETARG_POINTER(1);
+	int			numranges,
+				i;
+	GiSTSPointKey *ret;
 
 	ALLOC_INTERNAL_KEY(ret);
 	numranges = entryvec->n;
@@ -402,9 +404,9 @@ g_spherekey_same(PG_FUNCTION_ARGS)
 Datum
 g_spoint3_same(PG_FUNCTION_ARGS)
 {
-	GiSTSPointKey  *key1 = (GiSTSPointKey *) PG_GETARG_POINTER(0);
-	GiSTSPointKey  *key2 = (GiSTSPointKey *) PG_GETARG_POINTER(1);
-	bool		   *result = (bool *) PG_GETARG_POINTER(2);
+	GiSTSPointKey *key1 = (GiSTSPointKey *) PG_GETARG_POINTER(0);
+	GiSTSPointKey *key2 = (GiSTSPointKey *) PG_GETARG_POINTER(1);
+	bool	   *result = (bool *) PG_GETARG_POINTER(2);
 
 	*result = true;
 	if (key1 && key2)
@@ -510,7 +512,7 @@ g_spoint_consistent(PG_FUNCTION_ARGS)
 				SCK_INTERLEAVE(SELLIPSE, sphereellipse_gen_key, 0);
 				break;
 			case 42:
-				SCK_INTERLEAVE(SBOX, spherebox_gen_key , 0);
+				SCK_INTERLEAVE(SBOX, spherebox_gen_key, 0);
 				break;
 		}
 
@@ -702,9 +704,12 @@ g_spoint3_distance(PG_FUNCTION_ARGS)
 	{
 		Vector3D	v;
 		float8		sum = 0.0,
-					x_min, x_max,
-					y_min, y_max,
-					z_min, z_max;
+					x_min,
+					x_max,
+					y_min,
+					y_max,
+					z_min,
+					z_max;
 
 		spoint_vector3d(&v, query);
 
@@ -736,10 +741,10 @@ g_spoint3_distance(PG_FUNCTION_ARGS)
 Datum
 g_spoint3_fetch(PG_FUNCTION_ARGS)
 {
-	GISTENTRY     *entry = (GISTENTRY *) PG_GETARG_POINTER(0);
+	GISTENTRY  *entry = (GISTENTRY *) PG_GETARG_POINTER(0);
 	GiSTSPointKey *key = (GiSTSPointKey *) DatumGetPointer(entry->key);
-	GISTENTRY     *retval;
-	SPoint	      *p;
+	GISTENTRY  *retval;
+	SPoint	   *p;
 
 	retval = palloc(sizeof(GISTENTRY));
 	p = palloc(sizeof(SPoint));
@@ -747,7 +752,7 @@ g_spoint3_fetch(PG_FUNCTION_ARGS)
 	p->lat = key->lat;
 	p->lng = key->lng;
 	gistentryinit(*retval, PointerGetDatum(p), entry->rel,
-											entry->page, entry->offset, false);
+				  entry->page, entry->offset, false);
 	PG_RETURN_POINTER(retval);
 }
 
@@ -1562,18 +1567,19 @@ typedef struct
 static void
 checkBox3D(Box3D *box)
 {
-	  int i;
-	  for (i = 0; i < 3; i++)
-	  {
-		  if (box->low.coord[i] < -MAXCVALUE || box->low.coord[i] > MAXCVALUE)
-		  {
-			  elog(ERROR, "Invalid key!");
-		  }
-		  if (box->high.coord[i] < -MAXCVALUE || box->high.coord[i] > MAXCVALUE)
-		  {
-			  elog(ERROR, "Invalid key!");
-		  }
-	  }
+	int			i;
+
+	for (i = 0; i < 3; i++)
+	{
+		if (box->low.coord[i] < -MAXCVALUE || box->low.coord[i] > MAXCVALUE)
+		{
+			elog(ERROR, "Invalid key!");
+		}
+		if (box->high.coord[i] < -MAXCVALUE || box->high.coord[i] > MAXCVALUE)
+		{
+			elog(ERROR, "Invalid key!");
+		}
+	}
 }
 #endif
 
@@ -1595,21 +1601,21 @@ static inline double
 sizeBox3D(Box3D *b)
 {
 	return (double) ((int64) b->high.coord[0] - (int64) b->low.coord[0]) / MAXCVALUE
-		 * (double) ((int64) b->high.coord[1] - (int64) b->low.coord[1]) / MAXCVALUE
-		 * (double) ((int64) b->high.coord[2] - (int64) b->low.coord[2]) / MAXCVALUE;
+		* (double) ((int64) b->high.coord[1] - (int64) b->low.coord[1]) / MAXCVALUE
+		* (double) ((int64) b->high.coord[2] - (int64) b->low.coord[2]) / MAXCVALUE;
 }
 
 static inline double
 unionSizeBox3D(Box3D *a, Box3D *b)
 {
 	return (double) ((int64) Max(a->high.coord[0], b->high.coord[0]) -
-						(int64) Min(a->low.coord[0], b->low.coord[0])) / MAXCVALUE
+					 (int64) Min(a->low.coord[0], b->low.coord[0])) / MAXCVALUE
 
-		 * (double) ((int64) Max(a->high.coord[1], b->high.coord[1]) -
-						(int64) Min(a->low.coord[1], b->low.coord[1])) / MAXCVALUE
+		* (double) ((int64) Max(a->high.coord[1], b->high.coord[1]) -
+					(int64) Min(a->low.coord[1], b->low.coord[1])) / MAXCVALUE
 
-		 * (double) ((int64) Max(a->high.coord[2], b->high.coord[2]) -
-						(int64) Min(a->low.coord[2], b->low.coord[2])) / MAXCVALUE;
+		* (double) ((int64) Max(a->high.coord[2], b->high.coord[2]) -
+					(int64) Min(a->low.coord[2], b->low.coord[2])) / MAXCVALUE;
 }
 
 /*
@@ -1619,10 +1625,10 @@ unionSizeBox3D(Box3D *a, Box3D *b)
 static void
 fallbackSplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 {
-	OffsetNumber	i;
-	Box3D		   *unionL = NULL,
-				   *unionR = NULL;
-	int				nbytes;
+	OffsetNumber i;
+	Box3D	   *unionL = NULL,
+			   *unionR = NULL;
+	int			nbytes;
 
 	nbytes = (maxoff + 2) * sizeof(OffsetNumber);
 	v->spl_left = (OffsetNumber *) palloc(nbytes);
@@ -1631,7 +1637,7 @@ fallbackSplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 
 	for (i = FirstOffsetNumber; i <= maxoff; i = OffsetNumberNext(i))
 	{
-		Box3D *cur = &boxes[i];
+		Box3D	   *cur = &boxes[i];
 
 		if (i <= (maxoff - FirstOffsetNumber + 1) / 2)
 		{
@@ -1815,7 +1821,7 @@ g_box_consider_split(ConsiderSplitContext *context, int dimNum,
 		 * or less range with same overlap.
 		 */
 		range = (float8) context->boundingBox.high.coord[dimNum] -
-				(float8) context->boundingBox.low.coord[dimNum];
+			(float8) context->boundingBox.low.coord[dimNum];
 		overlap = ((float8) leftUpper - (float8) rightLower) / range;
 
 		/* If there is no previous selection, select this */
@@ -2203,7 +2209,7 @@ do_picksplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 		{
 			box = &boxes[i];
 			commonEntries[i].delta = fabs((unionSizeBox3D(leftBox, box) - leftBoxSize) -
-							 (unionSizeBox3D(rightBox, box) - rightBoxSize));
+										  (unionSizeBox3D(rightBox, box) - rightBoxSize));
 		}
 
 		/*
@@ -2240,7 +2246,7 @@ do_picksplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 			{
 				/* Otherwise select the group by minimal penalty */
 				if (unionSizeBox3D(leftBox, box) - leftBoxSize <
-						unionSizeBox3D(rightBox, box) - rightBoxSize)
+					unionSizeBox3D(rightBox, box) - rightBoxSize)
 				{
 					PLACE_LEFT(box, commonEntries[i].index);
 					/* checkBox3D(leftBox); */
@@ -2346,17 +2352,17 @@ g_spherekey_penalty(PG_FUNCTION_ARGS)
 		Box3D	   *n = (Box3D *) DatumGetPointer(newentry->key);
 
 		*result = (float) (((uint64) (Max(o->high.coord[0], n->high.coord[0]) -
-											Min(o->low.coord[0], n->low.coord[0])) >> 10)
+									  Min(o->low.coord[0], n->low.coord[0])) >> 10)
 
 						   * ((uint64) (Max(o->high.coord[1], n->high.coord[1]) -
-											Min(o->low.coord[1], n->low.coord[1])) >> 10)
+										Min(o->low.coord[1], n->low.coord[1])) >> 10)
 
 						   * ((uint64) (Max(o->high.coord[2], n->high.coord[2]) -
-											Min(o->low.coord[2], n->low.coord[2])) >> 10)
+										Min(o->low.coord[2], n->low.coord[2])) >> 10)
 
-						- ((uint64) (o->high.coord[0] - o->low.coord[0]) >> 10)
-							* ((uint64) (o->high.coord[1] - o->low.coord[1]) >> 10)
-							* ((uint64) (o->high.coord[2] - o->low.coord[2]) >> 10));
+						   - ((uint64) (o->high.coord[0] - o->low.coord[0]) >> 10)
+						   * ((uint64) (o->high.coord[1] - o->low.coord[1]) >> 10)
+						   * ((uint64) (o->high.coord[2] - o->low.coord[2]) >> 10));
 		PG_RETURN_POINTER(result);
 	}
 	else
@@ -2377,8 +2383,10 @@ g_spoint3_penalty(PG_FUNCTION_ARGS)
 	float	   *result = (float *) PG_GETARG_POINTER(2);
 	GiSTSPointKey *origkey = (GiSTSPointKey *) DatumGetPointer(origentry->key);
 	GiSTSPointKey *newkey = (GiSTSPointKey *) DatumGetPointer(newentry->key);
-	Box3D	   *o, *n;
-	int32		k[6], ok[6];
+	Box3D	   *o,
+			   *n;
+	int32		k[6],
+				ok[6];
 
 	if (IS_LEAF(origkey))
 	{
@@ -2421,13 +2429,13 @@ g_spoint3_penalty(PG_FUNCTION_ARGS)
 	}
 
 	*result = ((float) ((int64) Max(o->high.coord[0], n->high.coord[0])
-							- (int64) Min(o->low.coord[0], n->low.coord[0])))
-			* ((float) ((int64) Max(o->high.coord[1], n->high.coord[1])
-							- (int64) Min(o->low.coord[1], n->low.coord[1])))
-			* ((float) ((int64) Max(o->high.coord[2], n->high.coord[2])
-							- (int64) Min(o->low.coord[2], n->low.coord[2])))
-			- ((float) ((int64) o->high.coord[0] - (int64) o->low.coord[0]))
-			* ((float) ((int64) o->high.coord[1] - (int64) o->low.coord[1]))
-			* ((float) ((int64) o->high.coord[2] - (int64) o->low.coord[2]));
+						- (int64) Min(o->low.coord[0], n->low.coord[0])))
+		* ((float) ((int64) Max(o->high.coord[1], n->high.coord[1])
+					- (int64) Min(o->low.coord[1], n->low.coord[1])))
+		* ((float) ((int64) Max(o->high.coord[2], n->high.coord[2])
+					- (int64) Min(o->low.coord[2], n->low.coord[2])))
+		- ((float) ((int64) o->high.coord[0] - (int64) o->low.coord[0]))
+		* ((float) ((int64) o->high.coord[1] - (int64) o->low.coord[1]))
+		* ((float) ((int64) o->high.coord[2] - (int64) o->low.coord[2]));
 	PG_RETURN_POINTER(result);
 }

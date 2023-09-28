@@ -14,19 +14,19 @@
 #include <access/tuptoaster.h>
 #endif
 
-#include "point.h" /* SPoint */
+#include "point.h"				/* SPoint */
 
 /*
  * MOC data type(s)
  * ...
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  */
 
 /* das hier ist Mist: typedef moc_interval moc_leaf_page[MOC_PAGE_SIZE]; */
@@ -55,64 +55,64 @@ exactly PG_TOAST_PAGE_FRAGMENT...
 
 /* function prototypes for the MOC support functions */
 
-Datum smoc_in(PG_FUNCTION_ARGS);
-Datum smoc_out(PG_FUNCTION_ARGS);
-Datum moc_debug(PG_FUNCTION_ARGS);
-Datum set_smoc_output_type(PG_FUNCTION_ARGS);
-Datum smoc_info(PG_FUNCTION_ARGS);
-Datum smoc_area(PG_FUNCTION_ARGS);
-Datum smoc_order(PG_FUNCTION_ARGS);
-Datum smoc_eq(PG_FUNCTION_ARGS);
-Datum smoc_neq(PG_FUNCTION_ARGS);
-Datum smoc_overlap(PG_FUNCTION_ARGS);
-Datum smoc_overlap_neg(PG_FUNCTION_ARGS);
-Datum smoc_subset_smoc(PG_FUNCTION_ARGS);
-Datum smoc_subset_smoc_neg(PG_FUNCTION_ARGS);
-Datum smoc_superset_smoc(PG_FUNCTION_ARGS);
-Datum smoc_superset_smoc_neg(PG_FUNCTION_ARGS);
+Datum		smoc_in(PG_FUNCTION_ARGS);
+Datum		smoc_out(PG_FUNCTION_ARGS);
+Datum		moc_debug(PG_FUNCTION_ARGS);
+Datum		set_smoc_output_type(PG_FUNCTION_ARGS);
+Datum		smoc_info(PG_FUNCTION_ARGS);
+Datum		smoc_area(PG_FUNCTION_ARGS);
+Datum		smoc_order(PG_FUNCTION_ARGS);
+Datum		smoc_eq(PG_FUNCTION_ARGS);
+Datum		smoc_neq(PG_FUNCTION_ARGS);
+Datum		smoc_overlap(PG_FUNCTION_ARGS);
+Datum		smoc_overlap_neg(PG_FUNCTION_ARGS);
+Datum		smoc_subset_smoc(PG_FUNCTION_ARGS);
+Datum		smoc_subset_smoc_neg(PG_FUNCTION_ARGS);
+Datum		smoc_superset_smoc(PG_FUNCTION_ARGS);
+Datum		smoc_superset_smoc_neg(PG_FUNCTION_ARGS);
 
-Datum healpix_subset_smoc(PG_FUNCTION_ARGS);
-Datum healpix_not_subset_smoc(PG_FUNCTION_ARGS);
-Datum smoc_superset_healpix(PG_FUNCTION_ARGS);
-Datum smoc_not_superset_healpix(PG_FUNCTION_ARGS);
-Datum spoint_subset_smoc(PG_FUNCTION_ARGS);
-Datum spoint_not_subset_smoc(PG_FUNCTION_ARGS);
-Datum smoc_superset_spoint(PG_FUNCTION_ARGS);
-Datum smoc_not_superset_spoint(PG_FUNCTION_ARGS);
+Datum		healpix_subset_smoc(PG_FUNCTION_ARGS);
+Datum		healpix_not_subset_smoc(PG_FUNCTION_ARGS);
+Datum		smoc_superset_healpix(PG_FUNCTION_ARGS);
+Datum		smoc_not_superset_healpix(PG_FUNCTION_ARGS);
+Datum		spoint_subset_smoc(PG_FUNCTION_ARGS);
+Datum		spoint_not_subset_smoc(PG_FUNCTION_ARGS);
+Datum		smoc_superset_spoint(PG_FUNCTION_ARGS);
+Datum		smoc_not_superset_spoint(PG_FUNCTION_ARGS);
 
-bool healpix_subset_smoc_impl(hpint64, Datum);
-bool spoint_subset_smoc_impl(SPoint*, Datum);
-Datum healpix_subset_smoc_c(hpint64, Datum);
-Datum healpix_not_subset_smoc_c(hpint64, Datum); 
-Datum spoint_subset_smoc_c(SPoint*, Datum);
-Datum spoint_not_subset_smoc_c(SPoint*, Datum); 
+bool		healpix_subset_smoc_impl(hpint64, Datum);
+bool		spoint_subset_smoc_impl(SPoint *, Datum);
+Datum		healpix_subset_smoc_c(hpint64, Datum);
+Datum		healpix_not_subset_smoc_c(hpint64, Datum);
+Datum		spoint_subset_smoc_c(SPoint *, Datum);
+Datum		spoint_not_subset_smoc_c(SPoint *, Datum);
 
-Datum smoc_union(PG_FUNCTION_ARGS);
-Datum smoc_intersection(PG_FUNCTION_ARGS);
-Datum smoc_degrade(PG_FUNCTION_ARGS);
-Datum smoc_spoint(PG_FUNCTION_ARGS);
-Datum smoc_disc(PG_FUNCTION_ARGS);
-Datum smoc_scircle(PG_FUNCTION_ARGS);
-Datum smoc_spoly(PG_FUNCTION_ARGS);
+Datum		smoc_union(PG_FUNCTION_ARGS);
+Datum		smoc_intersection(PG_FUNCTION_ARGS);
+Datum		smoc_degrade(PG_FUNCTION_ARGS);
+Datum		smoc_spoint(PG_FUNCTION_ARGS);
+Datum		smoc_disc(PG_FUNCTION_ARGS);
+Datum		smoc_scircle(PG_FUNCTION_ARGS);
+Datum		smoc_spoly(PG_FUNCTION_ARGS);
 
-Datum smoc_gin_extract_value(PG_FUNCTION_ARGS);
-Datum smoc_gin_extract_value_fine(PG_FUNCTION_ARGS);
-Datum smoc_gin_extract_query(PG_FUNCTION_ARGS);
-Datum smoc_gin_extract_query_fine(PG_FUNCTION_ARGS);
-Datum smoc_gin_consistent(PG_FUNCTION_ARGS);
+Datum		smoc_gin_extract_value(PG_FUNCTION_ARGS);
+Datum		smoc_gin_extract_value_fine(PG_FUNCTION_ARGS);
+Datum		smoc_gin_extract_query(PG_FUNCTION_ARGS);
+Datum		smoc_gin_extract_query_fine(PG_FUNCTION_ARGS);
+Datum		smoc_gin_consistent(PG_FUNCTION_ARGS);
 
 /* parsing subroutines */
-hpint64 readNumber(const char*, int*);
-char readChar(const char*, int*);
+hpint64		readNumber(const char *, int *);
+char		readChar(const char *, int *);
 
 static inline int32
 next_interval(int32 a)
 {
-	int32	mod;
+	int32		mod;
 
 	a += MOC_INTERVAL_SIZE;
 
-	// page bumps
+	/* page bumps */
 	mod = (a + MOC_INTERVAL_SIZE) % PG_TOAST_PAGE_FRAGMENT;
 	if (mod > 0 && mod < MOC_INTERVAL_SIZE)
 		a += MOC_INTERVAL_SIZE - mod;
@@ -122,8 +122,8 @@ next_interval(int32 a)
 
 #define MOC_AREA_ALL_SKY 3458764513820540928
 
-#define MOC_GIN_ORDER 5 /* order 5 has 12 * 4^5 = 12288 pixels */
-#define MOC_GIN_ORDER_FINE 8 /* order 8 has 12 * 4^8 = 786432 pixels */
+#define MOC_GIN_ORDER 5			/* order 5 has 12 * 4^5 = 12288 pixels */
+#define MOC_GIN_ORDER_FINE 8	/* order 8 has 12 * 4^8 = 786432 pixels */
 #define MOC_GIN_STRATEGY_INTERSECTS	1
 #define MOC_GIN_STRATEGY_SUBSET		2
 #define MOC_GIN_STRATEGY_SUPERSET	3

@@ -16,9 +16,10 @@ PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
 
-static Oid point_id = InvalidOid;
+static Oid	point_id = InvalidOid;
 
-Oid	get_spoint_type_oid(void)
+Oid
+get_spoint_type_oid(void)
 {
 	if (point_id == InvalidOid)
 	{
@@ -41,7 +42,7 @@ spoint_eq(const SPoint *p1, const SPoint *p2)
 void
 spoint_check(SPoint *spoint)
 {
-	bool lat_is_neg = (spoint->lat < 0) ? true : false;
+	bool		lat_is_neg = (spoint->lat < 0) ? true : false;
 
 	if (spoint->lng < 0 || spoint->lng > PID)
 		spoint->lng = spoint->lng - floor(spoint->lng / (PID)) * PID;
@@ -85,7 +86,7 @@ spoint_check(SPoint *spoint)
 void
 vector3d_spoint(SPoint *p, const Vector3D *v)
 {
-	double rho = sqrt((v->x) * (v->x) + (v->y) * (v->y));
+	double		rho = sqrt((v->x) * (v->x) + (v->y) * (v->y));
 
 	if (0.0 == rho)
 	{
@@ -155,7 +156,8 @@ spherepoint_in(PG_FUNCTION_ARGS)
 	PG_RETURN_POINTER(sp);
 }
 
-void create_spherepoint_from_long_lat(SPoint *p, float8 lng, float8 lat)
+void
+create_spherepoint_from_long_lat(SPoint *p, float8 lng, float8 lat)
 {
 	p->lat = lat;
 	p->lng = lng;
@@ -165,10 +167,11 @@ void create_spherepoint_from_long_lat(SPoint *p, float8 lng, float8 lat)
 Datum
 spherepoint_from_long_lat(PG_FUNCTION_ARGS)
 {
-	SPoint *p = (SPoint *) palloc(sizeof(SPoint));
+	SPoint	   *p = (SPoint *) palloc(sizeof(SPoint));
 
 	const float8 lng = PG_GETARG_FLOAT8(0);
 	const float8 lat = PG_GETARG_FLOAT8(1);
+
 	create_spherepoint_from_long_lat(p, lng, lat);
 	PG_RETURN_POINTER(p);
 }
@@ -176,14 +179,13 @@ spherepoint_from_long_lat(PG_FUNCTION_ARGS)
 Datum
 spherepoint_from_long_lat_deg(PG_FUNCTION_ARGS)
 {
-	Datum res;
+	Datum		res;
 	const float8 lng = deg_to_rad(PG_GETARG_FLOAT8(0));
 	const float8 lat = deg_to_rad(PG_GETARG_FLOAT8(1));
-	res = DirectFunctionCall2(
-		spherepoint_from_long_lat,
-		Float8GetDatum(lng),
-		Float8GetDatum(lat)
-		);
+
+	res = DirectFunctionCall2(spherepoint_from_long_lat,
+							  Float8GetDatum(lng),
+							  Float8GetDatum(lat));
 	PG_RETURN_DATUM(res);
 }
 
@@ -196,13 +198,15 @@ norm2(double a, double b)
 float8
 spoint_dist(const SPoint *p1, const SPoint *p2)
 {
-	float8	dl = p1->lng - p2->lng;
+	float8		dl = p1->lng - p2->lng;
+
 	/* use Vincenty's formula for the inverse geodesic problem on the sphere */
-	float8	f = atan2(norm2(cos(p2->lat) * sin(dl),
-							cos(p1->lat) * sin(p2->lat)
+	float8		f = atan2(norm2(cos(p2->lat) * sin(dl),
+								cos(p1->lat) * sin(p2->lat)
 								- sin(p1->lat) * cos(p2->lat) * cos(dl)),
-						sin(p1->lat) * sin(p2->lat)
-							+ cos(p1->lat) * cos(p2->lat) * cos(dl));
+						  sin(p1->lat) * sin(p2->lat)
+						  + cos(p1->lat) * cos(p2->lat) * cos(dl));
+
 	if (FPzero(f))
 	{
 		return 0.0;

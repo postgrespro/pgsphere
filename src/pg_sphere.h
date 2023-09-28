@@ -72,7 +72,7 @@
 #else
 #define PGSPHERE_FLOAT_STORE 0
 #endif
-#endif // PGSPHERE_FLOAT_STORE
+#endif							/* PGSPHERE_FLOAT_STORE */
 
 #define EPSILON					1.0E-09
 
@@ -84,6 +84,7 @@ static inline bool
 FPeq(double A, double B)
 {
 	const volatile double AB = A - B;
+
 	return A == B || fabs(AB) <= EPSILON;
 }
 
@@ -91,6 +92,7 @@ static inline bool
 FPne(double A, double B)
 {
 	const volatile double AB = A - B;
+
 	return A != B && fabs(AB) > EPSILON;
 }
 
@@ -98,6 +100,7 @@ static inline bool
 FPlt(double A, double B)
 {
 	const volatile double AE = A + EPSILON;
+
 	return AE < B;
 }
 
@@ -105,6 +108,7 @@ static inline bool
 FPle(double A, double B)
 {
 	const volatile double BE = B + EPSILON;
+
 	return A <= BE;
 }
 
@@ -112,6 +116,7 @@ static inline bool
 FPgt(double A, double B)
 {
 	const volatile double BE = B + EPSILON;
+
 	return A > BE;
 }
 
@@ -119,6 +124,7 @@ static inline bool
 FPge(double A, double B)
 {
 	const volatile double AE = A + EPSILON;
+
 	return AE >= B;
 }
 
@@ -160,7 +166,7 @@ FPge(double A, double B)
 	return A + EPSILON >= B;
 }
 
-#endif // PGSPHERE_FLOAT_STORE
+#endif							/* PGSPHERE_FLOAT_STORE */
 
 /*---------------------------------------------------------------------
  * Point - (x,y)
@@ -171,7 +177,6 @@ typedef struct
 				y;
 } Point;
 
-void	sphere_yyparse(void);
+void		sphere_yyparse(void);
 
 #endif
-

@@ -2,7 +2,7 @@
 #define __PGS_CHEALPIX_H__
 
 #include <healpix_bare/healpix_bare.h>
-#include <c.h>                                        /* PostgreSQL type definitions */
+#include <c.h>					/* PostgreSQL type definitions */
 /*
  * Actually, chealpix changed its API: thus, this file must be included first,
  * directly or indirectly.
