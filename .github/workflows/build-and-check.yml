@@ -56,11 +56,14 @@ jobs:
     - name: Build docs
       run: ${MAKE_CMD} -C doc
 
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v4
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       if: success() || failure()
       with:
-        name: ${{ github.ref_name }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
+        name: ${{ env.GITHUB_REF_SLUG_URL }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
         if-no-files-found: ignore
         path: |
           ./**/*.log
