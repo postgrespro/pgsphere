@@ -3,7 +3,9 @@ include Makefile.common.mk
 
 RELEASE_SQL      = $(EXTENSION)--$(PGSPHERE_VERSION).sql
 USE_PGXS         = 1
-USE_HEALPIX      =? 1
+USE_HEALPIX     ?= 1
+PGINDENT        ?= pgindent
+PGBSDINDENT     ?= pg_bsd_indent
 
 # the base dir name may be changed depending on git clone command
 SRC_DIR = $(shell basename $(shell pwd))
@@ -223,3 +225,27 @@ endif
 dist : clean sparse.c sscan.c
 	find . -name '*~' -type f -exec rm {} \;
 	cd .. && tar --transform s/$(SRC_DIR)/pgsphere-$(PGSPHERE_VERSION)/ --exclude CVS --exclude .git -czf pgsphere-$(PGSPHERE_VERSION).tar.gz $(SRC_DIR) && cd -
+
+# To launch pgindent, set the PATH environment variable to the directories
+# containing the binaries pgindent and pg_bsd_indent. It is important to
+# utilize a specific version of pg_bsd_indent, which sources can be found
+# in the postgresql>/src/tools/pg_bsd_indent directory, where <postgresql>
+# is the root directory of the postgresql project source tree.
+#
+# The sources of the utilities can be found in the following directories:
+# - <postgresql>/src/tools/pgindent
+# - <postgresql>/src/tools/pg_bsd_indent
+#
+# pgindent-typedefs.list should be updated every time after implementing
+# new types and introducing new typedefs in the code. For details how
+# to update pgindent-typedefs.list and for other information about pgindent,
+# please, read the doc: <postgresql>/src/tools/pgindent/README.
+#
+# pgindent-excludes.list is used to specify files to be ignored.
+#
+pgindent:
+	$(PGINDENT) \
+		--typedefs=pgindent-typedefs.list \
+		--excludes=pgindent-excludes.list \
+		--indent=${PGBSDINDENT} \
+		src
