@@ -14,8 +14,9 @@
             <para>
               The <function>area</function> function returns the area of a
               spherical object in square radians. Supported data types are:
-              <type>scircle</type>, <type>spolygon</type> (if the polygon
-              is convex), <type>sbox</type>, and <type>smoc</type>.
+              <type>scircle</type>, <type>spolygon</type>, <type>sbox</type>,
+              <type>smoc</type>. The polygon should be convex, otherwise the
+              behaviour is undefined.
             </para>
             <example>
               <title>Area of a spherical circle as a multiple of &pg_pgr;</title>
@@ -25,6 +26,12 @@
 <![CDATA[------]]>
 <![CDATA[ 1]]>
 <![CDATA[(1 row)]]>
+              </programlisting>
+            </example>
+
+            <example>
+              <title>Area of a Multi-Order Coverage (MOC) object</title>
+              <programlisting>
 <![CDATA[sql> SELECT area(smoc '0/1-3');]]>
 <![CDATA[       area]]>
 <![CDATA[-------------------]]>

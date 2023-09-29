@@ -11,8 +11,6 @@
 <!ENTITY capFunctions  SYSTEM "functions.sgm">
 <!ENTITY capIndices    SYSTEM "indices.sgm">
 <!ENTITY capExamples   SYSTEM "examples.sgm">
-<!ENTITY capFaq        SYSTEM "faq.sgm">
-<!ENTITY capAppendixes SYSTEM "appendixes.sgm">
 
 <!ENTITY graph1001 "img/spoint.jpg">
 <!ENTITY graph1002 "img/scircle.jpg">
@@ -28,6 +26,11 @@
 <!ENTITY pg_ohgr "<symbol role='symbol'>&ohgr;</symbol>">
 <!ENTITY pg_OHgr "<symbol role='symbol'>&OHgr;</symbol>">
 <!ENTITY pg_pgr "<symbol role='symbol'>&pgr;</symbol>">
+<!ENTITY healpix "<application>HEALPix</application>">
+<!ENTITY pgsphere "<application>pgSphere</application>">
+<!ENTITY postgresql "<application>PostgreSQL</application>">
+<!ENTITY pg_config "<application>pg_config</application>">
+<!ENTITY pgsphereurl "https://github.com/postgrespro/pgsphere/releases">
 
 <!ENTITY pg_sphere_version SYSTEM "version.xml">
 ]>
