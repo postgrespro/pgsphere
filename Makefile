@@ -30,7 +30,8 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.2.1--1.2.2.sql \
 			  pg_sphere--1.2.2--1.2.3.sql \
 			  pg_sphere--1.2.3--1.3.0.sql \
-			  pg_sphere--1.3.0--1.3.1.sql
+			  pg_sphere--1.3.0--1.3.1.sql \
+			  pg_sphere--1.3.1--1.3.2.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
@@ -256,6 +257,9 @@ pg_sphere--1.2.3--1.3.0.sql: pgs_brin.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.3.0--1.3.1.sql:
+	cat upgrade_scripts/$@.in > $@
+
+pg_sphere--1.3.1--1.3.2.sql:
 	cat upgrade_scripts/$@.in > $@
 
 # end of local stuff
