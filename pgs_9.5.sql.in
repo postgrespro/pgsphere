@@ -1,7 +1,0 @@
--- add functionality that is only available for PostgreSQL 9.5+
-
-
--- add "fetch" support function to enable index-only scans for spoint3
-
-ALTER OPERATOR FAMILY spoint3 USING gist ADD
-   FUNCTION 9 (spoint, spoint) g_spoint3_fetch (internal);

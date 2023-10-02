@@ -42,8 +42,6 @@ ifneq ($(USE_HEALPIX),0)
 REGRESS    += healpix moc mocautocast
 endif
 
-REGRESS_9_5 = index_9.5 # experimental for spoint3
-
 TESTS       = init_test tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin
@@ -84,8 +82,6 @@ endif
 
 PGS_SQL    += pgs_epochprop.sql
 
-PGS_SQL_9_5 = pgs_9.5.sql # experimental for spoint3
-
 ifdef USE_PGXS
   ifndef PG_CONFIG
     PG_CONFIG = pg_config
@@ -112,17 +108,8 @@ endif
 healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 	$(COMPILE.c) -Wno-declaration-after-statement -o $@ $^
 
-# experimental for spoint3
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
-pg_version_9_5_plus = $(if $(filter-out 9.1% 9.2% 9.3% 9.4%,$(pg_version)),y,n)
 has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
-
-## the use of spoint 3 is too experimental and preliminary:
-#ifeq ($(pg_version_9_5_plus),y)
-#	REGRESS += $(REGRESS_9_5)
-#	TESTS   += $(REGRESS_9_5)
-#	PGS_SQL += $(PGS_SQL_9_5)
-#endif
 
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
