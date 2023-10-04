@@ -66,4 +66,5 @@ CREATE OPERATOR CLASS spoint3
 	FUNCTION  6 g_spoint3_picksplit (internal, internal),
 	FUNCTION  7 g_spoint3_same (bytea, bytea, internal),
 	FUNCTION  8 g_spoint3_distance (internal, internal, int4, oid),
+	FUNCTION  9 (spoint, spoint) g_spoint3_fetch (internal),
 	STORAGE	pointkey;
