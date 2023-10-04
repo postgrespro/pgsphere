@@ -1,7 +1,0 @@
--- versions before 2009-11-01 (i.e., release 1.1.1.) lack pg_sphere_version(),
--- see https://postgrespro.ru/list/id/20091101150558.9B87B1073FEE@pgfoundry.org
-
-CREATE OR REPLACE FUNCTION pg_sphere_version()
-   RETURNS CSTRING
-   AS 'MODULE_PATHNAME', 'pg_sphere_version'
-   LANGUAGE 'c';
