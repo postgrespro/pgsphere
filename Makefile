@@ -38,17 +38,9 @@ REGRESS     = init tables points euler circle line ellipse poly path box index \
               contains_ops contains_ops_compat bounding_box_gist gnomo epochprop \
               contains overlaps spoint_brin sbox_brin
 
-ifneq ($(USE_HEALPIX),0)
-REGRESS    += healpix moc mocautocast
-endif
-
 TESTS       = init_test tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin
-
-ifneq ($(USE_HEALPIX),0)
-TESTS      += healpix moc mocautocast
-endif
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -70,6 +62,8 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_gist.sql gnomo.sql pgs_brin.sql
 
 ifneq ($(USE_HEALPIX),0)
+REGRESS    += healpix moc moc1 moc100 mocautocast
+TESTS      += healpix moc moc1 moc100 mocautocast
 PGS_SQL    += healpix.sql
 endif
 
@@ -109,16 +103,9 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 	$(COMPILE.c) -Wno-declaration-after-statement -o $@ $^
 
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
-has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
-
-ifneq ($(USE_HEALPIX),0)
-ifeq ($(has_explain_summary),y)
-        REGRESS += moc1 moc100
-endif
-endif
 
 test: pg_sphere.test.sql
 	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) $(TESTS)
