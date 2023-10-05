@@ -44,14 +44,26 @@ jobs:
     - name: make test
       run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} test
 
+    - name: Show test regression.diffs
+      if: ${{ failure() }}
+      run: cat regression.diffs
+
     - name: Install pgSphere
       run: sudo ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} install
 
     - name: make installcheck
       run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} installcheck
 
+    - name: Show installcheck regression.diffs
+      if: ${{ failure() }}
+      run: cat regression.diffs
+
     - name: make crushtest
       run: pg_virtualenv ${MAKE_CMD} USE_HEALPIX=${{ matrix.use_healpix }} crushtest
+
+    - name: Show crushtest regression.diffs
+      if: ${{ failure() }}
+      run: cat regression.diffs
 
     - name: Build docs
       run: ${MAKE_CMD} -C doc
