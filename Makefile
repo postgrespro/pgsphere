@@ -130,8 +130,7 @@ endif
 pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 	tail -n+3 $< | sed 's,MODULE_PATHNAME,$(realpath $(shlib)),g' >$@
 
-
-$(RELEASE_SQL): $(addsuffix .in, $(RELEASE_SQL) $(PGS_SQL))
+$(RELEASE_SQL): pg_sphere_head.sql.in $(addsuffix .in, $(PGS_SQL))
 	cat $^ > $@
 
 # for "create extension from unpacked*":
