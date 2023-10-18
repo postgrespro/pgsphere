@@ -1,2 +1,0 @@
--- complain if this upgrade script is run via psql
-\echo Use "CREATE EXTENSION pg_sphere FROM unpackaged" to load this file. \quit

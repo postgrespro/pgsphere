@@ -20,7 +20,6 @@ OBJS      += src/healpix.o src/moc.o src/process_moc.o \
 endif
 
 DATA_built  = $(RELEASE_SQL) \
-			  pg_sphere--unpackaged--1.1.5beta0gavo.sql \
 			  pg_sphere--1.0--1.0_gavo.sql \
 			  pg_sphere--1.0_gavo--1.1.5beta0gavo.sql \
 			  pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql \
@@ -38,17 +37,9 @@ REGRESS     = init tables points euler circle line ellipse poly path box index \
               contains_ops contains_ops_compat bounding_box_gist gnomo epochprop \
               contains overlaps spoint_brin sbox_brin
 
-ifneq ($(USE_HEALPIX),0)
-REGRESS    += healpix moc mocautocast
-endif
-
 TESTS       = init_test tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin
-
-ifneq ($(USE_HEALPIX),0)
-TESTS      += healpix moc mocautocast
-endif
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -70,6 +61,8 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_gist.sql gnomo.sql pgs_brin.sql
 
 ifneq ($(USE_HEALPIX),0)
+REGRESS    += healpix moc moc1 moc100 mocautocast
+TESTS      += healpix moc moc1 moc100 mocautocast
 PGS_SQL    += healpix.sql
 endif
 
@@ -109,16 +102,9 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 	$(COMPILE.c) -Wno-declaration-after-statement -o $@ $^
 
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
-has_explain_summary = $(if $(filter-out 9.%,$(pg_version)),y,n)
 
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
-
-ifneq ($(USE_HEALPIX),0)
-ifeq ($(has_explain_summary),y)
-        REGRESS += moc1 moc100
-endif
-endif
 
 test: pg_sphere.test.sql
 	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) $(TESTS)
@@ -129,28 +115,6 @@ pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 $(RELEASE_SQL): pg_sphere_head.sql.in $(addsuffix .in, $(PGS_SQL))
 	cat $^ > $@
 
-# for "create extension from unpacked*":
-
-UPGRADE_UNP_COMMON = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
-	pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
-	pgs_box.sql pgs_contains_ops_compat.sql pgs_gist.sql \
-	pgs_gist_contains_ops.sql contains-ops-fixes-1.sql
-
-AUGMENT_UNP_COMMON = upgrade_scripts/pgs_pre111.sql pgs_contains_ops.sql \
-	gnomo.sql
-# for vanilla 1.1.1 users:
-AUGMENT_UNP_111 = $(AUGMENT_UNP_COMMON) pgs_gist_pointkey.sql
-
-# for 1.1.2+ users: 'from unpacked_1.1.2plus'
-AUGMENT_UNP_FOR_112plus = $(AUGMENT_UNP_COMMON)
-UPGRADE_UNP_FOR_112plus = pgs_gist_pointkey.sql pgs_gist_drop_spoint2.sql.in
-
-# for "alter extension":
-
-# TODO: add dynamic pl/pgsql to do perform an additional
-#    "ALTER EXTENSION pg_sphere UPDATE TO '1.1.5_from_before_2016-02-07';"
-# if required.
-#
 # default 1.0 (after 2016-02-07) -> 1.1.5
 UPGRADE_1_0_PRE_xxxxxx = contains-ops-fixes-2.sql
 # '1.1.5_from_2015-08-31'
@@ -158,39 +122,14 @@ AUGMENT_1_0_PRE_AAF2D5 = pgs_contains_ops.sql gnomo.sql
 UPGRADE_1_0_PRE_AAF2D5 = contains-ops-fixes-1.sql pgs_gist_drop_spoint2.sql.in \
 						pgs_gist_contains_ops.sql
 
-# vanilla 'create from unpackaged' must assume 1.1.1
-# ...
-
-# create "create extension from unpacked*" files
-
-# create "alter extension" files
-
-# local stuff follows here
-AUGMENT_GAVO_111 = $(AUGMENT_UNP_111) # for vanilla 1.1.1 users
-ifneq ($(USE_HEALPIX),0)
-AUGMENT_GAVO_111 += healpix.sql
-endif
-UPGRADE_GAVO_111 = $(UPGRADE_UNP_COMMON)
-
 # add new HEALPix functions and experimental spoint3
 ifneq ($(USE_HEALPIX),0)
 AUGMENT_FROM_GAVO = healpix.sql
 endif
 AUGMENT_FROM_GAVO += pgs_gist_spoint3.sql
 
-AUGMENT_UNP_115B0G = $(AUGMENT_UNP_111) $(AUGMENT_FROM_GAVO)
-UPGRADE_UNP_115B0G = $(UPGRADE_UNP_COMMON)
-
 AUGMENT_1_0_115B0G = $(AUGMENT_FROM_GAVO)
 UPGRADE_1_0_115B0G = contains-ops-fixes-2.sql pgs_gist_drop_spoint2.sql
-
-# test installation 0
-pg_sphere--unpackaged--1.1.5beta0gavo.sql: $(addsuffix .in, \
-		$(AUGMENT_GAVO_111) \
-		$(addprefix upgrade_scripts/, $(UPGRADE_GAVO_111)))
-	cat upgrade_scripts/$@.in $^ > $@
-
-# (The upgrade of test installation A has been completed.)
 
 # test installation B (generic)
 pg_sphere--1.0--1.0_gavo.sql: # dummy upgrade to allow for descriptive names
