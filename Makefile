@@ -10,8 +10,8 @@ SRC_DIR = $(shell basename $(shell pwd))
 
 MODULE_big = pg_sphere
 OBJS       = src/sscan.o src/sparse.o src/sbuffer.o src/vector3d.o src/point.o \
-             src/euler.o src/circle.o src/line.o src/ellipse.o src/polygon.o \
-             src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o \
+             src/euler.o src/circle.o src/circle_sel.o src/line.o src/ellipse.o src/polygon.o \
+             src/path.o src/box.o src/output.o src/gq_cache.o src/gist.o src/gist_support.o \
              src/key.o src/gnomo.o src/epochprop.o src/brin.o
 
 ifneq ($(USE_HEALPIX),0)
@@ -35,11 +35,11 @@ DATA_built  = $(RELEASE_SQL) \
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 REGRESS     = init tables points euler circle line ellipse poly path box index \
               contains_ops contains_ops_compat bounding_box_gist gnomo epochprop \
-              contains overlaps spoint_brin sbox_brin
+              contains overlaps spoint_brin sbox_brin selectivity
 
 TESTS       = init_test tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
-              epochprop contains overlaps spoint_brin sbox_brin
+              epochprop contains overlaps spoint_brin sbox_brin selectivity
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -58,7 +58,7 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
               pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-              pgs_gist.sql gnomo.sql pgs_brin.sql
+              pgs_gist.sql gnomo.sql pgs_brin.sql pgs_circle_sel.sql
 
 ifneq ($(USE_HEALPIX),0)
 REGRESS    += healpix moc moc1 moc100 mocautocast
@@ -102,9 +102,16 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 	$(COMPILE.c) -Wno-declaration-after-statement -o $@ $^
 
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
+has_support_functions = $(if $(filter-out 9.% 10.% 11.%,$(pg_version)),y,n)
 
 crushtest: REGRESS += $(CRUSH_TESTS)
 crushtest: installcheck
+
+ifeq ($(has_support_functions),y)
+PGS_SQL    += pgs_gist_support.sql
+REGRESS    += gist_support
+TESTS      += gist_support
+endif
 
 test: pg_sphere.test.sql
 	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) $(TESTS)
@@ -180,8 +187,11 @@ pg_sphere--1.2.3--1.3.0.sql: pgs_brin.sql.in
 pg_sphere--1.3.0--1.3.1.sql:
 	cat upgrade_scripts/$@.in > $@
 
-pg_sphere--1.3.1--1.3.2.sql:
-	cat upgrade_scripts/$@.in > $@
+ifeq ($(has_support_functions),y)
+pg_sphere--1.3.1--1.3.2.sql: pgs_gist_support.sql.in
+endif
+pg_sphere--1.3.1--1.3.2.sql: pgs_circle_sel.sql.in
+	cat upgrade_scripts/$@.in $^ > $@
 
 # end of local stuff
 

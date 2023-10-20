@@ -14,6 +14,10 @@
 #endif
 #define EPSILON		1.0E-09				/* precision of floating point values */
 
+/* spherical circle constants */
+#define SPHERE_SURFACE (4 * PI)
+#define DEFAULT_SCIRCLE_SEL 1e-7
+
 /* convert pg_sphere theta [pi/2 .. -pi/2] to healpix theta [0 .. pi] ([north .. south pole]) */
 static inline double
 conv_theta(double x)
@@ -29,6 +33,15 @@ conv_theta(double x)
 static inline double deg_to_rad(double in)
 {
 	return in * PI / 180;
+}
+
+/*
+ * Area of circle on sphere
+ */
+static inline double
+spherecircle_area_float(double radius)
+{
+	return PID * (1 - cos(radius));
 }
 
 #endif

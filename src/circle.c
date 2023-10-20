@@ -391,7 +391,7 @@ spherecircle_area(PG_FUNCTION_ARGS)
 {
 	SCIRCLE	   *c = (SCIRCLE *) PG_GETARG_POINTER(0);
 
-	PG_RETURN_FLOAT8(PID * (1 - cos(c->radius)));
+	PG_RETURN_FLOAT8(spherecircle_area_float(c->radius));
 }
 
 Datum

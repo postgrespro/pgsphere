@@ -8,6 +8,7 @@ PG_FUNCTION_INFO_V1(spherepoint_in);
 PG_FUNCTION_INFO_V1(spherepoint_from_long_lat);
 PG_FUNCTION_INFO_V1(spherepoint_from_long_lat_deg);
 PG_FUNCTION_INFO_V1(spherepoint_distance);
+PG_FUNCTION_INFO_V1(spherepoint_dwithin);
 PG_FUNCTION_INFO_V1(spherepoint_long);
 PG_FUNCTION_INFO_V1(spherepoint_lat);
 PG_FUNCTION_INFO_V1(spherepoint_x);
@@ -221,6 +222,17 @@ spherepoint_distance(PG_FUNCTION_ARGS)
 
 	PG_RETURN_FLOAT8(spoint_dist(p1, p2));
 
+}
+
+Datum
+spherepoint_dwithin(PG_FUNCTION_ARGS)
+{
+	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
+	SPoint	   *p2 = (SPoint *) PG_GETARG_POINTER(1);
+	float8		within = PG_GETARG_FLOAT8(2);
+	float8		dist = spoint_dist(p1, p2);
+
+	PG_RETURN_BOOL(FPle(dist, within));
 }
 
 Datum

@@ -1,0 +1,109 @@
+CREATE FUNCTION spoint_contained_by_circle_sel(internal, oid, internal, integer)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_sel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_sel(internal, oid, internal, integer) IS
+   'selectivity estimator function for spoint_contained_by_circle';
+
+CREATE FUNCTION spoint_contained_by_circle_joinsel(internal, oid, internal, smallint, internal)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_joinsel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_joinsel(internal, oid, internal, smallint, internal) IS
+   'join selectivity estimator function for spoint_contained_by_circle';
+
+
+CREATE FUNCTION spoint_contained_by_circle_neg_sel(internal, oid, internal, integer)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_neg_sel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_neg_sel(internal, oid, internal, integer) IS
+   'selectivity estimator function for spoint_contained_by_circle_neg';
+
+CREATE FUNCTION spoint_contained_by_circle_neg_joinsel(internal, oid, internal, smallint, internal)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_neg_joinsel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_neg_joinsel(internal, oid, internal, smallint, internal) IS
+   'join selectivity estimator function for spoint_contained_by_circle_neg';
+
+
+CREATE FUNCTION spoint_contained_by_circle_com_sel(internal, oid, internal, integer)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com_sel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_com_sel(internal, oid, internal, integer) IS
+   'selectivity estimator function for spoint_contained_by_circle_com';
+
+CREATE FUNCTION spoint_contained_by_circle_com_joinsel(internal, oid, internal, smallint, internal)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com_joinsel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_com_joinsel(internal, oid, internal, smallint, internal) IS
+   'join selectivity estimator function for spoint_contained_by_circle_com';
+
+
+CREATE FUNCTION spoint_contained_by_circle_com_neg_sel(internal, oid, internal, integer)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com_neg_sel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_com_neg_sel(internal, oid, internal, integer) IS
+   'selectivity estimator function for spoint_contained_by_circle_com_neg';
+
+CREATE FUNCTION spoint_contained_by_circle_com_neg_joinsel(internal, oid, internal, smallint, internal)
+   RETURNS double precision
+   AS 'MODULE_PATHNAME' , 'spherepoint_in_circle_com_neg_joinsel'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_contained_by_circle_com_neg_joinsel(internal, oid, internal, smallint, internal) IS
+   'join selectivity estimator function for spoint_contained_by_circle_com_neg';
+
+
+ALTER OPERATOR @> (scircle, spoint)
+SET (
+   RESTRICT   = spoint_contained_by_circle_com_sel,
+   JOIN       = spoint_contained_by_circle_com_joinsel
+);
+
+ALTER OPERATOR <@ (spoint, scircle)
+SET (
+   RESTRICT   = spoint_contained_by_circle_sel,
+   JOIN       = spoint_contained_by_circle_joinsel
+);
+
+ALTER OPERATOR !@> (scircle, spoint)
+SET (
+   RESTRICT   = spoint_contained_by_circle_com_neg_sel,
+   JOIN       = spoint_contained_by_circle_com_neg_joinsel
+);
+
+ALTER OPERATOR !<@ (spoint, scircle)
+SET (
+   RESTRICT   = spoint_contained_by_circle_neg_sel,
+   JOIN       = spoint_contained_by_circle_neg_joinsel
+);
+
+
+CREATE FUNCTION spoint_dwithin(spoint, spoint, float8)
+   RETURNS boolean
+   AS 'MODULE_PATHNAME', 'spherepoint_dwithin'
+   LANGUAGE C
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoint_dwithin(spoint, spoint, float8) IS
+   'predicate matching spherical points less than a given distance apart';
