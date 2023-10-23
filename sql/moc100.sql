@@ -1,14 +1,3 @@
-\set ECHO none
-SELECT CASE
-  WHEN setting::int/10000 IN (10, 11, 12) THEN '10, 11, 12' -- moc100
-  WHEN setting::int/10000 IN (13, 14, 15) THEN '13, 14, 15' -- moc100_2
-  ELSE '16+'
-END AS outputfile_for_majorversion
-FROM pg_settings WHERE name = 'server_version_num';
-
-SELECT (regexp_matches(version(), '..-bit'))[1] outputfile_for_arch_bits;
-\set ECHO queries
-
 CREATE TABLE moc100 (
 	ivoid text,
 	coverage smoc,
@@ -119,59 +108,38 @@ ivo://cds.vizier/j/a+as/124/353	6/24603,24796,25383,26065,27212,29368,29399,3101
 empty	0/	\N
 \.
 
+ANALYZE moc100;
 CREATE INDEX ON moc100 USING GIN (coverage);
 
 SELECT ivoid FROM moc100 WHERE coverage && '4/0' ORDER BY ivoid;
 
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage && '0/';
+-- PG 10 does not have JIT, ignore errors on SET
+DO $$
+   begin
+      set jit = off;
+   exception
+      when undefined_object then null;
+      when others then raise;
+   end;
+$$;
 
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage && '4/0';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '0/0-11';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '6/43225,43227';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '0/';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '0/0-11';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '6/43225,43227';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '0/';
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage && '0/'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage && '4/0'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '0/0-11'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '6/43225,43227'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '0/'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '0/0-11'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '6/43225,43227'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '0/'$$);
 
 SET enable_seqscan = off;
 
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage && '4/0';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <@ '4/0';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage @> '4/0';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '0/0-11';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '6/43225,43227';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage = '0/';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '0/0-11';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '6/43225,43227';
-
-EXPLAIN (ANALYZE, BUFFERS, TIMING OFF, SUMMARY OFF)
-	SELECT * FROM moc100 WHERE coverage <> '0/';
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage && '4/0'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <@ '4/0'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage @> '4/0'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '0/0-11'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '6/43225,43227'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage = '0/'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '0/0-11'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '6/43225,43227'$$);
+SELECT explain ($$SELECT * FROM moc100 WHERE coverage <> '0/'$$);
