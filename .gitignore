@@ -3,10 +3,17 @@
 *.so
 /*.sql
 /doc/html/
+/doc/pg_sphere*.fo
+/doc/pg_sphere-*.html
+/doc/pg_sphere-*.pdf
+/doc/pg_sphere-full.xml
 /doc/pg_sphere.dsl
+/doc/version.xml
+/log
 /results/
 regression.out
 regression.diffs
 tags
+/tmp_check
 buildpod
 .deps
