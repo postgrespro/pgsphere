@@ -122,12 +122,29 @@ next_interval(int32 a)
 
 #define MOC_AREA_ALL_SKY 3458764513820540928
 
-#define MOC_GIN_ORDER 5 /* order 5 has 12 * 4^5 = 12288 pixels */
+#define MOC_GIN_ORDER_DEFAULT 5 /* order 5 has 12 * 4^5 = 12288 pixels */
 #define MOC_GIN_ORDER_FINE 8 /* order 8 has 12 * 4^8 = 786432 pixels */
 #define MOC_GIN_STRATEGY_INTERSECTS	1
 #define MOC_GIN_STRATEGY_SUBSET		2
 #define MOC_GIN_STRATEGY_SUPERSET	3
 #define MOC_GIN_STRATEGY_EQUAL		4
 #define MOC_GIN_STRATEGY_UNEQUAL	5
+
+/* smoc_gin_ops opclass options */
+#if PG_VERSION_NUM >= 130000
+Datum smoc_gin_options(PG_FUNCTION_ARGS);
+
+typedef struct
+{
+    int32       vl_len_;        /* varlena header (do not touch directly!) */
+    int         order;          /* smoc order to store in index (default 5) */
+} SMocGinOptions;
+
+#define SMOC_GIN_GET_ORDER()	(PG_HAS_OPCLASS_OPTIONS() ? \
+								 ((SMocGinOptions *) PG_GET_OPCLASS_OPTIONS())->order : \
+								 MOC_GIN_ORDER_DEFAULT)
+#else
+#define SMOC_GIN_GET_ORDER()	MOC_GIN_ORDER_DEFAULT
+#endif
 
 #endif

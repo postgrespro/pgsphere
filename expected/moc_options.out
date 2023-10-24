@@ -1,0 +1,40 @@
+create table moc_opt (m smoc);
+insert into moc_opt select format('9/%s', i)::smoc from generate_series(1, 1000) g(i);
+analyze moc_opt;
+create index moc_opt5 on moc_opt using gin (m);
+explain (analyze, costs off, timing off, summary off) select * from moc_opt where m && '9/1';
+                          QUERY PLAN                           
+---------------------------------------------------------------
+ Bitmap Heap Scan on moc_opt (actual rows=1 loops=1)
+   Recheck Cond: (m && '9/1'::smoc)
+   Rows Removed by Index Recheck: 254
+   Heap Blocks: exact=4
+   ->  Bitmap Index Scan on moc_opt5 (actual rows=255 loops=1)
+         Index Cond: (m && '9/1'::smoc)
+(6 rows)
+
+drop index moc_opt5;
+create index moc_opt8 on moc_opt using gin (m smoc_gin_ops_fine);
+explain (analyze, costs off, timing off, summary off) select * from moc_opt where m && '9/1';
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Bitmap Heap Scan on moc_opt (actual rows=1 loops=1)
+   Recheck Cond: (m && '9/1'::smoc)
+   Rows Removed by Index Recheck: 2
+   Heap Blocks: exact=1
+   ->  Bitmap Index Scan on moc_opt8 (actual rows=3 loops=1)
+         Index Cond: (m && '9/1'::smoc)
+(6 rows)
+
+drop index moc_opt8;
+create index moc_opt9 on moc_opt using gin (m smoc_gin_ops (order = 9));
+explain (analyze, costs off, timing off, summary off) select * from moc_opt where m && '9/1';
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Bitmap Heap Scan on moc_opt (actual rows=1 loops=1)
+   Recheck Cond: (m && '9/1'::smoc)
+   Heap Blocks: exact=1
+   ->  Bitmap Index Scan on moc_opt9 (actual rows=1 loops=1)
+         Index Cond: (m && '9/1'::smoc)
+(5 rows)
+

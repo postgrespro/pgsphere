@@ -3,7 +3,8 @@
 
 #include <stddef.h>
 #include <string.h>
-#include <access/gin.h>
+#include "access/gin.h"
+#include "access/reloptions.h"
 
 #include "circle.h"
 #include "polygon.h"
@@ -45,6 +46,7 @@ PG_FUNCTION_INFO_V1(smoc_gin_extract_value_fine);
 PG_FUNCTION_INFO_V1(smoc_gin_extract_query);
 PG_FUNCTION_INFO_V1(smoc_gin_extract_query_fine);
 PG_FUNCTION_INFO_V1(smoc_gin_consistent);
+PG_FUNCTION_INFO_V1(smoc_gin_options);
 
 int32 smoc_output_type = 0;
 
@@ -1079,7 +1081,6 @@ smoc_gin_extract_internal(Smoc *moc_a, int32 *nkeys, int gin_order)
 			if (*nkeys >= nalloc)
 			{
 				nalloc *= 2;
-				Assert(nalloc < 2000000);
 				keys = repalloc(keys, nalloc * sizeof(Datum));
 			}
 			keys[(*nkeys)++] = Int32GetDatum(p);
@@ -1094,8 +1095,9 @@ smoc_gin_extract_value(PG_FUNCTION_ARGS)
 {
 	Smoc*	moc_a = (Smoc *) PG_DETOAST_DATUM(PG_GETARG_DATUM(0));
 	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
+	int		order = SMOC_GIN_GET_ORDER();
 
-	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, order));
 }
 
 Datum
@@ -1114,13 +1116,14 @@ smoc_gin_extract_query(PG_FUNCTION_ARGS)
 	int32*	nkeys = (int32 *) PG_GETARG_POINTER(1);
 	StrategyNumber st = PG_GETARG_UINT16(2);
 	int32*	searchmode = (int32 *) PG_GETARG_POINTER(6);
+	int		order = SMOC_GIN_GET_ORDER();
 
 	if (st == MOC_GIN_STRATEGY_SUBSET || (st == MOC_GIN_STRATEGY_EQUAL && moc_a->area == 0))
 		*searchmode = GIN_SEARCH_MODE_INCLUDE_EMPTY;
 	else if (st == MOC_GIN_STRATEGY_UNEQUAL)
 		*searchmode = GIN_SEARCH_MODE_ALL;
 
-	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, MOC_GIN_ORDER));
+	PG_RETURN_DATUM(smoc_gin_extract_internal(moc_a, nkeys, order));
 }
 
 Datum
@@ -1202,3 +1205,21 @@ smoc_gin_consistent(PG_FUNCTION_ARGS)
 	/* not reached */
 	PG_RETURN_NULL();
 }
+
+#if PG_VERSION_NUM >= 130000
+Datum
+smoc_gin_options(PG_FUNCTION_ARGS)
+{
+	local_relopts *relopts = (local_relopts *) PG_GETARG_POINTER(0);
+
+	init_local_reloptions(relopts, sizeof(SMocGinOptions));
+	add_local_int_reloption(relopts, "order",
+							"smoc order to store in index",
+							MOC_GIN_ORDER_DEFAULT,
+							0,
+							12, /* maximum order fitting into 32bit */
+							offsetof(SMocGinOptions, order));
+
+	PG_RETURN_VOID();
+}
+#endif

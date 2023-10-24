@@ -1,0 +1,12 @@
+-- GIN opclass options
+
+CREATE FUNCTION smoc_gin_options (internal)
+	RETURNS void
+	AS 'MODULE_PATHNAME'
+	LANGUAGE C
+	PARALLEL SAFE
+	IMMUTABLE
+	STRICT;
+
+ALTER OPERATOR FAMILY smoc_gin_ops USING gin
+	ADD FUNCTION 7 (smoc) smoc_gin_options (internal);

@@ -354,6 +354,7 @@ CREATE OPERATOR CLASS smoc_gin_ops
 		FUNCTION 4 smoc_gin_consistent (internal, int2, smoc, int4, internal, internal, internal, internal),
 		--FUNCTION 5 smoc_gin_compare_partial (),
 		--FUNCTION 6 smoc_gin_tri_consistent (),
+		--FUNCTION 7 (smoc) smoc_gin_options (internal), -- needs PG13
 		STORAGE int4;
 
 CREATE OPERATOR CLASS smoc_gin_ops_fine

@@ -99,6 +99,7 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 has_support_functions = $(if $(filter-out 9.% 10.% 11.%,$(pg_version)),y,n)
+has_index_options = $(if $(filter-out 9.% 10.% 11.% 12.%,$(pg_version)),y,n)
 
 crushtest: TESTS += $(CRUSH_TESTS)
 crushtest: installcheck
@@ -106,6 +107,13 @@ crushtest: installcheck
 ifeq ($(has_support_functions),y)
 PGS_SQL    += pgs_gist_support.sql
 TESTS      += gist_support
+endif
+
+ifneq ($(USE_HEALPIX),0)
+ifeq ($(has_index_options),y)
+PGS_SQL    += pgs_moc_options.sql
+TESTS      += moc_options
+endif
 endif
 
 # "make test" uses a special initialization file that doesn't rely on "create extension"
@@ -185,6 +193,11 @@ pg_sphere--1.3.0--1.3.1.sql:
 
 ifeq ($(has_support_functions),y)
 pg_sphere--1.3.1--1.3.2.sql: pgs_gist_support.sql.in
+endif
+ifneq ($(USE_HEALPIX),0)
+ifeq ($(has_index_options),y)
+pg_sphere--1.3.1--1.3.2.sql: pgs_moc_options.sql.in
+endif
 endif
 pg_sphere--1.3.1--1.3.2.sql: pgs_circle_sel.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
