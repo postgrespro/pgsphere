@@ -33,13 +33,10 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.3.1--1.3.2.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
-REGRESS     = init tables points euler circle line ellipse poly path box index \
-              contains_ops contains_ops_compat bounding_box_gist gnomo epochprop \
-              contains overlaps spoint_brin sbox_brin selectivity
-
-TESTS       = init_test tables points euler circle line ellipse poly path box \
+TESTS       = tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin selectivity
+REGRESS     = init $(TESTS)
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
 PG_CPPFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
@@ -61,7 +58,6 @@ PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_gist.sql gnomo.sql pgs_brin.sql pgs_circle_sel.sql
 
 ifneq ($(USE_HEALPIX),0)
-REGRESS    += healpix moc moc1 moc100 mocautocast
 TESTS      += healpix moc moc1 moc100 mocautocast
 PGS_SQL    += healpix.sql
 endif
@@ -104,17 +100,17 @@ healpix_bare/healpix_bare.o : healpix_bare/healpix_bare.c
 pg_version := $(word 2,$(shell $(PG_CONFIG) --version))
 has_support_functions = $(if $(filter-out 9.% 10.% 11.%,$(pg_version)),y,n)
 
-crushtest: REGRESS += $(CRUSH_TESTS)
+crushtest: TESTS += $(CRUSH_TESTS)
 crushtest: installcheck
 
 ifeq ($(has_support_functions),y)
 PGS_SQL    += pgs_gist_support.sql
-REGRESS    += gist_support
 TESTS      += gist_support
 endif
 
+# "make test" uses a special initialization file that doesn't rely on "create extension"
 test: pg_sphere.test.sql
-	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) $(TESTS)
+	$(pg_regress_installcheck) --temp-instance=tmp_check $(REGRESS_OPTS) init_test $(TESTS)
 
 pg_sphere.test.sql: $(RELEASE_SQL) $(shlib)
 	tail -n+3 $< | sed 's,MODULE_PATHNAME,$(realpath $(shlib)),g' >$@
