@@ -12,3 +12,7 @@ EXCEPTION
    WHEN OTHERS THEN RAISE;
 END;
 $$;
+
+-- remove legacy spellings of operators
+DROP OPERATOR IF EXISTS @(bigint, smoc);
+DROP OPERATOR IF EXISTS @(spoint, smoc);

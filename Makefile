@@ -65,7 +65,7 @@ endif
 PGS_SQL    += pgs_gist_spoint3.sql
 
 ifneq ($(USE_HEALPIX),0)
-PGS_SQL    += pgs_moc_type.sql pgs_moc_compat.sql pgs_moc_ops.sql \
+PGS_SQL    += pgs_moc_type.sql pgs_moc_ops.sql \
               pgs_moc_geo_casts.sql
 endif
 
@@ -146,7 +146,7 @@ ifneq ($(USE_HEALPIX),0)
 pg_sphere--1.1.5beta0gavo--1.1.5beta2gavo.sql: pgs_moc_type.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
-pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql: pgs_moc_compat.sql.in
+pg_sphere--1.1.5beta2gavo--1.1.5beta4gavo.sql:
 	cat upgrade_scripts/$@.in $^ > $@
 
 pg_sphere--1.1.5beta4gavo--1.2.0.sql: pgs_moc_ops.sql.in
