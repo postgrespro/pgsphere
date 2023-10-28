@@ -1,6 +1,8 @@
-
+-- **************************
+--
 -- spherical polygon functions
-
+--
+-- **************************
 
 CREATE FUNCTION npoints(spoly)
    RETURNS INT4
@@ -934,6 +936,29 @@ COMMENT ON OPERATOR !&& (sellipse, spoly) IS
 
 
 --
+-- Functions to create a polygon from arrays
+--
+
+CREATE FUNCTION spoly(float8[])
+   RETURNS spoly
+   AS 'MODULE_PATHNAME', 'spherepoly_rad'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly(float8[]) IS
+   'creates spoly from array of numbers in radians';
+
+CREATE FUNCTION spoly_deg(float8[])
+   RETURNS spoly
+   AS 'MODULE_PATHNAME', 'spherepoly_deg'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly_deg(float8[]) IS
+   'creates spoly from array of numbers in degrees';
+
+
+--
 -- Aggregate functions to add points to polygon
 --
 
@@ -945,18 +970,6 @@ CREATE FUNCTION spoly_add_point_aggr (spoly, spoint)
 
 COMMENT ON FUNCTION  spoly_add_point_aggr (spoly, spoint) IS
   'adds a spherical point to spherical polygon. Do not use it standalone!';
-
-CREATE FUNCTION spoly_deg(float8[])
-   RETURNS spoly
-   AS 'MODULE_PATHNAME', 'spherepoly_deg'
-   LANGUAGE 'c'
-   IMMUTABLE STRICT;
-
-COMMENT ON FUNCTION spoly_deg(float8[]) IS
-   '   Create spoly from array of points.
-   Two consecutive numbers among those present
-   refer to the same occurrence and cover its
-   latitude and longitude, respectively.';
 
 CREATE FUNCTION spoly_add_points_fin_aggr (spoly)
   RETURNS spoly

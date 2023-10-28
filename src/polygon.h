@@ -87,9 +87,14 @@ Datum	spherepoly_get_point(PG_FUNCTION_ARGS);
 int8	poly_line_pos(const SPOLY *poly, const SLine *line);
 
 /*
- * Input of a spherical from sequence of pairconsecutive numbers(lng, lat).
+ * Input of a spherical from array of pair-consecutive numbers (lng, lat), in radians.
  */
-Datum spherepoly_deg(PG_FUNCTION_ARGS);
+Datum	spherepoly_rad(PG_FUNCTION_ARGS);
+
+/*
+ * Input of a spherical from array of pair-consecutive numbers (lng, lat), in degrees.
+ */
+Datum	spherepoly_deg(PG_FUNCTION_ARGS);
 
 /*
  * Input of a spherical polygon.
