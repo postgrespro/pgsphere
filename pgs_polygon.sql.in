@@ -948,6 +948,15 @@ CREATE FUNCTION spoly(float8[])
 COMMENT ON FUNCTION spoly(float8[]) IS
    'creates spoly from array of numbers in radians';
 
+CREATE FUNCTION spoly(spoint[])
+  RETURNS spoly
+  AS 'MODULE_PATHNAME', 'spherepoly_from_point_array'
+  LANGUAGE 'c'
+  IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly(spoint[]) IS
+  'creates spoly from an array of points';
+
 CREATE FUNCTION spoly_deg(float8[])
    RETURNS spoly
    AS 'MODULE_PATHNAME', 'spherepoly_deg'
@@ -986,7 +995,6 @@ CREATE AGGREGATE spoly (
     stype     = spoly,
     finalfunc = spoly_add_points_fin_aggr
 );
-
 
 --
 -- polygon is convex

@@ -61,7 +61,7 @@ PG_FUNCTION_INFO_V1(spheretrans_poly_inverse);
 PG_FUNCTION_INFO_V1(spherepoly_add_point);
 PG_FUNCTION_INFO_V1(spherepoly_add_points_finalize);
 PG_FUNCTION_INFO_V1(spherepoly_is_convex);
-
+PG_FUNCTION_INFO_V1(spherepoly_from_point_array);
 
  /*
   * Writes "center" of a polygon into 'v'.
@@ -1004,6 +1004,32 @@ spherepoly_deg(PG_FUNCTION_ARGS)
 						 deg_to_rad(array_data[2 * i + 1])
 						);
 	}
+	PG_RETURN_POINTER(spherepoly_from_array(points, np));
+}
+
+Datum
+spherepoly_from_point_array(PG_FUNCTION_ARGS)
+{
+	int			np;
+	ArrayType  *inarr = PG_GETARG_ARRAYTYPE_P(0);
+	SPoint	   *points;
+
+	np = ArrayGetNItems(ARR_NDIM(inarr), ARR_DIMS(inarr));
+
+	if (np < 3)
+	{
+		elog(ERROR, "spoly_deg: invalid number of arguments (must be >= 3)");
+		PG_RETURN_NULL();
+	}
+
+	if (ARR_HASNULL(inarr))
+	{
+		elog(ERROR, "spoly_deg: input array is invalid because if has null values");
+		PG_RETURN_NULL();
+	}
+
+	points = (SPoint *) ARR_DATA_PTR(inarr);
+
 	PG_RETURN_POINTER(spherepoly_from_array(points, np));
 }
 
