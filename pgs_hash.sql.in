@@ -1,0 +1,19 @@
+CREATE FUNCTION spoint_hash32 (spoint)
+   RETURNS int
+   IMMUTABLE STRICT
+   PARALLEL SAFE
+   LANGUAGE C
+   AS 'MODULE_PATHNAME', 'spherepoint_hash32';
+
+UPDATE pg_operator
+   SET oprcanhash = true
+   WHERE oprname = '=' AND
+     oprleft = 'spoint'::regtype AND oprright = 'spoint'::regtype;
+
+/* PG17: ALTER OPERATOR = (spoint, spoint) SET (HASHES); */
+
+CREATE OPERATOR CLASS spoint_hash_ops
+   DEFAULT FOR TYPE spoint USING hash
+   AS
+      OPERATOR 1 = (spoint, spoint),
+      FUNCTION 1 spoint_hash32(spoint);

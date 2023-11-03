@@ -55,7 +55,7 @@ CRUSH_TESTS = init_extended circle_extended
 PGS_SQL     = pgs_types.sql pgs_point.sql pgs_euler.sql pgs_circle.sql \
               pgs_line.sql pgs_ellipse.sql pgs_polygon.sql pgs_path.sql \
               pgs_box.sql pgs_contains_ops.sql pgs_contains_ops_compat.sql \
-              pgs_gist.sql gnomo.sql pgs_brin.sql pgs_circle_sel.sql
+              pgs_gist.sql gnomo.sql pgs_brin.sql pgs_circle_sel.sql pgs_hash.sql
 
 ifneq ($(USE_HEALPIX),0)
 TESTS      += healpix moc moc1 moc100 mocautocast
@@ -199,7 +199,7 @@ ifeq ($(has_index_options),y)
 pg_sphere--1.3.1--1.3.2.sql: pgs_moc_options.sql.in
 endif
 endif
-pg_sphere--1.3.1--1.3.2.sql: pgs_circle_sel.sql.in
+pg_sphere--1.3.1--1.3.2.sql: pgs_circle_sel.sql.in pgs_hash.sql.in
 	cat upgrade_scripts/$@.in $^ > $@
 
 # end of local stuff
