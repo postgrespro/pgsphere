@@ -268,22 +268,45 @@
           <title>
             Polygon
           </title>
+
           <para>
-            The aggregate function
-          </para>
-          <funcsynopsis>
-            <funcprototype>
-              <funcdef><function>spoly</function></funcdef>
-                <paramdef>spoint <parameter>edge</parameter></paramdef>
-            </funcprototype>
-          </funcsynopsis>
-          <para>
-            can be used to create a polygon from a set of spherical points.
+            The functions <literal>spoly</literal> and <literal>spoly_deg</literal>
+            can be used to create spherical polygons. Function <literal>spoly</literal>
+            is overloaded and can accept arrays of float8 or spoint elements.
             There are the same restrictions as for using the input function of
-            spherical polygon (see <xref linkend="dt.spoly"/>). The function
-            returns
-            <literal>NULL</literal>, if the polygon couldn't be created.
+            spherical polygon (see <xref linkend="dt.spoly"/>).
           </para>
+
+          <para>
+            Create a spherical polygon from an array of pair-consecutive
+            numbers (lng, lat). The coordinates are specified in radians.
+            <programlisting>
+<![CDATA[sql> SELECT spoly(ARRAY[0, 0, 0, 0.5, 0.5, 0.5, 0.5, 0])]]>
+            </programlisting>
+          </para>
+
+          <para>
+            Create a spherical polygon from an array of spoint elements.
+            <programlisting>
+<![CDATA[sql> SELECT spoly(ARRAY[spoint(0, 0), spoint(0, 0.5), spoint(0.5, 0.5), spoint(0.5, 0)])]]>
+            </programlisting>
+          </para>
+
+          <para>
+            Create a spherical polygon from an array of pair-consecutive
+            numbers (lng, lat). The coordinates are specified in degrees.
+            <programlisting>
+<![CDATA[sql> SELECT spoly_deg(ARRAY[0, 0, 0, 10, 10, 10, 10, 0])]]>
+            </programlisting>
+          </para>
+
+          <para>
+            The aggregate function <literal>spoly</literal> can be used to
+            create a polygon from a set of spherical points. The function
+            returns <literal>NULL</literal>, if the polygon could not be
+            created.
+          </para>
+
           <example>
             <title>
               Create a spherical polygon using a set of spherical points
