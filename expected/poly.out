@@ -318,6 +318,18 @@ SELECT spoly '{(10d,0d),(10d,1d),(15d,0d)}';
  {(10d , 0d),(10d , 1d),(15d , 0d)}
 (1 row)
 
+SELECT spoly(ARRAY[0.017453292519943295, 0.03490658503988659, 0.05235987755982988, 0.06981317007977318, 0.08726646259971647, 0.10471975511965977]);
+              spoly              
+---------------------------------
+ {(1d , 2d),(3d , 4d),(5d , 6d)}
+(1 row)
+
+SELECT spoly(ARRAY[0.17453292519943295, 0.0, 0.17453292519943295, 0.017453292519943295, 0.2617993877991494, 0.0]);
+               spoly                
+------------------------------------
+ {(10d , 0d),(10d , 1d),(15d , 0d)}
+(1 row)
+
 SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
             spoly_deg            
 ---------------------------------
@@ -335,8 +347,22 @@ SELECT spoly '{(10d,0d),(10d,1d)}';
 ERROR:  spherepoly_in: more than two points needed
 LINE 1: SELECT spoly '{(10d,0d),(10d,1d)}';
                      ^
+SELECT spoly(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0]);
+ERROR:  spherepoly_rad: invalid number of arguments (must be even and >= 6)
+SELECT spoly(ARRAY[1.0, 2.0, 3.0, NULL, 5.0, 6.0]);
+ERROR:  spherepoly_rad: input array is invalid because it has null values
+SELECT spoly(ARRAY[]::float8[]);
+ERROR:  spherepoly_rad: invalid number of arguments (must be even and >= 6)
+SELECT spoly(NULL::float8[]);
+ spoly 
+-------
+ 
+(1 row)
+
 SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, 4.0, 5.0]);
 ERROR:  spherepoly_deg: invalid number of arguments (must be even and >= 6)
+SELECT spoly_deg(ARRAY[1.0, 2.0, 3.0, NULL, 5.0, 6.0]);
+ERROR:  spherepoly_deg: input array is invalid because it has null values
 SELECT spoly_deg(ARRAY[]::float8[]);
 ERROR:  spherepoly_deg: invalid number of arguments (must be even and >= 6)
 SELECT spoly_deg(NULL::float8[]);

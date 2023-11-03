@@ -16,3 +16,20 @@ $$;
 -- remove legacy spellings of operators
 DROP OPERATOR IF EXISTS @(bigint, smoc);
 DROP OPERATOR IF EXISTS @(spoint, smoc);
+
+-- add spoly function that takes an array of float8 values in radians
+CREATE FUNCTION spoly(float8[])
+   RETURNS spoly
+   AS 'MODULE_PATHNAME', 'spherepoly_rad'
+   LANGUAGE 'c'
+   IMMUTABLE STRICT PARALLEL SAFE;
+
+COMMENT ON FUNCTION spoly(float8[]) IS
+   'creates spoly from array of numbers in radians';
+
+-- add PARALLEL SAFE to spoly_deg(float8[])
+ALTER FUNCTION spoly_deg(float8[]) IMMUTABLE STRICT PARALLEL SAFE;
+
+-- update comment on spoly_deg function
+COMMENT ON FUNCTION spoly_deg(float8[]) IS
+   'creates spoly from array of numbers in degrees';
