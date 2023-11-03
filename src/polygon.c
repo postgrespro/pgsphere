@@ -1010,21 +1010,21 @@ spherepoly_deg(PG_FUNCTION_ARGS)
 Datum
 spherepoly_from_point_array(PG_FUNCTION_ARGS)
 {
-	int			np;
-	ArrayType  *inarr = PG_GETARG_ARRAYTYPE_P(0);
 	SPoint	   *points;
-
-	np = ArrayGetNItems(ARR_NDIM(inarr), ARR_DIMS(inarr));
+	ArrayType  *inarr = PG_GETARG_ARRAYTYPE_P(0);
+	const int	np = ArrayGetNItems(ARR_NDIM(inarr), ARR_DIMS(inarr));
 
 	if (np < 3)
 	{
-		elog(ERROR, "spoly_deg: invalid number of arguments (must be >= 3)");
+		elog(ERROR, "spherepoly_from_point_array: "
+			 "invalid number of arguments (must be >= 3)");
 		PG_RETURN_NULL();
 	}
 
 	if (ARR_HASNULL(inarr))
 	{
-		elog(ERROR, "spoly_deg: input array is invalid because if has null values");
+		elog(ERROR, "spherepoly_from_point_array: "
+			 "input array is invalid because it has null values");
 		PG_RETURN_NULL();
 	}
 

@@ -350,18 +350,18 @@ SELECT spoly(NULL::spoint[]);
 (1 row)
 
 SELECT spoly(ARRAY[]::spoint[]);
-ERROR:  spoly_deg: invalid number of arguments (must be >= 3)
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
 SELECT spoly(ARRAY[spoint_deg(0, 0)]);
-ERROR:  spoly_deg: invalid number of arguments (must be >= 3)
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
 SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0)]);
-ERROR:  spoly_deg: invalid number of arguments (must be >= 3)
-SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10,10)]);
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10)]);
                spoly                
 ------------------------------------
  {(0d , 0d),(10d , 0d),(10d , 10d)}
 (1 row)
 
-SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10,10), spoint_deg(0, 10)]);
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10), spoint_deg(0, 10)]);
                      spoly                     
 -----------------------------------------------
  {(0d , 0d),(10d , 0d),(10d , 10d),(0d , 10d)}

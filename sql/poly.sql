@@ -96,9 +96,9 @@ SELECT spoly(ARRAY[spoint_deg(0, 0)]);
 
 SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0)]);
 
-SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10,10)]);
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10)]);
 
-SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10,10), spoint_deg(0, 10)]);
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10), spoint_deg(0, 10)]);
 
 --- incorrect input -----
 
