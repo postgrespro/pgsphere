@@ -16,6 +16,7 @@ PG_FUNCTION_INFO_V1(spherepoint_y);
 PG_FUNCTION_INFO_V1(spherepoint_z);
 PG_FUNCTION_INFO_V1(spherepoint_xyz);
 PG_FUNCTION_INFO_V1(spherepoint_equal);
+PG_FUNCTION_INFO_V1(spherepoint_hash32);
 
 static Oid point_id = InvalidOid;
 
@@ -308,4 +309,14 @@ spherepoint_equal(PG_FUNCTION_ARGS)
 	SPoint	   *p2 = (SPoint *) PG_GETARG_POINTER(1);
 
 	PG_RETURN_BOOL(spoint_eq(p1, p2));
+}
+
+Datum
+spherepoint_hash32(PG_FUNCTION_ARGS)
+{
+	SPoint	   *p1 = (SPoint *) PG_GETARG_POINTER(0);
+	Datum		h1 = DirectFunctionCall1(hashfloat8, p1->lat);
+	Datum		h2 = DirectFunctionCall1(hashfloat8, p1->lng);
+
+	PG_RETURN_INT32(DatumGetInt32(h1) ^ DatumGetInt32(h2));
 }

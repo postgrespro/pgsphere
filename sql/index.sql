@@ -76,3 +76,14 @@ EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),
                     SELECT count(*) FROM spheretmp1b WHERE p <@ scircle '<(1,1),0.3>';
 EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
                     SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1.25)';
+
+-- test hash opclass
+
+CREATE TABLE spheretmp1c AS TABLE spheretmp1;
+
+SELECT p FROM spheretmp1c WHERE p <@ scircle '<(1,1),0.2>' ORDER BY p::text;
+WITH points AS (SELECT DISTINCT p FROM spheretmp1c WHERE p <@ scircle '<(1,1),0.2>')
+   SELECT p FROM points ORDER BY p::text;
+
+CREATE INDEX spheretmp1c_hash_idx ON spheretmp1c USING hash(p);
+EXPLAIN (COSTS OFF) SELECT * FROM spheretmp1c WHERE p = '(0.67 , 0.97)';

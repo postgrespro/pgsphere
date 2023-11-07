@@ -102,4 +102,9 @@ Datum	spherepoint_xyz(PG_FUNCTION_ARGS);
  */
 Datum	spherepoint_equal(PG_FUNCTION_ARGS);
 
+/*
+ * Compute a 32-bit hash value of a point.
+ */
+Datum	spherepoint_hash32(PG_FUNCTION_ARGS);
+
 #endif

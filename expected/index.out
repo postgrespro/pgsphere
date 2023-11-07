@@ -195,3 +195,39 @@ EXPLAIN (COSTS OFF) SELECT count(*) FROM spheretmp1b WHERE p = spoint '(3.09 , 1
      4
 (1 row)
 
+-- test hash opclass
+CREATE TABLE spheretmp1c AS TABLE spheretmp1;
+SELECT p FROM spheretmp1c WHERE p <@ scircle '<(1,1),0.2>' ORDER BY p::text;
+       p       
+---------------
+ (0.67 , 0.97)
+ (0.67 , 0.97)
+ (0.67 , 0.97)
+ (0.67 , 0.97)
+ (1.07 , 1.09)
+ (1.07 , 1.09)
+ (1.07 , 1.09)
+ (1.07 , 1.09)
+ (1.24 , 0.95)
+ (1.24 , 0.95)
+ (1.24 , 0.95)
+ (1.24 , 0.95)
+(12 rows)
+
+WITH points AS (SELECT DISTINCT p FROM spheretmp1c WHERE p <@ scircle '<(1,1),0.2>')
+   SELECT p FROM points ORDER BY p::text;
+       p       
+---------------
+ (0.67 , 0.97)
+ (1.07 , 1.09)
+ (1.24 , 0.95)
+(3 rows)
+
+CREATE INDEX spheretmp1c_hash_idx ON spheretmp1c USING hash(p);
+EXPLAIN (COSTS OFF) SELECT * FROM spheretmp1c WHERE p = '(0.67 , 0.97)';
+                      QUERY PLAN                      
+------------------------------------------------------
+ Index Scan using spheretmp1c_hash_idx on spheretmp1c
+   Index Cond: (p = '(0.67 , 0.97)'::spoint)
+(2 rows)
+

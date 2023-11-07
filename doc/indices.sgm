@@ -153,4 +153,29 @@
 
       </sect1>
 
+      <sect1 id="ind.hash">
+        <title>
+          Hash index
+        </title>
+        <para>
+          Values of type <type>spoint</type> can be indexed using a
+          <literal>HASH</literal> index, supporting the
+          <link linkend="op.equal"><literal>=</literal></link> operator.
+          The <literal>spoint_hash_ops</literal> operator class also enables
+          <literal>DISTINCT</literal> queries on <type>spoint</type>.
+        </para>
+        <example>
+          <title>Hash index of spoints</title>
+          <programlisting>
+<![CDATA[CREATE TABLE sky (]]>
+<![CDATA[  star spoint]]>
+<![CDATA[);]]>
+<![CDATA[CREATE INDEX ON sky USING HASH (star);]]>
+<![CDATA[]]>
+<![CDATA[SELECT DISTINCT star FROM sky;]]>
+          </programlisting>
+        </example>
+
+      </sect1>
+
 </chapter>
