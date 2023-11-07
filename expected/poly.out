@@ -12,25 +12,25 @@ SELECT spoint   '(0.15,0.10)' @ :poly;                  -- point inside polygon
  t
 (1 row)
 
-SELECT spoint   '(0.20,0.00)' @ :poly;                  -- point contained polygon 
+SELECT spoint   '(0.20,0.00)' @ :poly;                  -- point contained polygon
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT spoint   '(0.10,0.10)' @ :poly;                  -- point contained polygon 
+SELECT spoint   '(0.10,0.10)' @ :poly;                  -- point contained polygon
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT spoint   '(0.25,0.50)' @ :poly;                  -- point outside polygon 
+SELECT spoint   '(0.25,0.50)' @ :poly;                  -- point outside polygon
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT spoint   '(0.25,0.00)' @ :poly;                  -- point outside polygon 
+SELECT spoint   '(0.25,0.00)' @ :poly;                  -- point outside polygon
  ?column? 
 ----------
  f
@@ -42,13 +42,13 @@ SELECT scircle  '<(0.15,0.10),0.03>' @  :poly;          -- circle inside polygon
  t
 (1 row)
 
-SELECT scircle  '<(0.20,0.00),0.00>' @  :poly;          -- circle contained polygon 
+SELECT scircle  '<(0.20,0.00),0.00>' @  :poly;          -- circle contained polygon
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT scircle  '<(0.20,0.30),0.05>' @  :poly;          -- circle outside  polygon 
+SELECT scircle  '<(0.20,0.30),0.05>' @  :poly;          -- circle outside  polygon
  ?column? 
 ----------
  f
@@ -72,13 +72,13 @@ SELECT scircle  '<(0.15,0.10),0.03>' && :poly;          -- circle inside polygon
  t
 (1 row)
 
-SELECT scircle  '<(0.20,0.00),0.00>' && :poly;          -- circle contained polygon 
+SELECT scircle  '<(0.20,0.00),0.00>' && :poly;          -- circle contained polygon
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT scircle  '<(0.20,0.30),0.05>' && :poly;          -- circle outside  polygon 
+SELECT scircle  '<(0.20,0.30),0.05>' && :poly;          -- circle outside  polygon
  ?column? 
 ----------
  f
@@ -96,13 +96,13 @@ SELECT scircle  '<(0.25,0.00),0.10>' && :poly;          -- circle overlaps polyg
  t
 (1 row)
 
-SELECT sline ( spoint '(0.00, 0.00)', spoint '(0.10,0.20)' ) @  :poly;  -- line touches polygon 
+SELECT sline ( spoint '(0.00, 0.00)', spoint '(0.10,0.20)' ) @  :poly;  -- line touches polygon
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT sline ( spoint '(0.00, 0.10)', spoint '(0.10,0.10)' ) @  :poly;  -- line touches polygon 
+SELECT sline ( spoint '(0.00, 0.10)', spoint '(0.10,0.10)' ) @  :poly;  -- line touches polygon
  ?column? 
 ----------
  f
@@ -114,7 +114,7 @@ SELECT sline ( spoint '(0.50, 0.00)', spoint '(0.50,0.20)' ) @  :poly;  -- line 
  f
 (1 row)
 
-SELECT sline ( spoint '(0.10, 0.20)', spoint '(0.20,0.00)' ) @  :poly;  -- line touches and inside polygon 
+SELECT sline ( spoint '(0.10, 0.20)', spoint '(0.20,0.00)' ) @  :poly;  -- line touches and inside polygon
  ?column? 
 ----------
  t
@@ -138,13 +138,13 @@ SELECT sline ( spoint '(0.24, 0.17)', spoint '(0.25,0.14)' ) @  :poly;  -- line 
  t
 (1 row)
 
-SELECT sline ( spoint '(0.00, 0.00)', spoint '(0.10,0.20)' ) && :poly;  -- line touches polygon 
+SELECT sline ( spoint '(0.00, 0.00)', spoint '(0.10,0.20)' ) && :poly;  -- line touches polygon
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT sline ( spoint '(0.00, 0.10)', spoint '(0.10,0.10)' ) && :poly;  -- line touches polygon 
+SELECT sline ( spoint '(0.00, 0.10)', spoint '(0.10,0.10)' ) && :poly;  -- line touches polygon
  ?column? 
 ----------
  t
@@ -156,7 +156,7 @@ SELECT sline ( spoint '(0.50, 0.00)', spoint '(0.50,0.20)' ) && :poly;  -- line 
  t
 (1 row)
 
-SELECT sline ( spoint '(0.10, 0.20)', spoint '(0.20,0.00)' ) && :poly;  -- line touches and inside polygon 
+SELECT sline ( spoint '(0.10, 0.20)', spoint '(0.20,0.00)' ) && :poly;  -- line touches and inside polygon
  ?column? 
 ----------
  t
@@ -342,7 +342,32 @@ SELECT spoly_deg(ARRAY[10.0, 0.0, 10.0, 1.0, 15.0, 0.0]);
  {(10d , 0d),(10d , 1d),(15d , 0d)}
 (1 row)
 
--- incorrect input -----
+--- Constructors
+SELECT spoly(NULL::spoint[]);
+ spoly 
+-------
+ 
+(1 row)
+
+SELECT spoly(ARRAY[]::spoint[]);
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
+SELECT spoly(ARRAY[spoint_deg(0, 0)]);
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0)]);
+ERROR:  spherepoly_from_point_array: invalid number of arguments (must be >= 3)
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10)]);
+               spoly                
+------------------------------------
+ {(0d , 0d),(10d , 0d),(10d , 10d)}
+(1 row)
+
+SELECT spoly(ARRAY[spoint_deg(0, 0), spoint_deg(10, 0), spoint_deg(10, 10), spoint_deg(0, 10)]);
+                     spoly                     
+-----------------------------------------------
+ {(0d , 0d),(10d , 0d),(10d , 10d),(0d , 10d)}
+(1 row)
+
+--- incorrect input -----
 SELECT spoly '{(10d,0d),(10d,1d)}';
 ERROR:  spherepoly_in: more than two points needed
 LINE 1: SELECT spoly '{(10d,0d),(10d,1d)}';
@@ -1211,7 +1236,7 @@ SELECT spoly '{(0d,-88d),(90d,-88d),(180d,-88d),(270d,-88d)}' @ spoly '{(0d,89d)
 (1 row)
 
 --- spoly ~ spoly
---- should be true                                                                                       
+--- should be true
 SELECT spoly '{(-1d,-1d),(-1d,1d),(1d,1d),(1d,-1d)}' ~ spoly '{(0d,0d),(0d,0.5d),(0.5d,0.5d),(0.5d,0d)}';
  ?column? 
 ----------
@@ -1280,7 +1305,7 @@ SELECT spoly '{(0d,89d),(90d,89d),(180d,89d),(270d,89d)}' ~ spoly '{(0d,-88d),(9
 (1 row)
 
 --- spoly && spoly
---- should be true                                                                                       
+--- should be true
 SELECT spoly '{(0d,0d),(0d,0.5d),(0.5d,0.5d),(0.5d,0d)}' && spoly '{(-1d,-1d),(-1d,1d),(1d,1d),(1d,-1d)}';
  ?column? 
 ----------
@@ -1417,7 +1442,6 @@ SELECT spoly '{(-1d,-1d),(-1d,1d),(1d,1d),(1d,-1d)}' && spoly '{(179d,-1d),(179d
 --
 -- ellipse and polygon
 --
-  
 -- negators , commutator @,&&
 SELECT spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}'    @  sellipse '<{10d,5d},(280d,-20d),90d>';
  ?column? 
@@ -1564,49 +1588,49 @@ SELECT sellipse '<{10d,5d},(280d,-20d),90d>'  !&&  spoly '{(280d,-11d),(280d,-12
 (1 row)
 
 -- ellipse is point
-SELECT spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}'    @  sellipse '<{0d,0d},(280d,-20d),90d>'; 
+SELECT spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}'    @  sellipse '<{0d,0d},(280d,-20d),90d>';
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'   @  sellipse '<{0d,0d},(280d,-20d),90d>'; 
+SELECT spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'   @  sellipse '<{0d,0d},(280d,-20d),90d>';
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}'   &&  sellipse '<{0d,0d},(280d,-20d),90d>'; 
+SELECT spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}'   &&  sellipse '<{0d,0d},(280d,-20d),90d>';
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'  &&  sellipse '<{0d,0d},(280d,-20d),90d>'; 
+SELECT spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'  &&  sellipse '<{0d,0d},(280d,-20d),90d>';
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT sellipse '<{0d,0d},(280d,-20d),90d>'   @  spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}' ; 
+SELECT sellipse '<{0d,0d},(280d,-20d),90d>'   @  spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}' ;
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT sellipse '<{0d,0d},(280d,-20d),90d>'   @  spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'; 
+SELECT sellipse '<{0d,0d},(280d,-20d),90d>'   @  spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}';
  ?column? 
 ----------
  t
 (1 row)
 
-SELECT sellipse '<{0d,0d},(280d,-20d),90d>'  &&  spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}' ; 
+SELECT sellipse '<{0d,0d},(280d,-20d),90d>'  &&  spoly '{(280d, -9d),(280d, -8d),(279d, -8d)}' ;
  ?column? 
 ----------
  f
 (1 row)
 
-SELECT sellipse '<{0d,0d},(280d,-20d),90d>'  &&  spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}'; 
+SELECT sellipse '<{0d,0d},(280d,-20d),90d>'  &&  spoly '{(280d,-11d),(280d,-20d),(279d, -12d)}';
  ?column? 
 ----------
  t
