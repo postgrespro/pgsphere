@@ -226,11 +226,11 @@ dist : clean sparse.c sscan.c
 	find . -name '*~' -type f -exec rm {} \;
 	cd .. && tar --transform s/$(SRC_DIR)/pgsphere-$(PGSPHERE_VERSION)/ --exclude CVS --exclude .git -czf pgsphere-$(PGSPHERE_VERSION).tar.gz $(SRC_DIR) && cd -
 
-# To launch pgindent, set the PATH environment variable to the directories
+# To use pgindent, set the PATH environment variable to include the directories
 # containing the binaries pgindent and pg_bsd_indent. It is important to
 # utilize a specific version of pg_bsd_indent, which sources can be found
-# in the postgresql>/src/tools/pg_bsd_indent directory, where <postgresql>
-# is the root directory of the postgresql project source tree.
+# in the <postgresql>/src/tools/pg_bsd_indent directory, where <postgresql>
+# is the root directory of the PostgreSQL project source tree.
 #
 # The sources of the utilities can be found in the following directories:
 # - <postgresql>/src/tools/pgindent
