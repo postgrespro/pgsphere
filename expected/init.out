@@ -6,6 +6,6 @@ CREATE EXTENSION pg_sphere;
 select pg_sphere_version();
  pg_sphere_version 
 -------------------
- 1.3.2
+ 1.4.0
 (1 row)
 
