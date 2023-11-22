@@ -35,7 +35,7 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.3.1--1.4.0.sql
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
-TESTS       = tables points euler circle line ellipse poly path box \
+TESTS       = version tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin selectivity
 REGRESS     = init $(TESTS)
