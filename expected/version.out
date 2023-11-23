@@ -1,0 +1,7 @@
+-- Check current pgsphere version
+SELECT pg_sphere_version();
+ pg_sphere_version 
+-------------------
+ 1.4.1
+(1 row)
+

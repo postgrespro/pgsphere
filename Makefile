@@ -32,10 +32,11 @@ DATA_built  = $(RELEASE_SQL) \
 			  pg_sphere--1.2.2--1.2.3.sql \
 			  pg_sphere--1.2.3--1.3.0.sql \
 			  pg_sphere--1.3.0--1.3.1.sql \
-			  pg_sphere--1.3.1--1.4.0.sql
+			  pg_sphere--1.3.1--1.4.0.sql \
+			  pg_sphere--1.4.0--1.4.1.sql \
 
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
-TESTS       = tables points euler circle line ellipse poly path box \
+TESTS       = version tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
               epochprop contains overlaps spoint_brin sbox_brin selectivity
 REGRESS     = init $(TESTS)
@@ -202,6 +203,9 @@ pg_sphere--1.3.1--1.4.0.sql: pgs_moc_options.sql.in
 endif
 endif
 pg_sphere--1.3.1--1.4.0.sql: pgs_circle_sel.sql.in pgs_hash.sql.in
+	cat upgrade_scripts/$@.in $^ > $@
+
+pg_sphere--1.4.0--1.4.1.sql:
 	cat upgrade_scripts/$@.in $^ > $@
 
 # end of local stuff
