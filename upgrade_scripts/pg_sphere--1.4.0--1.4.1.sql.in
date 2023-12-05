@@ -1,1 +1,0 @@
--- Nothing to upgrade in the schema
