@@ -36,6 +36,7 @@ PG_FUNCTION_INFO_V1(g_spherekey_penalty);
 PG_FUNCTION_INFO_V1(g_spherekey_picksplit);
 PG_FUNCTION_INFO_V1(g_spoint3_penalty);
 PG_FUNCTION_INFO_V1(g_spoint3_picksplit);
+PG_FUNCTION_INFO_V1(g_spoint_distance);
 PG_FUNCTION_INFO_V1(g_spoint3_distance);
 PG_FUNCTION_INFO_V1(g_spoint3_fetch);
 
@@ -679,6 +680,10 @@ g_spoint3_consistent(PG_FUNCTION_ARGS)
 		PG_RETURN_BOOL(result);
 	}
 	PG_RETURN_BOOL(false);
+}
+
+static double distance_vector_point_3d (Vector3D* v, double x, double y, double z) { 
+	return acos ( (v->x * x + v->y * y + v->z * z) / sqrt( x*x + y*y + z*z ) ); //  as v has length=1 by design
 }
 
 Datum
@@ -1671,6 +1676,127 @@ fallbackSplit(Box3D *boxes, OffsetNumber maxoff, GIST_SPLITVEC *v)
 
 	v->spl_ldatum_exists = v->spl_rdatum_exists = false;
 }
+
+
+Datum
+g_spoint_distance(PG_FUNCTION_ARGS)
+{
+	GISTENTRY  *entry = (GISTENTRY *) PG_GETARG_POINTER(0);
+	StrategyNumber strategy = (StrategyNumber) PG_GETARG_UINT16(2);
+	Box3D* box = (Box3D *) DatumGetPointer(entry->key);
+	double		retval;
+	SPoint	   *point = (SPoint *) PG_GETARG_POINTER(1);
+	Vector3D 	v_point, v_low, v_high;
+
+	switch (strategy)
+	{
+		case 17:
+			// Prepare data for calculation
+			spoint_vector3d(&v_point, point);
+			v_low.x  = (double)box->low.coord[0]  / MAXCVALUE;
+			v_low.y  = (double)box->low.coord[1]  / MAXCVALUE;
+			v_low.z  = (double)box->low.coord[2]  / MAXCVALUE;
+			v_high.x = (double)box->high.coord[0]  / MAXCVALUE;
+			v_high.y = (double)box->high.coord[1]  / MAXCVALUE;
+			v_high.z = (double)box->high.coord[2]  / MAXCVALUE;
+			//  a box splits space into 27 subspaces (6+12+8+1) with different distance calculation
+			if(v_point.x < v_low.x) { 
+				if(v_point.y < v_low.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_low.y, v_low.z); //point2point distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_low.y, v_point.z); //point2line distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_low.y, v_high.z); //point2point distance
+					}								
+				} else if(v_point.y < v_high.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_point.y  , v_low.z); //point2line distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_point.y , v_point.z); //point2plane distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_point.y, v_high.z); //point2line distance
+					}
+				} else { 								
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_high.y, v_low.z); //point2point distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_high.y, v_point.z); //point2line distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_low.x, v_high.y, v_high.z); //point2point distance
+					}
+				}
+			} else if(v_point.x < v_high.x) { 
+				if(v_point.y < v_low.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_low.y, v_low.z); //p2line distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_low.y, v_point.z); //point2plane distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_low.y, v_high.z); //point2line distance
+					}								
+				} else if(v_point.y < v_high.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_point.y  , v_low.z); //point2plane distance
+					} else if (v_point.z < v_high.z) { 
+						retval = 0; // inside cube
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_point.y, v_high.z); //point2plane distance
+					}
+				} else { 								
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_high.y, v_low.z); //point2line distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_high.y, v_point.z); //point2plane distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_point.x, v_high.y, v_high.z); //point2line distance
+					}
+				}
+			} else {
+				if(v_point.y < v_low.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_low.y, v_low.z); //p2p distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_low.y, v_point.z); //point2line distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_low.y, v_high.z); //point2point distance
+					}								
+				} else if(v_point.y < v_high.y) { 
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_point.y  , v_low.z); //point2line distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_point.y , v_point.z); //point2plane distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_point.y, v_high.z); //point2line distance
+					}
+				} else { 								
+					if(v_point.z < v_low.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_high.y, v_low.z); //point2point distance
+					} else if (v_point.z < v_high.z) { 
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_high.y, v_point.z); //point2line distance
+					} else {
+						retval = distance_vector_point_3d (&v_point, v_high.x, v_high.y, v_high.z); //point2point distance
+					}
+				}
+			}
+				
+			elog(DEBUG1, "distance (%lg,%lg,%lg %lg,%lg,%lg) <-> (%lg,%lg) = %lg",
+				v_low.x, v_low.y, v_low.z,
+				v_high.x, v_high.y, v_high.z,
+				point->lng, point->lat,
+				retval
+			);
+			break;
+
+		default:
+			elog(ERROR, "unrecognized cube strategy number: %d", strategy);
+			retval = 0;		/* keep compiler quiet */
+			break;
+	}
+	PG_RETURN_FLOAT8(retval);
+}
+
+
 
 /*
  * Represents information about an entry that can be placed to either group

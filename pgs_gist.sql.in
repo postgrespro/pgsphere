@@ -98,12 +98,15 @@ CREATE FUNCTION g_spoint_compress(internal)
    AS 'MODULE_PATHNAME', 'g_spoint_compress'
    LANGUAGE 'c';
 
-
 CREATE FUNCTION g_spoint_consistent(internal, internal, int4, oid, internal)
    RETURNS internal
    AS 'MODULE_PATHNAME', 'g_spoint_consistent'
    LANGUAGE 'c';
 
+CREATE FUNCTION g_spoint_distance(internal, spoint, smallint, oid, internal)
+   RETURNS internal
+   AS 'MODULE_PATHNAME', 'g_spoint_distance'
+   LANGUAGE 'c';
 
 CREATE OPERATOR CLASS spoint
    DEFAULT FOR TYPE spoint USING gist AS
@@ -114,6 +117,7 @@ CREATE OPERATOR CLASS spoint
    OPERATOR  14 @ (spoint, spoly),
    OPERATOR  15 @ (spoint, sellipse),
    OPERATOR  16 @ (spoint, sbox),
+   OPERATOR	 17	<-> (spoint, spoint) FOR ORDER BY float_ops,
    OPERATOR  37 <@ (spoint, scircle),
    OPERATOR  38 <@ (spoint, sline),
    OPERATOR  39 <@ (spoint, spath),
@@ -127,6 +131,7 @@ CREATE OPERATOR CLASS spoint
    FUNCTION  5 g_spherekey_penalty (internal, internal, internal),
    FUNCTION  6 g_spherekey_picksplit (internal, internal),
    FUNCTION  7 g_spherekey_same (spherekey, spherekey, internal),
+   FUNCTION  8 g_spoint_distance (internal, spoint, smallint, oid, internal),
    STORAGE   spherekey;
 
 
