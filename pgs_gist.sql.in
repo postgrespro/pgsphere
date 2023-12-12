@@ -117,7 +117,7 @@ CREATE OPERATOR CLASS spoint
    OPERATOR  14 @ (spoint, spoly),
    OPERATOR  15 @ (spoint, sellipse),
    OPERATOR  16 @ (spoint, sbox),
-   OPERATOR	 17	<-> (spoint, spoint) FOR ORDER BY float_ops,
+   OPERATOR  17 <-> (spoint, spoint) FOR ORDER BY float_ops,
    OPERATOR  37 <@ (spoint, scircle),
    OPERATOR  38 <@ (spoint, sline),
    OPERATOR  39 <@ (spoint, spath),
