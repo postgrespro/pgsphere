@@ -258,3 +258,10 @@ pgindent:
 		--excludes=pgindent-excludes.list \
 		--indent=${PGBSDINDENT} \
 		src
+
+pgindent-headers:
+	$(PGINDENT) \
+		--typedefs=pgindent-typedefs.list \
+		--excludes=pgindent-excludes.list \
+		--indent=${PGBSDINDENT} \
+		src/*.h
