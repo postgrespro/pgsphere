@@ -10,9 +10,9 @@
  */
 typedef struct
 {
-	float8	x;	/* x (-1.0 .. 1.0) */
-	float8	y;	/* y (-1.0 .. 1.0) */
-	float8	z;	/* z (-1.0 .. 1.0) */
+	float8		x;				/* x (-1.0 .. 1.0) */
+	float8		y;				/* y (-1.0 .. 1.0) */
+	float8		z;				/* z (-1.0 .. 1.0) */
 } Vector3D;
 
 
@@ -20,27 +20,28 @@ typedef struct
  * Calculate the cross product of two vectors. Puts
  * cross product of v1 and v2 into out and returns it.
  */
-void	vector3d_cross(Vector3D *out, const Vector3D *v1, const Vector3D *v2);
+extern void vector3d_cross(Vector3D *out, const Vector3D *v1,
+						   const Vector3D *v2);
 
 /*
  * Checks equality of two vectors.
  */
-bool	vector3d_eq(const Vector3D *a, const Vector3D *b);
+extern bool vector3d_eq(const Vector3D *a, const Vector3D *b);
 
 /*
  * Calculate the scalar product of two vectors.
  */
-float8	vector3d_scalar(Vector3D *v1, Vector3D *v2);
+extern float8 vector3d_scalar(Vector3D *v1, Vector3D *v2);
 
 /*
  * Calculate the length of a vector.
  */
-float8	vector3d_length(const Vector3D *v);
+extern float8 vector3d_length(const Vector3D *v);
 
-/* 
- * Calculate result + scalar*delta 
+/*
+ * Calculate result + scalar*delta
  */
-void vector3d_addwithscalar(
-	Vector3D *result, double scalar, const Vector3D *delta);
+extern void vector3d_addwithscalar(Vector3D *result, double scalar,
+								   const Vector3D *delta);
 
 #endif
