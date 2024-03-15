@@ -26,6 +26,11 @@ CREATE FUNCTION set_sphere_output_precision(INT4)
    AS 'MODULE_PATHNAME', 'set_sphere_output_precision'
    LANGUAGE 'c';
 
+CREATE FUNCTION reset_sphere_output_precision()
+   RETURNS CSTRING
+   AS 'MODULE_PATHNAME', 'reset_sphere_output_precision'
+   LANGUAGE 'c';
+
 CREATE FUNCTION set_sphere_output(CSTRING)
    RETURNS CSTRING
    AS 'MODULE_PATHNAME', 'set_sphere_output'
@@ -175,4 +180,3 @@ CREATE OPERATOR  <-> (
 
 COMMENT ON OPERATOR <-> (spoint, spoint) IS
   'distance between spherical points';
-
