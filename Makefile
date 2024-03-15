@@ -40,7 +40,8 @@ DATA_built  = $(RELEASE_SQL) \
 DOCS        = README.pg_sphere COPYRIGHT.pg_sphere
 TESTS       = version tables points euler circle line ellipse poly path box \
               index contains_ops contains_ops_compat bounding_box_gist gnomo \
-              epochprop contains overlaps spoint_brin sbox_brin selectivity knn
+              epochprop contains overlaps spoint_brin sbox_brin selectivity \
+              knn output_precision
 REGRESS     = init $(TESTS)
 
 PG_CFLAGS	+= -DPGSPHERE_VERSION=$(PGSPHERE_VERSION)
