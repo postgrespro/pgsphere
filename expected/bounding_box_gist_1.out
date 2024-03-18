@@ -1,3 +1,4 @@
+SET extra_float_digits = 2;
 SET enable_seqscan=true;
 CREATE TABLE bbox_ellipse (e sellipse not null);
 INSERT INTO bbox_ellipse VALUES ('<{10d, 0.1d}, (0d,0d), 0d>');
@@ -20,19 +21,19 @@ SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
 (1 row)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
-                        QUERY PLAN                        
-----------------------------------------------------------
- Aggregate
-   ->  Seq Scan on bbox_ellipse
-         Filter: ('(0.0872664625997165 , 0)'::spoint @ e)
-(3 rows)
-
-EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
                         QUERY PLAN                         
 -----------------------------------------------------------
  Aggregate
    ->  Seq Scan on bbox_ellipse
-         Filter: ('(0.0872664625997165 , 0)'::spoint <@ e)
+         Filter: ('(0.08726646259971647 , 0)'::spoint @ e)
+(3 rows)
+
+EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
+                         QUERY PLAN                         
+------------------------------------------------------------
+ Aggregate
+   ->  Seq Scan on bbox_ellipse
+         Filter: ('(0.08726646259971647 , 0)'::spoint <@ e)
 (3 rows)
 
 -- The ellipse has semi-major axis length of 10 degrees along the equator,
@@ -53,19 +54,19 @@ SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
 (1 row)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' @ e;
-                          QUERY PLAN                          
---------------------------------------------------------------
- Aggregate
-   ->  Index Scan using idx_bbox_ellipse on bbox_ellipse
-         Index Cond: (e ~ '(0.0872664625997165 , 0)'::spoint)
-(3 rows)
-
-EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
                           QUERY PLAN                           
 ---------------------------------------------------------------
  Aggregate
    ->  Index Scan using idx_bbox_ellipse on bbox_ellipse
-         Index Cond: (e @> '(0.0872664625997165 , 0)'::spoint)
+         Index Cond: (e ~ '(0.08726646259971647 , 0)'::spoint)
+(3 rows)
+
+EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_ellipse WHERE spoint '(5d, 0d)' <@ e;
+                           QUERY PLAN                           
+----------------------------------------------------------------
+ Aggregate
+   ->  Index Scan using idx_bbox_ellipse on bbox_ellipse
+         Index Cond: (e @> '(0.08726646259971647 , 0)'::spoint)
 (3 rows)
 
 SET enable_seqscan=true;
@@ -170,11 +171,11 @@ SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
 (1 row)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
-                                            QUERY PLAN                                            
---------------------------------------------------------------------------------------------------
+                                               QUERY PLAN                                                
+---------------------------------------------------------------------------------------------------------
  Aggregate
    ->  Seq Scan on bbox_path
-         Filter: ('( 6.10865238198015, 1.5707963267949, 0, ZXZ ), 0.349065850398866'::sline && p)
+         Filter: ('( 6.1086523819801535, 1.5707963267948966, 0, ZXZ ), 0.34906585039886584'::sline && p)
 (3 rows)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
@@ -215,11 +216,11 @@ SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' <@ p;
 (1 row)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE sline(spoint '(0d, -10d)', spoint '(0d, 10d)') && p;
-                                              QUERY PLAN                                              
-------------------------------------------------------------------------------------------------------
+                                                 QUERY PLAN                                                  
+-------------------------------------------------------------------------------------------------------------
  Aggregate
    ->  Index Scan using idx_bbox_path on bbox_path
-         Index Cond: (p && '( 6.10865238198015, 1.5707963267949, 0, ZXZ ), 0.349065850398866'::sline)
+         Index Cond: (p && '( 6.1086523819801535, 1.5707963267948966, 0, ZXZ ), 0.34906585039886584'::sline)
 (3 rows)
 
 EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM bbox_path WHERE spoint '(0d, 0d)' @ p;
