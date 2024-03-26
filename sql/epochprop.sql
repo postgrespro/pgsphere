@@ -1,3 +1,5 @@
+SET extra_float_digits = 2;
+
 SELECT 
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),

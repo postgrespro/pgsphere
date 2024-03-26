@@ -1,0 +1,212 @@
+--
+-- Test default and custom output precisions for double values.
+--
+SELECT set_sphere_output( 'RAD' );
+ set_sphere_output 
+-------------------
+ SET RAD
+(1 row)
+
+--
+-- Check default precision
+--
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+--
+-- Check option extra_float_digits
+--
+SET extra_float_digits TO -6;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+           spoint            
+-----------------------------
+ (0.272707696 , 0.018180513)
+(1 row)
+
+SET extra_float_digits TO -2;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                spoint                
+--------------------------------------
+ (0.2727076956241 , 0.01818051304161)
+(1 row)
+
+SET extra_float_digits TO 0;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SET extra_float_digits TO 1;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SET extra_float_digits TO 2;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                    spoint                    
+----------------------------------------------
+ (0.27270769562411401 , 0.018180513041607602)
+(1 row)
+
+SET extra_float_digits TO 3;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                    spoint                     
+-----------------------------------------------
+ (0.27270769562411401 , 0.0181805130416076016)
+(1 row)
+
+SET extra_float_digits TO 6;
+ERROR:  6 is outside the valid range for parameter "extra_float_digits" (-15 .. 3)
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                    spoint                     
+-----------------------------------------------
+ (0.27270769562411401 , 0.0181805130416076016)
+(1 row)
+
+--
+-- Check compatibility behaviour
+--
+SELECT set_sphere_output_precision(10);
+ set_sphere_output_precision 
+-----------------------------
+ SET 10
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+             spoint             
+--------------------------------
+ (0.2727076956 , 0.01818051304)
+(1 row)
+
+SELECT set_sphere_output_precision(12);
+ set_sphere_output_precision 
+-----------------------------
+ SET 12
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+               spoint               
+------------------------------------
+ (0.272707695624 , 0.0181805130416)
+(1 row)
+
+SELECT set_sphere_output_precision(15);
+ set_sphere_output_precision 
+-----------------------------
+ SET 15
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SELECT set_sphere_output_precision(17);
+ set_sphere_output_precision 
+-----------------------------
+ SET 15
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SELECT set_sphere_output_precision(20);
+ set_sphere_output_precision 
+-----------------------------
+ SET 15
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SELECT set_sphere_output_precision(0);
+ set_sphere_output_precision 
+-----------------------------
+ SET 15
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+SELECT set_sphere_output_precision(-3);
+ set_sphere_output_precision 
+-----------------------------
+ SET 15
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+                  spoint                  
+------------------------------------------
+ (0.272707695624114 , 0.0181805130416076)
+(1 row)
+
+--
+-- Check extra_float_digits after set_sphere_output_precision.
+-- The change of extra_float_digits should not affect the precision of pgsphere
+-- output because set_sphere_output_precision enables compatibility mode.
+--
+SELECT set_sphere_output_precision(10);
+ set_sphere_output_precision 
+-----------------------------
+ SET 10
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+             spoint             
+--------------------------------
+ (0.2727076956 , 0.01818051304)
+(1 row)
+
+SET extra_float_digits TO -6;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+             spoint             
+--------------------------------
+ (0.2727076956 , 0.01818051304)
+(1 row)
+
+SET extra_float_digits TO -10;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+             spoint             
+--------------------------------
+ (0.2727076956 , 0.01818051304)
+(1 row)
+
+--
+-- Check reset_sphere_output_precision.
+-- It should disable compatibility mode - extra_float_digits should work.
+--
+SELECT reset_sphere_output_precision();
+ reset_sphere_output_precision 
+-------------------------------
+ RESET
+(1 row)
+
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+        spoint        
+----------------------
+ (0.27271 , 0.018181)
+(1 row)
+
+SET extra_float_digits TO -6;
+SELECT '( 1h 2m 30s , +1d 2m 30s)'::spoint;
+           spoint            
+-----------------------------
+ (0.272707696 , 0.018180513)
+(1 row)
+

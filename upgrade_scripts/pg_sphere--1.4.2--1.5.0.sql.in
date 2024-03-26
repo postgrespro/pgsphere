@@ -14,3 +14,8 @@ EXCEPTION
    WHEN OTHERS THEN RAISE;
 END;
 $$;
+
+CREATE FUNCTION reset_sphere_output_precision()
+   RETURNS CSTRING
+   AS 'MODULE_PATHNAME', 'reset_sphere_output_precision'
+   LANGUAGE 'c';

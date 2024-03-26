@@ -1,3 +1,4 @@
+SET extra_float_digits = 2;
 SET enable_seqscan=true;
 CREATE TABLE bbox_ellipse (e sellipse not null);
 INSERT INTO bbox_ellipse VALUES ('<{10d, 0.1d}, (0d,0d), 0d>');
