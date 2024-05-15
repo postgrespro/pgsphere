@@ -133,6 +133,7 @@ epoch_prop(PG_FUNCTION_ARGS) {
 	phasevec input, output;
 	ArrayType *result;
 	Datum retvals[6];
+	bool output_null[6] = {0, 0, 0, 0, 0, 0};
 
 	if (PG_ARGISNULL(0)) {
 		ereport(ERROR,
@@ -141,25 +142,29 @@ epoch_prop(PG_FUNCTION_ARGS) {
 	memcpy(&(input.pos), (void*)PG_GETARG_POINTER(0), sizeof(SPoint));
 	if (PG_ARGISNULL(1)) {
 		input.parallax = 0;
+		output_null[2] = 1;
+		/* The way we do our computation, with a bad parallax the RV
+		will be horribly off, too, so null this out, too; if avaialble,
+		we will fiddle in the original RV below again. */
+		output_null[5] = 1;
 	} else {
 		input.parallax = PG_GETARG_FLOAT8(1);
 	}
 	input.parallax_valid = fabs(input.parallax) > PX_MIN;
-	
-	if (PG_ARGISNULL(2)) {
+
+	if (PG_ARGISNULL(2) || PG_ARGISNULL(3)) {
 		input.pm[0] = 0;
+		input.pm[1] = 0;
+		output_null[3] = 1;
+		output_null[4] = 1;
 	} else {
 		input.pm[0] = PG_GETARG_FLOAT8(2);
-	}
-
-	if (PG_ARGISNULL(3)) {
-		input.pm[1] = 0;
-	} else {
 		input.pm[1] = PG_GETARG_FLOAT8(3);
 	}
 
 	if (PG_ARGISNULL(4)) {
 		input.rv = 0;
+		output_null[5] = 1;
 	} else {
 		input.rv = PG_GETARG_FLOAT8(4);
 	}
@@ -172,6 +177,15 @@ epoch_prop(PG_FUNCTION_ARGS) {
 
 	propagate_phasevec(&input, delta_t, &output);
 
+	/* If we have an invalid parallax but a good RV, preserve the original,
+		untransformed RV on output.  See
+		https://github.com/ivoa-std/udf-catalogue/pull/20#issuecomment-2115053757
+		for the rationale. */
+	if (!PG_ARGISNULL(4) && !input.parallax_valid) {
+		output_null[5] = 0;
+		output.rv = input.rv;
+	}
+
 	/* change to internal units: rad, rad/yr, mas, and km/s */
 	retvals[0] = Float8GetDatum(output.pos.lng);
 	retvals[1] = Float8GetDatum(output.pos.lat);
@@ -181,7 +195,6 @@ epoch_prop(PG_FUNCTION_ARGS) {
 	retvals[5] = Float8GetDatum(output.rv);
 
 	{
-		bool isnull[6] = {0, 0, 0, 0, 0, 0};
 		int lower_bounds[1] = {1};
 		int dims[1] = {6};
 #ifdef USE_FLOAT8_BYVAL
@@ -190,13 +203,7 @@ epoch_prop(PG_FUNCTION_ARGS) {
 		bool embyval = false;
 #endif
 
-		if (! output.parallax_valid) {
-			/* invalidate parallax and rv */
-			isnull[2] = 1;
-			isnull[5] = 1;
-		}
-
-		result = construct_md_array(retvals, isnull, 1, dims, lower_bounds,
+		result = construct_md_array(retvals, output_null, 1, dims, lower_bounds,
 			FLOAT8OID, sizeof(float8), embyval, 'd');
 	}
 	PG_RETURN_ARRAYTYPE_P(result);

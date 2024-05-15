@@ -1,5 +1,5 @@
-SET extra_float_digits = 2;
-SELECT 
+SET extra_float_digits = 1;
+SELECT
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
        to_char(tp[3], '999D999'),
@@ -7,7 +7,7 @@ SELECT
        to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
        to_char(tp[6], '999D999')
 FROM (
-       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)), 
+       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)),
                546.9759,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
@@ -16,7 +16,7 @@ FROM (
   269.4742714391 |    4.4072939987 |  543.624 | -791.442 |  10235.412 | -110.450
 (1 row)
 
-SELECT 
+SELECT
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
        to_char(tp[3], '999D999'),
@@ -24,16 +24,16 @@ SELECT
        to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
        to_char(tp[6], '999D999')
 FROM (
-       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)), 
+       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)),
                0,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
-     to_char     |     to_char     | to_char | to_char  |  to_char   | to_char 
------------------+-----------------+---------+----------+------------+---------
-  269.4744079540 |    4.4055337210 |         | -801.210 |  10361.762 | 
+     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
+-----------------+-----------------+----------+----------+------------+----------
+  269.4744079540 |    4.4055337210 |     .000 | -801.210 |  10361.762 | -110.000
 (1 row)
 
-SELECT 
+SELECT
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
        to_char(tp[3], '999D999'),
@@ -41,16 +41,16 @@ SELECT
        to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
        to_char(tp[6], '999D999')
 FROM (
-       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)), 
+       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)),
                NULL,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                -100) AS tp) AS q;
-     to_char     |     to_char     | to_char | to_char  |  to_char   | to_char 
------------------+-----------------+---------+----------+------------+---------
-  269.4744079540 |    4.4055337210 |         | -801.210 |  10361.762 | 
+     to_char     |     to_char     | to_char | to_char  |  to_char   | to_char  
+-----------------+-----------------+---------+----------+------------+----------
+  269.4744079540 |    4.4055337210 |         | -801.210 |  10361.762 | -110.000
 (1 row)
 
-SELECT 
+SELECT
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
        to_char(tp[3], '999D999'),
@@ -58,16 +58,16 @@ SELECT
        to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
        to_char(tp[6], '999D999')
 FROM (
-       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)), 
+       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)),
                23,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), NULL,
                20) AS tp) AS q;
-     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
------------------+-----------------+----------+----------+------------+----------
-  269.4476085384 |    4.7509315989 |   23.000 | -801.617 |  10361.984 |    2.159
+     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char 
+-----------------+-----------------+----------+----------+------------+---------
+  269.4476085384 |    4.7509315989 |   23.000 | -801.617 |  10361.984 | 
 (1 row)
 
-SELECT 
+SELECT
        to_char(DEGREES(tp[1]), '999D9999999999'),
        to_char(DEGREES(tp[2]), '999D9999999999'),
        to_char(tp[3], '999D999'),
@@ -75,13 +75,13 @@ SELECT
        to_char(DEGREES(tp[5])*3.6e6, '99999D999'),
        to_char(tp[6], '999D999')
 FROM (
-       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)), 
+       SELECT epoch_prop(spoint(radians(269.45207695), radians(4.693364966)),
                23,
                NULL, RADIANS(10362/3.6e6), -110,
                120) AS tp) AS q;
-     to_char     |     to_char     | to_char  | to_char  |  to_char   | to_char  
------------------+-----------------+----------+----------+------------+----------
-  269.4520769500 |    5.0388680565 |   23.007 |    -.000 |  10368.061 |  -97.120
+     to_char     |     to_char     | to_char  | to_char | to_char | to_char  
+-----------------+-----------------+----------+---------+---------+----------
+  269.4520769500 |    4.6933649660 |   23.007 |         |         | -110.000
 (1 row)
 
 SELECT epoch_prop(NULL,
@@ -89,20 +89,20 @@ SELECT epoch_prop(NULL,
                0.01 , RADIANS(10362/3.6e6), -110,
                120);
 ERROR:  NULL position not supported in epoch propagation
-SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)), 
+SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)),
                23,
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6), -110,
                20) AS tp;
-                     tp                      
----------------------------------------------
- (4.7027479265831289 , 0.082919450934599334)
+                    tp                     
+-------------------------------------------
+ (4.702747926583129 , 0.08291945093459933)
 (1 row)
 
-SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)), 
+SELECT epoch_prop_pos(spoint(radians(269.45207695), radians(4.693364966)),
                RADIANS(-801.551/3.6e6), RADIANS(10362/3.6e6),
                20) AS tp;
-                     tp                      
----------------------------------------------
- (4.7027479306195161 , 0.082919398938087627)
+                    tp                     
+-------------------------------------------
+ (4.702747930619516 , 0.08291939893808763)
 (1 row)
 
