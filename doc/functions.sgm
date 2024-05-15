@@ -867,9 +867,12 @@
             <para>
               It is an error to have either pos or delta_t NULL.  For all
               other arguments, NULLs are turned into 0s, except for parallax,
-              where some very small default is put in.  In that case,
-              both parallax and radial_velocity will be NULL in the output
-              array.
+              where some very small default is put in.  Whatever is NULL
+              on the input is NULL on the output.  In addition, we null
+              out a non-NULL input on one component of the proper motion
+              if the other component is NULL, and we null out the radial
+              velocity if the parallax is missing, as it would be horribly
+              off with the propagation algorithm we use here.
             </para>
 
             <para>
