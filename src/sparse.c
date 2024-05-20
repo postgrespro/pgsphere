@@ -74,7 +74,7 @@
 #define yychar          sphere_yychar
 
 /* First part of user prologue.  */
-#line 1 "sparse.y"
+#line 1 "src/sparse.y"
 
 #include <stdio.h>
 #include <string.h>
@@ -110,7 +110,7 @@ static double human2dec(double d, double m, double s)
 }
 
 
-#line 114 "sparse.c"
+#line 114 "src/sparse.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -134,8 +134,8 @@ static double human2dec(double d, double m, double s)
 
 /* Use api.header.include to #include this header
    instead of duplicating it here.  */
-#ifndef YY_SPHERE_YY_SPARSE_H_INCLUDED
-# define YY_SPHERE_YY_SPARSE_H_INCLUDED
+#ifndef YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED
+# define YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -187,13 +187,13 @@ extern int sphere_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 41 "sparse.y"
+#line 41 "src/sparse.y"
 
 	int		i;
 	double	d;
 	char	c[3];
 
-#line 197 "sparse.c"
+#line 197 "src/sparse.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -206,7 +206,7 @@ extern YYSTYPE sphere_yylval;
 
 int sphere_yyparse (void);
 
-#endif /* !YY_SPHERE_YY_SPARSE_H_INCLUDED  */
+#endif /* !YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED  */
 
 
 
@@ -1349,265 +1349,265 @@ yyreduce:
   switch (yyn)
     {
   case 4:
-#line 70 "sparse.y"
+#line 70 "src/sparse.y"
     { set_spheretype( STYPE_POINT   ); }
-#line 1355 "sparse.c"
+#line 1355 "src/sparse.c"
     break;
 
   case 5:
-#line 71 "sparse.y"
+#line 71 "src/sparse.y"
     { set_spheretype( STYPE_CIRCLE  ); }
-#line 1361 "sparse.c"
+#line 1361 "src/sparse.c"
     break;
 
   case 6:
-#line 72 "sparse.y"
+#line 72 "src/sparse.y"
     { set_spheretype( STYPE_LINE    ); }
-#line 1367 "sparse.c"
+#line 1367 "src/sparse.c"
     break;
 
   case 7:
-#line 73 "sparse.y"
+#line 73 "src/sparse.y"
     { set_spheretype( STYPE_EULER   ); }
-#line 1373 "sparse.c"
+#line 1373 "src/sparse.c"
     break;
 
   case 8:
-#line 74 "sparse.y"
+#line 74 "src/sparse.y"
     { set_spheretype( STYPE_PATH    ); }
-#line 1379 "sparse.c"
+#line 1379 "src/sparse.c"
     break;
 
   case 9:
-#line 75 "sparse.y"
+#line 75 "src/sparse.y"
     { set_spheretype( STYPE_ELLIPSE ); }
-#line 1385 "sparse.c"
+#line 1385 "src/sparse.c"
     break;
 
   case 10:
-#line 76 "sparse.y"
+#line 76 "src/sparse.y"
     { set_spheretype( STYPE_BOX     ); }
-#line 1391 "sparse.c"
+#line 1391 "src/sparse.c"
     break;
 
   case 11:
-#line 81 "sparse.y"
+#line 81 "src/sparse.y"
     { (yyval.d) = (yyvsp[0].d); }
-#line 1397 "sparse.c"
+#line 1397 "src/sparse.c"
     break;
 
   case 12:
-#line 82 "sparse.y"
+#line 82 "src/sparse.y"
     { (yyval.d) = (yyvsp[0].i); }
-#line 1403 "sparse.c"
+#line 1403 "src/sparse.c"
     break;
 
   case 13:
-#line 87 "sparse.y"
+#line 87 "src/sparse.y"
     { (yyval.i) = set_angle(0, (yyvsp[0].d) ); }
-#line 1409 "sparse.c"
+#line 1409 "src/sparse.c"
     break;
 
   case 14:
-#line 88 "sparse.y"
+#line 88 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-1].d), 0, 0) ); }
-#line 1415 "sparse.c"
+#line 1415 "src/sparse.c"
     break;
 
   case 15:
-#line 89 "sparse.y"
+#line 89 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-1].i), 0, 0) ); }
-#line 1421 "sparse.c"
+#line 1421 "src/sparse.c"
     break;
 
   case 16:
-#line 90 "sparse.y"
+#line 90 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-2].i), (yyvsp[0].d), 0) ); }
-#line 1427 "sparse.c"
+#line 1427 "src/sparse.c"
     break;
 
   case 17:
-#line 91 "sparse.y"
+#line 91 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-3].i), (yyvsp[-1].d), 0) ); }
-#line 1433 "sparse.c"
+#line 1433 "src/sparse.c"
     break;
 
   case 18:
-#line 92 "sparse.y"
+#line 92 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-3].i), (yyvsp[-1].i), 0) ); }
-#line 1439 "sparse.c"
+#line 1439 "src/sparse.c"
     break;
 
   case 19:
-#line 93 "sparse.y"
+#line 93 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-4].i), (yyvsp[-2].i), (yyvsp[0].d)) ); }
-#line 1445 "sparse.c"
+#line 1445 "src/sparse.c"
     break;
 
   case 20:
-#line 94 "sparse.y"
+#line 94 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-5].i), (yyvsp[-3].i), (yyvsp[-1].d)) ); }
-#line 1451 "sparse.c"
+#line 1451 "src/sparse.c"
     break;
 
   case 21:
-#line 99 "sparse.y"
+#line 99 "src/sparse.y"
     { (yyval.i) = set_angle(0, (yyvsp[0].d)); }
-#line 1457 "sparse.c"
+#line 1457 "src/sparse.c"
     break;
 
   case 22:
-#line 100 "sparse.y"
+#line 100 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-1].d), 0, 0)); }
-#line 1463 "sparse.c"
+#line 1463 "src/sparse.c"
     break;
 
   case 23:
-#line 101 "sparse.y"
+#line 101 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-1].i), 0, 0)); }
-#line 1469 "sparse.c"
+#line 1469 "src/sparse.c"
     break;
 
   case 24:
-#line 102 "sparse.y"
+#line 102 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-2].i), (yyvsp[0].d), 0)); }
-#line 1475 "sparse.c"
+#line 1475 "src/sparse.c"
     break;
 
   case 25:
-#line 103 "sparse.y"
+#line 103 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-3].i), (yyvsp[-1].d), 0)); }
-#line 1481 "sparse.c"
+#line 1481 "src/sparse.c"
     break;
 
   case 26:
-#line 104 "sparse.y"
+#line 104 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-3].i), (yyvsp[-1].i), 0)); }
-#line 1487 "sparse.c"
+#line 1487 "src/sparse.c"
     break;
 
   case 27:
-#line 105 "sparse.y"
+#line 105 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-4].i), (yyvsp[-2].i), (yyvsp[0].d))); }
-#line 1493 "sparse.c"
+#line 1493 "src/sparse.c"
     break;
 
   case 28:
-#line 106 "sparse.y"
+#line 106 "src/sparse.y"
     { (yyval.i) = set_angle(1, human2dec((yyvsp[-5].i), (yyvsp[-3].i), (yyvsp[-1].d))); }
-#line 1499 "sparse.c"
+#line 1499 "src/sparse.c"
     break;
 
   case 29:
-#line 107 "sparse.y"
+#line 107 "src/sparse.y"
     { (yyval.i) = set_angle(1, 15 * human2dec((yyvsp[-2].i), (yyvsp[0].d), 0)); }
-#line 1505 "sparse.c"
+#line 1505 "src/sparse.c"
     break;
 
   case 30:
-#line 108 "sparse.y"
+#line 108 "src/sparse.y"
     { (yyval.i) = set_angle(1, 15 * human2dec((yyvsp[-4].i), (yyvsp[-2].i), (yyvsp[0].d))); }
-#line 1511 "sparse.c"
+#line 1511 "src/sparse.c"
     break;
 
   case 31:
-#line 109 "sparse.y"
+#line 109 "src/sparse.y"
     { (yyval.i) = set_angle(1, 15 * human2dec((yyvsp[-5].i), (yyvsp[-3].i), (yyvsp[-1].d))); }
-#line 1517 "sparse.c"
+#line 1517 "src/sparse.c"
     break;
 
   case 32:
-#line 114 "sparse.y"
+#line 114 "src/sparse.y"
     { (yyval.i) = set_angle_sign((yyvsp[0].i), 1); }
-#line 1523 "sparse.c"
+#line 1523 "src/sparse.c"
     break;
 
   case 33:
-#line 115 "sparse.y"
+#line 115 "src/sparse.y"
     { (yyval.i) = set_angle_sign((yyvsp[0].i), (yyvsp[-1].i)); }
-#line 1529 "sparse.c"
+#line 1529 "src/sparse.c"
     break;
 
   case 34:
-#line 120 "sparse.y"
+#line 120 "src/sparse.y"
     { (yyval.i) = set_angle_sign((yyvsp[0].i), 1); }
-#line 1535 "sparse.c"
+#line 1535 "src/sparse.c"
     break;
 
   case 35:
-#line 121 "sparse.y"
+#line 121 "src/sparse.y"
     { (yyval.i) = set_angle_sign((yyvsp[0].i), (yyvsp[-1].i)); }
-#line 1541 "sparse.c"
+#line 1541 "src/sparse.c"
     break;
 
   case 36:
-#line 128 "sparse.y"
+#line 128 "src/sparse.y"
     {
 			(yyval.i) = set_point((yyvsp[-3].i), (yyvsp[-1].i));
 		}
-#line 1549 "sparse.c"
+#line 1549 "src/sparse.c"
     break;
 
   case 37:
-#line 136 "sparse.y"
+#line 136 "src/sparse.y"
     {
 			set_circle((yyvsp[-3].i), (yyvsp[-1].i));
 		}
-#line 1557 "sparse.c"
+#line 1557 "src/sparse.c"
     break;
 
   case 38:
-#line 144 "sparse.y"
+#line 144 "src/sparse.y"
     {
 			set_euler((yyvsp[-4].i), (yyvsp[-2].i), (yyvsp[0].i), "ZXZ");
 		}
-#line 1565 "sparse.c"
+#line 1565 "src/sparse.c"
     break;
 
   case 39:
-#line 148 "sparse.y"
+#line 148 "src/sparse.y"
     {
 			set_euler((yyvsp[-6].i), (yyvsp[-4].i), (yyvsp[-2].i), (yyvsp[0].c));
 		}
-#line 1573 "sparse.c"
+#line 1573 "src/sparse.c"
     break;
 
   case 40:
-#line 156 "sparse.y"
+#line 156 "src/sparse.y"
     {
 			set_line ((yyvsp[0].i));
 		}
-#line 1581 "sparse.c"
+#line 1581 "src/sparse.c"
     break;
 
   case 43:
-#line 168 "sparse.y"
+#line 168 "src/sparse.y"
     { }
-#line 1587 "sparse.c"
+#line 1587 "src/sparse.c"
     break;
 
   case 44:
-#line 174 "sparse.y"
+#line 174 "src/sparse.y"
     {
 			set_ellipse((yyvsp[-8].i), (yyvsp[-6].i), (yyvsp[-3].i), (yyvsp[-1].i));
 		}
-#line 1595 "sparse.c"
+#line 1595 "src/sparse.c"
     break;
 
   case 45:
-#line 181 "sparse.y"
+#line 181 "src/sparse.y"
     { }
-#line 1601 "sparse.c"
+#line 1601 "src/sparse.c"
     break;
 
   case 46:
-#line 182 "sparse.y"
+#line 182 "src/sparse.y"
     { }
-#line 1607 "sparse.c"
+#line 1607 "src/sparse.c"
     break;
 
 
-#line 1611 "sparse.c"
+#line 1611 "src/sparse.c"
 
       default: break;
     }
