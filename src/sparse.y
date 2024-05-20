@@ -44,9 +44,9 @@ static double human2dec(double d, double m, double s)
 	char	c[3];
 }
 
-%token <i> SIGN
-%token <i> INT
-%token <d> FLOAT
+%token <i> TOK_SIGN
+%token <i> TOK_INT
+%token <d> TOK_FLOAT
 %token <c> EULERAXIS
 %left      COMMA
 
@@ -78,47 +78,47 @@ command:
 
 /* unsigned number */
 number :
-	FLOAT	{ $$ = $1; }
-	| INT	{ $$ = $1; }
+	TOK_FLOAT	{ $$ = $1; }
+	| TOK_INT	{ $$ = $1; }
 	;
 
 /* unsigned longitude */
 angle_lat_us :
 	number							{ $$ = set_angle(0, $1 ); }
-	| FLOAT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0) ); }
-	| INT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0) ); }
-	| INT DEG number				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
-	| INT DEG FLOAT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
-	| INT DEG INT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
-	| INT DEG INT MIN number		{ $$ = set_angle(1, human2dec($1, $3, $5) ); }
-	| INT DEG INT MIN number SEC	{ $$ = set_angle(1, human2dec($1, $3, $5) ); }
+	| TOK_FLOAT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0) ); }
+	| TOK_INT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0) ); }
+	| TOK_INT DEG number				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
+	| TOK_INT DEG TOK_FLOAT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
+	| TOK_INT DEG TOK_INT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0) ); }
+	| TOK_INT DEG TOK_INT MIN number		{ $$ = set_angle(1, human2dec($1, $3, $5) ); }
+	| TOK_INT DEG TOK_INT MIN number SEC	{ $$ = set_angle(1, human2dec($1, $3, $5) ); }
 	;
 
 /* unsigned latitude */
 angle_long_us :
 	number							{ $$ = set_angle(0, $1); }
-	| FLOAT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0)); }
-	| INT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0)); }
-	| INT DEG number				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
-	| INT DEG FLOAT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
-	| INT DEG INT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
-	| INT DEG INT MIN number		{ $$ = set_angle(1, human2dec($1, $3, $5)); }
-	| INT DEG INT MIN number SEC	{ $$ = set_angle(1, human2dec($1, $3, $5)); }
-	| INT HOUR number				{ $$ = set_angle(1, 15 * human2dec($1, $3, 0)); }
-	| INT HOUR INT MIN number		{ $$ = set_angle(1, 15 * human2dec($1, $3, $5)); }
-	| INT HOUR INT MIN number SEC	{ $$ = set_angle(1, 15 * human2dec($1, $3, $5)); }
+	| TOK_FLOAT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0)); }
+	| TOK_INT DEG						{ $$ = set_angle(1, human2dec($1, 0, 0)); }
+	| TOK_INT DEG number				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
+	| TOK_INT DEG TOK_FLOAT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
+	| TOK_INT DEG TOK_INT MIN				{ $$ = set_angle(1, human2dec($1, $3, 0)); }
+	| TOK_INT DEG TOK_INT MIN number		{ $$ = set_angle(1, human2dec($1, $3, $5)); }
+	| TOK_INT DEG TOK_INT MIN number SEC	{ $$ = set_angle(1, human2dec($1, $3, $5)); }
+	| TOK_INT HOUR number				{ $$ = set_angle(1, 15 * human2dec($1, $3, 0)); }
+	| TOK_INT HOUR TOK_INT MIN number		{ $$ = set_angle(1, 15 * human2dec($1, $3, $5)); }
+	| TOK_INT HOUR TOK_INT MIN number SEC	{ $$ = set_angle(1, 15 * human2dec($1, $3, $5)); }
 	;
 
 /* longitude */
 angle_long :
 	angle_long_us			{ $$ = set_angle_sign($1, 1); }
-	| SIGN angle_long_us	{ $$ = set_angle_sign($2, $1); }
+	| TOK_SIGN angle_long_us	{ $$ = set_angle_sign($2, $1); }
 	;
 
 /* latitude */
 angle_lat :
 	angle_lat_us			{ $$ = set_angle_sign($1, 1); }
-	| SIGN angle_lat_us		{ $$ = set_angle_sign($2, $1); }
+	| TOK_SIGN angle_lat_us		{ $$ = set_angle_sign($2, $1); }
 	;
 
 
