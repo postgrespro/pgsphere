@@ -1019,17 +1019,17 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 36 "src/sscan.l"
-sphere_yylval.i = (strcmp("-", yytext)) ? (1) : (-1); return SIGN;
+sphere_yylval.i = (strcmp("-", yytext)) ? (1) : (-1); return TOK_SIGN;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 37 "src/sscan.l"
-sphere_yylval.i = atoi(yytext); return INT;
+sphere_yylval.i = atoi(yytext); return TOK_INT;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 38 "src/sscan.l"
-sphere_yylval.d = atof(yytext); return FLOAT;
+sphere_yylval.d = atof(yytext); return TOK_FLOAT;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP

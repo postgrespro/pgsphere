@@ -60,9 +60,9 @@ extern int sphere_yydebug;
     CLOSEPOINT = 266,
     OPENARR = 267,
     CLOSEARR = 268,
-    SIGN = 269,
-    INT = 270,
-    FLOAT = 271,
+    TOK_SIGN = 269,
+    TOK_INT = 270,
+    TOK_FLOAT = 271,
     EULERAXIS = 272
   };
 #endif
@@ -78,9 +78,9 @@ extern int sphere_yydebug;
 #define CLOSEPOINT 266
 #define OPENARR 267
 #define CLOSEARR 268
-#define SIGN 269
-#define INT 270
-#define FLOAT 271
+#define TOK_SIGN 269
+#define TOK_INT 270
+#define TOK_FLOAT 271
 #define EULERAXIS 272
 
 /* Value type.  */

@@ -33,9 +33,9 @@ real			({int})?\.({int})
 float			({int}|{real})([eE]{sign}{int})?
 
 %%
-{sign}			sphere_yylval.i = (strcmp("-", yytext)) ? (1) : (-1); return SIGN;
-{int}			sphere_yylval.i = atoi(yytext); return INT;
-{float}			sphere_yylval.d = atof(yytext); return FLOAT;
+{sign}			sphere_yylval.i = (strcmp("-", yytext)) ? (1) : (-1); return TOK_SIGN;
+{int}			sphere_yylval.i = atoi(yytext); return TOK_INT;
+{float}			sphere_yylval.d = atof(yytext); return TOK_FLOAT;
 [x-zX-Z]{3}		memcpy(&sphere_yylval.c[0], yytext, 3); return EULERAXIS;
 h				return HOUR;
 d				return DEG;
