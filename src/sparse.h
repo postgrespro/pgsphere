@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_SPHERE_YY_SPARSE_H_INCLUDED
-# define YY_SPHERE_YY_SPARSE_H_INCLUDED
+#ifndef YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED
+# define YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -87,13 +87,13 @@ extern int sphere_yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 41 "sparse.y"
+#line 41 "src/sparse.y"
 
 	int		i;
 	double	d;
 	char	c[3];
 
-#line 97 "sparse.h"
+#line 97 "src/sparse.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -106,4 +106,4 @@ extern YYSTYPE sphere_yylval;
 
 int sphere_yyparse (void);
 
-#endif /* !YY_SPHERE_YY_SPARSE_H_INCLUDED  */
+#endif /* !YY_SPHERE_YY_SRC_SPARSE_H_INCLUDED  */

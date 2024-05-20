@@ -1,6 +1,6 @@
-#line 2 "sscan.c"
+#line 2 "src/sscan.c"
 
-#line 4 "sscan.c"
+#line 4 "src/sscan.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -722,8 +722,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "sscan.l"
-#line 2 "sscan.l"
+#line 1 "src/sscan.l"
+#line 2 "src/sscan.l"
 #include <stdio.h>
 #include "string.h"
 #include "sparse.h"
@@ -745,8 +745,8 @@ void sphere_flush_scanner_buffer(void)
 {
 	YY_FLUSH_BUFFER;
 }
-#line 749 "sscan.c"
-#line 750 "sscan.c"
+#line 749 "src/sscan.c"
+#line 750 "src/sscan.c"
 
 #define INITIAL 0
 
@@ -961,9 +961,9 @@ YY_DECL
 		}
 
 	{
-#line 35 "sscan.l"
+#line 35 "src/sscan.l"
 
-#line 967 "sscan.c"
+#line 967 "src/sscan.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1018,106 +1018,106 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 36 "sscan.l"
+#line 36 "src/sscan.l"
 sphere_yylval.i = (strcmp("-", yytext)) ? (1) : (-1); return SIGN;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 37 "sscan.l"
+#line 37 "src/sscan.l"
 sphere_yylval.i = atoi(yytext); return INT;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 38 "sscan.l"
+#line 38 "src/sscan.l"
 sphere_yylval.d = atof(yytext); return FLOAT;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 39 "sscan.l"
+#line 39 "src/sscan.l"
 memcpy(&sphere_yylval.c[0], yytext, 3); return EULERAXIS;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 40 "sscan.l"
+#line 40 "src/sscan.l"
 return HOUR;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 41 "sscan.l"
+#line 41 "src/sscan.l"
 return DEG;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 42 "sscan.l"
+#line 42 "src/sscan.l"
 return MIN;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 43 "sscan.l"
+#line 43 "src/sscan.l"
 return MIN;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "sscan.l"
+#line 44 "src/sscan.l"
 return SEC;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 45 "sscan.l"
+#line 45 "src/sscan.l"
 return SEC;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 46 "sscan.l"
+#line 46 "src/sscan.l"
 return COMMA;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 47 "sscan.l"
+#line 47 "src/sscan.l"
 return OPENCIRC;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 48 "sscan.l"
+#line 48 "src/sscan.l"
 return CLOSECIRC;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 49 "sscan.l"
+#line 49 "src/sscan.l"
 return OPENPOINT;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 50 "sscan.l"
+#line 50 "src/sscan.l"
 return CLOSEPOINT;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 51 "sscan.l"
+#line 51 "src/sscan.l"
 return OPENARR;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 52 "sscan.l"
+#line 52 "src/sscan.l"
 return CLOSEARR;
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 53 "sscan.l"
+#line 53 "src/sscan.l"
 /* discard spaces */
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 54 "sscan.l"
+#line 54 "src/sscan.l"
 /* alert parser of the garbage */
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 55 "sscan.l"
+#line 55 "src/sscan.l"
 ECHO;
 	YY_BREAK
-#line 1121 "sscan.c"
+#line 1121 "src/sscan.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2086,6 +2086,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 55 "sscan.l"
+#line 55 "src/sscan.l"
 
 
