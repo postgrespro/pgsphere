@@ -218,6 +218,9 @@ pg_sphere--1.4.2--1.5.0.sql:
 pg_sphere--1.5.0--1.5.1.sql:
 	cat upgrade_scripts/$@.in $^ > $@
 
+pg_sphere--1.5.1--1.5.2.sql:
+	cat upgrade_scripts/$@.in $^ > $@
+
 # end of local stuff
 
 src/sscan.o : src/sparse.c
