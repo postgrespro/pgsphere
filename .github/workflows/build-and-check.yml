@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pg_version: [10, 11, 12, 13, 14, 15, 16]
+        pg_version: [10, 11, 12, 13, 14, 15, 16, 17]
         use_healpix: [0, 1]
 
     name: PostgreSQL ${{ matrix.pg_version }} - USE_HEALPIX=${{ matrix.use_healpix }}
@@ -29,7 +29,7 @@ jobs:
           xsltproc \
           fop
 
-    - name: Install Postgres
+    - name: Install PostgreSQL
       run: sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -p -v ${{ matrix.pg_version }} -i
 
     - name: Clone pgSphere
