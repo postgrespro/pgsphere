@@ -75,7 +75,7 @@ jobs:
       uses: rlespinasse/github-slug-action@v4
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success() || failure()
       with:
         name: ${{ env.GITHUB_REF_SLUG_URL }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
