@@ -1,0 +1,81 @@
+name: Build and Check (windows-latest)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 5'
+
+jobs:
+  build_and_test:
+
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        pg_version: [10, 11, 12, 13, 14, 15, 16, 17]
+        use_healpix: [0]
+
+    name: PostgreSQL ${{ matrix.pg_version }} - USE_HEALPIX=${{ matrix.use_healpix }} (windows-latest)
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+
+    - name: Install MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        msystem: mingw64
+        install: >-
+          base-devel
+          curl
+          git
+          make
+          perl
+          flex
+          bison
+          diffutils
+          mingw-w64-x86_64-zlib
+          mingw-w64-x86_64-icu
+          mingw-w64-x86_64-gcc
+
+    - name: Install PostgreSQL
+      run: |
+        echo "Workspace: ${GITHUB_WORKSPACE}"
+        git clone --single-branch -b "REL_${{ matrix.pg_version }}_STABLE" git://git.postgresql.org/git/postgresql.git
+        cd ${GITHUB_WORKSPACE}/postgresql
+        ./configure --enable-cassert --without-icu
+        make -j$(nproc)
+        make install
+
+    - name: Clone pgSphere
+      uses: actions/checkout@v4
+      with:
+        ref: 'master'
+        fetch-depth: 1
+
+    - name: Build pgSphere
+      run: |
+        make --keep-going -j$(nproc) PROFILE='-Werror -Wall' USE_HEALPIX=0
+        make USE_HEALPIX=0 install
+
+    - name: Test pgSphere
+      run: |
+        initdb -D pgdata -U postgres
+        pg_ctl -D pgdata -l postgres.log start
+        make USE_HEALPIX=0 installcheck
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: success() || failure()
+      with:
+        name: ${{ env.GITHUB_REF_SLUG_URL }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
+        if-no-files-found: ignore
+        path: |
+          ./**/*.log
+          ./**/*.diffs
