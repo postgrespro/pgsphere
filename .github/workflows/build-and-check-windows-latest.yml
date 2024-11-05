@@ -70,6 +70,10 @@ jobs:
         pg_ctl -D pgdata -l postgres.log start
         make USE_HEALPIX=0 installcheck
 
+    - name: Show installcheck regression.diffs
+      if: ${{ failure() }}
+      run: cat regression.diffs
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       if: success() || failure()
