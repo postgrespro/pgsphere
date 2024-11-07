@@ -64,9 +64,9 @@ jobs:
     - name: Test pgSphere (installcheck)
       run: |
         initdb -D pgdata -U postgres
-        pg_ctl -D pgdata -l postgres.log start
+        pg_ctl -D pgdata -l postgres_installcheck.log start
         make USE_HEALPIX=0 installcheck
-        pg_ctl -D pgdata -l postgres_installcheck.log stop
+        pg_ctl -D pgdata stop
         rm -rf pgdata
 
     - name: Show installcheck regression.diffs
@@ -78,6 +78,7 @@ jobs:
         initdb -D pgdata -U postgres
         pg_ctl -D pgdata -l postgres_crushtest.log start
         make USE_HEALPIX=0 crushtest
+        pg_ctl -D pgdata stop
 
     - name: Show crushtest regression.diffs
       if: ${{ failure() }}
