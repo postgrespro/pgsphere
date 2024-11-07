@@ -55,9 +55,6 @@ jobs:
 
     - name: Clone pgSphere
       uses: actions/checkout@v4
-      with:
-        ref: 'master'
-        fetch-depth: 1
 
     - name: Build pgSphere
       run: |
