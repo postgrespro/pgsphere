@@ -64,13 +64,25 @@ jobs:
         make --keep-going -j$(nproc) PROFILE='-Werror -Wall' USE_HEALPIX=0
         make USE_HEALPIX=0 install
 
-    - name: Test pgSphere
+    - name: Test pgSphere (installcheck)
       run: |
         initdb -D pgdata -U postgres
         pg_ctl -D pgdata -l postgres.log start
         make USE_HEALPIX=0 installcheck
+        pg_ctl -D pgdata -l postgres_installcheck.log stop
+        rm -rf pgdata
 
     - name: Show installcheck regression.diffs
+      if: ${{ failure() }}
+      run: cat regression.diffs
+
+    - name: Test pgSphere (crushtest)
+      run: |
+        initdb -D pgdata -U postgres
+        pg_ctl -D pgdata -l postgres_crushtest.log start
+        make USE_HEALPIX=0 crushtest
+
+    - name: Show crushtest regression.diffs
       if: ${{ failure() }}
       run: cat regression.diffs
 
