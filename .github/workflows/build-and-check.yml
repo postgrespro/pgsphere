@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pg_version: [10, 11, 12, 13, 14, 15, 16, 17]
+        pg_version: [10, 11, 12, 13, 14, 15, 16, 17, 18]
         use_healpix: [0, 1]
 
     name: PostgreSQL ${{ matrix.pg_version }} - USE_HEALPIX=${{ matrix.use_healpix }}
