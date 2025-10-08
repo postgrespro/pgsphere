@@ -9,7 +9,8 @@ create or replace function explain(query text, do_analyze text default 'true') r
 declare
   line text;
 begin
-  for line in execute format('explain (analyze %s, timing off, summary off) %s', do_analyze, query) loop
+  for line in execute format('explain (analyze %s, timing off, summary off, buffers off) %s', do_analyze, query) loop
+    continue when (line ~ ' +Index Searches: .*');
     return next regexp_replace(line, 'cost=\S+ ', '');
   end loop;
   return;
