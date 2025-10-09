@@ -17,7 +17,9 @@
 #define EULER_AXIS_Y 2			/* y - axis for Euler transformation */
 #define EULER_AXIS_Z 3			/* z - axis for Euler transformation */
 
-extern int	sphere_yylex();
+extern int sphere_yychar;
+extern int sphere_yynerrs;
+extern int sphere_yylex();
 extern void sphere_yyerror(const char *str);
 extern void sphere_flush_scanner_buffer(void);
 

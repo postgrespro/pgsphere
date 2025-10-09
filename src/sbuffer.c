@@ -7,10 +7,10 @@
 #define MAX_BUF_ANGLE	20
 
 /* The type of parsed spherical object. */
-unsigned char spheretype;
+static unsigned char spheretype;
 
 /* The angle buffer. */
-float8	bufangle[MAX_BUF_ANGLE];
+static float8	bufangle[MAX_BUF_ANGLE];
 
 /* A simple spherical point. */
 typedef struct
@@ -20,29 +20,29 @@ typedef struct
 } bpoint;
 
  /* Spherical point buffer. */
-struct
+static struct
 {
 	int		m;		/* count of buffered points */
 	bpoint *p;		/* pointer to array of points */
 }		bufpoints;
 
 /* ID of line's length angle. */
-int		bufline;
+static int	bufline;
 
 /*
  * First element is the ID of spherical point ( center ).
  * Second element is the ID of radius angle.
  */
-int		bufcircle[2];
+static int	bufcircle[2];
 
 /* Buffer of ellipse. */
-int		bufellipse[5];
+static int	bufellipse[5];
 
 /* Buffer of IDs of Euler transformation values. */
-int		bufeuler[3];
+static int	bufeuler[3];
 
 /* Structure to buffer the axes of Euler transformation. */
-struct
+static struct
 {
 	unsigned char	phi,	/* first axis */
 					theta,	/* second axis */
@@ -50,13 +50,13 @@ struct
 }		bufeulertype;
 
 /* Current angle ID. */
-int		bufapos;
+static int	bufapos;
 
 /* Current point ID. */
-int		bufspos;
+static int	bufspos;
 
 /* Pointer to input buffer. */
-char   *parse_buffer;
+static char    *parse_buffer;
 
 
 void
