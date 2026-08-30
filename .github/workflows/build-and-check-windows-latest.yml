@@ -54,7 +54,7 @@ jobs:
         make install
 
     - name: Clone pgSphere
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Build pgSphere
       run: |
@@ -85,7 +85,7 @@ jobs:
       run: cat regression.diffs
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: success() || failure()
       with:
         name: ${{ env.GITHUB_REF_SLUG_URL }}-pg${{ matrix.pg_version }}-use-healpix-${{ matrix.use_healpix }}-${{ github.run_id }}
