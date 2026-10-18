@@ -19,7 +19,7 @@
 
 extern int sphere_yychar;
 extern int sphere_yynerrs;
-extern int sphere_yylex();
+extern int sphere_yylex(void);
 extern void sphere_yyerror(const char *str);
 extern void sphere_flush_scanner_buffer(void);
 
