@@ -47,7 +47,7 @@ jobs:
     - name: Install PostgreSQL
       run: |
         echo "Workspace: ${GITHUB_WORKSPACE}"
-        git clone --single-branch -b "REL_${{ matrix.pg_version }}_STABLE" https://git.postgresql.org/git/postgresql.git
+        git clone --single-branch -b "REL_${{ matrix.pg_version }}_STABLE" https://github.com/postgres/postgres.git postgresql
         cd ${GITHUB_WORKSPACE}/postgresql
         ./configure --enable-cassert --without-icu
         make -j$(nproc)
